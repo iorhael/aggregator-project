@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_MULTIPLE_DATABASES=${WEBAPP_DB_USERNAME}:${WEBAPP_DB_PASSWORD} ${KC_DB_USERNAME}:${KC_DB_PASSWORD}
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready --username=${WEBAPP_DB_USERNAME} && 
+                            pg_isready --username=${KC_DB_USERNAME}" ]
+      timeout: 5s
+      interval: 5s
+      retries: 5
+
+  keycloak:
+    image: keycloak/keycloak:26.1
+    command: [ "start", "--http-enabled", "true", "--import-realm"]
+    volumes:
+      - ./keycloak-export:/opt/keycloak/data/import
+      - keycloak:/opt/keycloak/data
+    environment:
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres/${KC_DBNAME}
+
+      - KC_HOSTNAME_STRICT=false
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  webapp:
+    build: .
+    ports:
+      - '8080:8080'
+    environment:
+      - DB_HOST=postgres
+      - KC_HOST=keycloak
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres:
+  keycloak:

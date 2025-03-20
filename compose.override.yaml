@@ -1,0 +1,21 @@
+services:
+  postgres:
+    networks:
+      - default
+      - pgadmin
+
+  keycloak:
+    ports:
+      - '8090:8080'
+
+  webapp:
+    command: --spring.profiles.active=dev
+    ports:
+      - '5005:5005'
+    environment:
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+
+networks:
+  pgadmin:
+    name: composes_default
+    external: true
