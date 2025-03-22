@@ -97,7 +97,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         UserRepresentation updatedUser = updateKeycloakUser(user, userId);
 
-        if (Objects.nonNull(dto.getEmail())) // зачем аж три селекта
+        if (Objects.nonNull(dto.getEmail()))
             userRepository.save(userMapper.toUser(updatedUser));
 
         return userMapper.toUserProfileDto(updatedUser);

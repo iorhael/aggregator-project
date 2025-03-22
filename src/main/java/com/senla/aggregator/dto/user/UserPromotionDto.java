@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PromoteUserDto {
+public class UserPromotionDto {
 
     @NotNull
     private Role role;

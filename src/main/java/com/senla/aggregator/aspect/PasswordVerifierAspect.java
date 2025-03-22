@@ -2,6 +2,7 @@ package com.senla.aggregator.aspect;
 
 import com.senla.aggregator.service.keycloak.KeycloakService;
 import com.senla.aggregator.util.CustomSpringExpressionLanguageParser;
+import com.senla.aggregator.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -33,17 +34,6 @@ public class PasswordVerifierAspect {
                 verifyPasswordAnnotation.password()
         );
 
-//        keycloakService.verifyPassword(password);
+        keycloakService.verifyPassword(SecurityUtil.getPrincipalName(), password);
     }
-
-//    private String getUserIdFromAuthentication() {
-//        String id = SecurityContextHolder.getContext()
-//                SecurityContextHolder.getContext()
-//                        .getAuthentication()
-//                .getAuthentication()
-//                .getName();
-//
-//        return UUID.fromString(id);
-
-//    }
 }

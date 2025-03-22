@@ -1,6 +1,7 @@
 spring:
   application:
     name: price_aggregator
+    version: 1.0
 
   datasource:
     url: jdbc:postgresql://${DB_HOST}/${WEBAPP_DBNAME}
@@ -30,3 +31,8 @@ keycloak:
   client-database-id: ${KC_CLIENT_DATABASE_ID}
   client-id: ${KC_CLIENT_ID}
   client-secret: ${KC_CLIENT_SECRET}
+
+swagger:
+  application:
+    title: Price Aggregator Project
+    description: An application that helps you choose a store with the best prices

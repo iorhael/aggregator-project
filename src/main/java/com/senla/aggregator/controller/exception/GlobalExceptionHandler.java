@@ -3,6 +3,7 @@ package com.senla.aggregator.controller.exception;
 import com.senla.aggregator.controller.ControllerMessages;
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.service.exception.KeycloakException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,10 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler({
+            NotFoundException.class,
+            EntityNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseInfoDto handleNotFound(Exception exception) {
         String errorMessage = exception.getMessage();

@@ -3,7 +3,7 @@ services:
     image: postgres:17-alpine
     volumes:
       - postgres:/var/lib/postgresql/data
-      - ./initdb:/docker-entrypoint-initdb.d:ro
+      - ./initdb:/docker-entrypoint-initdb.d:z
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_MULTIPLE_DATABASES=${WEBAPP_DB_USERNAME}:${WEBAPP_DB_PASSWORD} ${KC_DB_USERNAME}:${KC_DB_PASSWORD}
@@ -20,7 +20,7 @@ services:
     image: keycloak/keycloak:26.1
     command: [ "start", "--http-enabled", "true", "--import-realm"]
     volumes:
-      - ./keycloak-export:/opt/keycloak/data/import
+      - ./keycloak-export:/opt/keycloak/data/import:z
       - keycloak:/opt/keycloak/data
     environment:
       - KC_DB=postgres

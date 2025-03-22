@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdatePasswordDto {
+public class PasswordUpdateDto {
 
     @NotBlank
     @Size(min = 6, max = 32)

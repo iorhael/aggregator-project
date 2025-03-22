@@ -1,15 +1,16 @@
 package com.senla.aggregator.controller;
 
+import com.senla.aggregator.aspect.VerifyPassword;
+import com.senla.aggregator.dto.PasswordDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
-import com.senla.aggregator.dto.user.PromoteUserDto;
-import com.senla.aggregator.dto.user.UpdatePasswordDto;
+import com.senla.aggregator.dto.user.UserPromotionDto;
+import com.senla.aggregator.dto.user.PasswordUpdateDto;
 import com.senla.aggregator.dto.user.UserProfileDto;
 import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.service.keycloak.KeycloakService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,8 +47,24 @@ public class UserController {
         return keycloakService.updateUser(dto, userId);
     }
 
+    @PutMapping("/password")
+    @VerifyPassword(password = "#dto.oldPassword")
+    public ResponseInfoDto updatePassword(@Valid @RequestBody PasswordUpdateDto dto,
+                                          Principal principal) {
+        String userId = principal.getName();
+        String newPassword = dto.getNewPassword();
+
+        keycloakService.updatePassword(userId, newPassword);
+
+        return ResponseInfoDto.builder()
+                .message(PASSWORD_UPDATED_MESSAGE)
+                .build();
+    }
+
     @DeleteMapping
-    public ResponseInfoDto deleteProfileInfo(Principal principal) {
+    @VerifyPassword(password = "#dto.password")
+    public ResponseInfoDto deleteUser(@Valid @RequestBody PasswordDto dto,
+                                      Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
 
         keycloakService.deleteUser(userId);
@@ -59,7 +76,7 @@ public class UserController {
 
     @PutMapping("/promotion/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseInfoDto promoteUser(@Valid @RequestBody PromoteUserDto dto,
+    public ResponseInfoDto promoteUser(@Valid @RequestBody UserPromotionDto dto,
                                        @PathVariable UUID id) {
         String roleName = dto.getRole().name();
 
@@ -67,19 +84,6 @@ public class UserController {
 
         return ResponseInfoDto.builder()
                 .message(String.format(PROMOTION_MESSAGE, id))
-                .build();
-    }
-
-    @PutMapping("/password")
-    public ResponseInfoDto updatePassword(@Valid @RequestBody UpdatePasswordDto dto,
-                                          Principal principal) {
-        String userId = principal.getName();
-        String newPassword = dto.getNewPassword();
-
-        keycloakService.updatePassword(userId, newPassword);
-
-        return ResponseInfoDto.builder()
-                .message(PASSWORD_UPDATED_MESSAGE)
                 .build();
     }
 }
