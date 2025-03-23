@@ -1,6 +1,5 @@
 package com.senla.aggregator.controller.exception;
 
-import com.senla.aggregator.controller.ControllerMessages;
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.service.exception.KeycloakException;
 import jakarta.persistence.EntityNotFoundException;

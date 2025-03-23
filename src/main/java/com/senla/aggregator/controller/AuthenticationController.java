@@ -23,7 +23,7 @@ public class AuthenticationController {
 
     @PostMapping("login")
     public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
-       return keycloakService.getAccessToken(loginDto);
+        return keycloakService.getAccessToken(loginDto);
     }
 
     @PostMapping("signup")

@@ -43,7 +43,7 @@ public class Category {
     private Instant createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parend_id")
+    @JoinColumn(name = "parent_id")
     private Category parent;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "parent")

@@ -283,7 +283,8 @@ INSERT INTO price_histories (card_id, price, updated_at)
 SELECT pc.id                                  AS card_id,
        CASE
            WHEN p.name = 'Apple iPhone 15 Pro' THEN ROUND((random() * 200 + 800)::numeric, 2) -- Price from 800 to 1000
-           WHEN p.name = 'Dell XPS 13 (2023 Model)' THEN ROUND((random() * 300 + 1200)::numeric, 2) -- Price from 1200 to 1500
+           WHEN p.name = 'Dell XPS 13 (2023 Model)'
+               THEN ROUND((random() * 300 + 1200)::numeric, 2) -- Price from 1200 to 1500
            WHEN p.name = 'Sony WH-1000XM5' THEN ROUND((random() * 100 + 300)::numeric, 2) -- Price from 300 to 400
            ELSE ROUND((random() * 1000 + 100)::numeric, 2) -- Default price
            END                                AS price,

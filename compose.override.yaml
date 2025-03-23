@@ -9,11 +9,20 @@ services:
       - '8090:8080'
 
   webapp:
-    command: --spring.profiles.active=dev
+    volumes:
+      - m2-cache:/root/.m2
+    develop:
+      watch:
+        - action: sync
+          path: ./src/main/java
+          target: /app/src/main/java
     ports:
       - '5005:5005'
     environment:
-      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - SPRING_PROFILES_ACTIVE=dev
+
+volumes:
+  m2-cache:
 
 networks:
   pgadmin:

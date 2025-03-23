@@ -7,5 +7,6 @@ public final class ValidationPatterns {
     public static final String EMAIL = "^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\\.[a-zA-Z]{2,}$";
     public static final String EMAIL_MESSAGE = "Invalid email format";
 
-    private ValidationPatterns() {}
+    private ValidationPatterns() {
+    }
 }

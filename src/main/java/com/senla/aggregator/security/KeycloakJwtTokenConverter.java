@@ -6,8 +6,6 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -29,11 +27,9 @@ public class KeycloakJwtTokenConverter implements Converter<Jwt, JwtAuthenticati
     private static final String ROLES = "roles";
     private static final String ROLE_PREFIX = "ROLE_";
     private static final String RESOURCE_ACCESS = "resource_access";
-
+    private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter;
     @Value("${keycloak.client-id}")
     private String keycloakClientId;
-
-    private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter;
 
     @Override
     public JwtAuthenticationToken convert(@NonNull Jwt jwt) {
@@ -53,8 +49,8 @@ public class KeycloakJwtTokenConverter implements Converter<Jwt, JwtAuthenticati
     private Collection<? extends GrantedAuthority> extractClientRoles(Jwt jwt) {
         Map<String, Object> resourceAccess = jwt.getClaim(RESOURCE_ACCESS);
 
-        if(Objects.isNull(resourceAccess)) return Set.of();
-        if(Objects.isNull(resourceAccess.get(keycloakClientId))) return Set.of();
+        if (Objects.isNull(resourceAccess)) return Set.of();
+        if (Objects.isNull(resourceAccess.get(keycloakClientId))) return Set.of();
 
         Map<String, Object> clientAccess = (Map<String, Object>) resourceAccess.get(keycloakClientId);
         Collection<String> roles = (Collection<String>) clientAccess.get(ROLES);

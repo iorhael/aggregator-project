@@ -1,10 +1,10 @@
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+FROM maven:3.9-eclipse-temurin-17-alpine
 WORKDIR /app
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+RUN apk add --no-cache inotify-tools && \
+    chmod +x /docker-entrypoint.sh
+
 COPY pom.xml .
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
-FROM eclipse-temurin:17-jre-alpine
-COPY --from=builder /app/target/*.jar app.jar
-
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

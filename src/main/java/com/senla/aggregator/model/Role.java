@@ -11,5 +11,5 @@ public enum Role {
     RETAILER("RETAILER_ROLE"),
     ADMIN("ADMIN_ROLE");
 
-   private final String prefixedRole;
+    private final String prefixedRole;
 }

@@ -3,9 +3,9 @@ package com.senla.aggregator.controller;
 import com.senla.aggregator.aspect.VerifyPassword;
 import com.senla.aggregator.dto.PasswordDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
-import com.senla.aggregator.dto.user.UserPromotionDto;
 import com.senla.aggregator.dto.user.PasswordUpdateDto;
 import com.senla.aggregator.dto.user.UserProfileDto;
+import com.senla.aggregator.dto.user.UserPromotionDto;
 import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.service.keycloak.KeycloakService;
 import jakarta.validation.Valid;
@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.PROMOTION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.PASSWORD_UPDATED_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.USER;
+import static com.senla.aggregator.controller.ControllerMessages.*;
 
 @RestController
 @RequestMapping("api/users")

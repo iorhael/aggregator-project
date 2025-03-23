@@ -8,5 +8,6 @@ public final class ControllerMessages {
     public static final String USER = "User";
     public static final String CATEGORY = "Category";
 
-    private ControllerMessages() {}
+    private ControllerMessages() {
+    }
 }

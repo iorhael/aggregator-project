@@ -85,9 +85,9 @@ public class KeycloakServiceImpl implements KeycloakService {
     public UserProfileDto getUser(String userId) {
         return userMapper.toUserProfileDto(
                 adminKeycloak.realm(keycloakCredentials.realm())
-                .users()
-                .get(userId)
-                .toRepresentation()
+                        .users()
+                        .get(userId)
+                        .toRepresentation()
         );
     }
 
@@ -167,7 +167,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     private UUID createKeycloakUser(UserRepresentation user) {
         UsersResource usersResource = getUsersResource();
 
-        try(Response response = usersResource.create(user)) {
+        try (Response response = usersResource.create(user)) {
             if (response.getStatusInfo().getFamily() == Response.Status.Family.CLIENT_ERROR)
                 throw new KeycloakException(ExceptionMessages.KEYCLOAK_CONFLICT);
 
