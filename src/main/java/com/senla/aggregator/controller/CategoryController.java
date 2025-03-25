@@ -30,7 +30,7 @@ import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAG
 @RestController
 @RequestMapping("api/categories")
 @RequiredArgsConstructor
-@Tag(name = "Categories source", description = "Manage operations related to categories")
+@Tag(name = "Categories Resource", description = "Manage operations related to categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -39,6 +39,11 @@ public class CategoryController {
     public List<CategoryGetDto> findAllCategories(@RequestParam(defaultValue = "0") int pageNo,
                                                   @RequestParam(defaultValue = "15") int pageSize) {
         return categoryService.getAllCategories(pageNo, pageSize);
+    }
+
+    @GetMapping("/subcategories/{parentName}")
+    public List<CategoryGetDto> findAllSubcategories(@PathVariable String parentName) {
+        return categoryService.getAllSubcategories(parentName);
     }
 
     @GetMapping("/{id}")

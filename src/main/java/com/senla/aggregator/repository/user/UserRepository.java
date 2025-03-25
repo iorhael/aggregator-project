@@ -1,4 +1,4 @@
-package com.senla.aggregator.repository;
+package com.senla.aggregator.repository.user;
 
 import com.senla.aggregator.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

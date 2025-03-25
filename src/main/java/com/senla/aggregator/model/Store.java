@@ -18,7 +18,7 @@ import org.hibernate.type.SqlTypes;
 import java.util.UUID;
 
 @Entity
-@Table(name = "store_locations")
+@Table(name = "stores")
 @Getter
 @Setter
 public class Store {
@@ -35,7 +35,7 @@ public class Store {
 
     @Column(name = "opening_hours")
     @JdbcTypeCode(SqlTypes.JSON)
-    private JsonNode openingHours;
+    private StoreSchedule openingHours;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "retailer_id")

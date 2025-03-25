@@ -27,7 +27,9 @@ public class KeycloakJwtTokenConverter implements Converter<Jwt, JwtAuthenticati
     private static final String ROLES = "roles";
     private static final String ROLE_PREFIX = "ROLE_";
     private static final String RESOURCE_ACCESS = "resource_access";
+
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter;
+
     @Value("${keycloak.client-id}")
     private String keycloakClientId;
 

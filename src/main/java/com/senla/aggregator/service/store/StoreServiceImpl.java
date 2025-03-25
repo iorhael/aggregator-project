@@ -1,0 +1,93 @@
+package com.senla.aggregator.service.store;
+
+import com.senla.aggregator.dto.store.StoreCreateDto;
+import com.senla.aggregator.dto.store.StoreGetDto;
+import com.senla.aggregator.dto.store.StoreUpdateDto;
+import com.senla.aggregator.mapper.StoreMapper;
+import com.senla.aggregator.model.Retailer;
+import com.senla.aggregator.model.Store;
+import com.senla.aggregator.repository.store.StoreRepository;
+import com.senla.aggregator.repository.retailer.RetailerRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+import static com.senla.aggregator.service.exception.ExceptionMessages.*;
+
+@Service
+@RequiredArgsConstructor
+public class StoreServiceImpl implements StoreService {
+
+    private final StoreRepository storeRepository;
+
+    private final RetailerRepository retailerRepository;
+
+    private final StoreMapper storeMapper;
+
+    @Override
+    @Transactional
+    public StoreGetDto createStore(StoreCreateDto dto, UUID ownerId) {
+        Store store = storeMapper.toStore(dto);
+
+        Retailer retailer = retailerRepository.findRetailerByOwnerId(ownerId)
+                .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
+
+        store.setRetailer(retailer);
+
+        storeRepository.save(store);
+
+        return storeMapper.toStoreGetDto(store);
+    }
+
+    @Override
+    public List<StoreGetDto> getAllStores(int pageNo, int pageSize) {
+        return storeRepository.findWithRetailerBy(PageRequest.of(pageNo, pageSize,
+                        Sort.by("retailer.name", "address")))
+                .stream()
+                .map(storeMapper::toStoreGetDto)
+                .toList();
+    }
+
+    @Override
+    public List<StoreGetDto> getMyStores(UUID ownerId, int pageNo, int pageSize) {
+        return storeRepository.findAllByRetailerOwnerId(ownerId, PageRequest.of(pageNo, pageSize,
+                        Sort.by("address")))
+                .stream()
+                .map(storeMapper::toStoreGetDto)
+                .toList();
+    }
+
+    @Override
+    public List<StoreGetDto> getStoresOfRetailer(String retailerName, int pageNo, int pageSize) {
+        return storeRepository.findByRetailerName(retailerName, PageRequest.of(pageNo, pageSize,
+                        Sort.by("address")))
+                .stream()
+                .map(storeMapper::toStoreGetDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public StoreGetDto updateStore(StoreUpdateDto dto, UUID ownerId) {
+        Store store = storeRepository.findByRetailerOwnerId(ownerId)
+                .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND));
+
+        storeMapper.updateStore(store, dto);
+
+        return storeMapper.toStoreGetDto(store);
+    }
+
+    @Override
+    public void deleteStore(UUID id, UUID ownerId) {
+        storeRepository.findByIdAndRetailerOwnerId(id, ownerId)
+                        .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND));
+
+        storeRepository.deleteById(id);
+    }
+}

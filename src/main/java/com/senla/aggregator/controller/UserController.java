@@ -8,6 +8,7 @@ import com.senla.aggregator.dto.user.UserProfileDto;
 import com.senla.aggregator.dto.user.UserPromotionDto;
 import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.service.keycloak.KeycloakService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,6 +28,7 @@ import static com.senla.aggregator.controller.ControllerMessages.*;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
+@Tag(name = "Users Resource", description = "Manage users")
 public class UserController {
 
     private final KeycloakService keycloakService;

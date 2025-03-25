@@ -1,4 +1,4 @@
-package com.senla.aggregator.repository;
+package com.senla.aggregator.repository.comment;
 
 import com.senla.aggregator.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;

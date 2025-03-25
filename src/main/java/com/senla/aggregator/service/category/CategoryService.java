@@ -17,7 +17,7 @@ public interface CategoryService {
 
     List<CategoryGetDto> getAllCategories(int pageNo, int pageSize);
 
-    List<CategoryGetDto> getAllSubcategories(String name);
+    List<CategoryGetDto> getAllSubcategories(String parentName);
 
     CategoryGetDto updateCategory(CategoryUpdateDto category, UUID id);
 

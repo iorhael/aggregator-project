@@ -16,7 +16,9 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class Product {
     @Column(name = "description")
     private String description;
 
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "creation_type")
     private ProductCreationType creationType;
 

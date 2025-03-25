@@ -5,7 +5,7 @@ import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.mapper.CategoryMapper;
 import com.senla.aggregator.model.Category;
-import com.senla.aggregator.repository.CategoryRepository;
+import com.senla.aggregator.repository.category.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -62,8 +62,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryGetDto> getAllSubcategories(String name) {
-        return List.of();
+    public List<CategoryGetDto> getAllSubcategories(String parentName) {
+        return categoryRepository.findChildren(parentName)
+                .stream()
+                .map(categoryMapper::toCategoryGetDto)
+                .toList();
     }
 
     @Override

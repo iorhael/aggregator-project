@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "stores")
+@Table(name = "retailers")
 @Getter
 @Setter
 public class Retailer {
@@ -48,7 +48,7 @@ public class Retailer {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    private User owner; // работает ли lazy
+    private User owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "retailer", orphanRemoval = true)
     private List<Store> stores = new ArrayList<>();

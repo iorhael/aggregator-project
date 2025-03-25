@@ -3,6 +3,7 @@ package com.senla.aggregator.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,10 +35,9 @@ public class ProductCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    // проверить
     @Column(name = "additional_properties")
     @JdbcTypeCode(SqlTypes.JSON)
-    private JsonNode additionalProperties;
+    private ProductCardProperties additionalProperties;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -52,9 +52,9 @@ public class ProductCard {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
+    @JoinColumn(name = "retailer_id")
     private Retailer retailer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "card", orphanRemoval = true)
-    private List<PriceHistory> priceHistory = new ArrayList<>();
+    private List<PriceHistory> priceHistories = new ArrayList<>();
 }

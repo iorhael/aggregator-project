@@ -4,7 +4,7 @@
 CREATE TABLE categories
 (
     id          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
-    name        VARCHAR(30) NOT NULL,
+    name        VARCHAR(30) NOT NULL UNIQUE,
     description TEXT,
     parent_id   UUID        REFERENCES categories ON DELETE SET NULL,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT now()

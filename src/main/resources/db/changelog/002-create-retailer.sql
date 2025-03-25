@@ -5,7 +5,7 @@ CREATE TABLE retailers
 (
     id          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
     owner_id    UUID        NOT NULL UNIQUE REFERENCES users ON DELETE SET NULL,
-    name        VARCHAR(50) NOT NULL,
+    name        VARCHAR(50) NOT NULL UNIQUE,
     description TEXT        NOT NULL,
     website     VARCHAR(255),
     email       VARCHAR(255),

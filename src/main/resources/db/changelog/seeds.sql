@@ -22,22 +22,22 @@ WITH electrosila_id AS (SELECT id FROM retailers WHERE name = 'electrosila'),
      seventh_element_id AS (SELECT id FROM retailers WHERE name = '7element'),
      store_of_everything_id AS (SELECT id FROM retailers WHERE name = 'store_of_everything'),
      schedule_1 AS (SELECT '{
-       "Monday": "9:00 - 18:00",
-       "Tuesday": "9:00 - 18:00",
-       "Wednesday": "9:00 - 18:00",
-       "Thursday": "9:00 - 18:00",
-       "Friday": "9:00 - 18:00",
-       "Saturday": "10:00 - 16:00",
-       "Sunday": "Closed"
+       "monday": "9:00 - 18:00",
+       "tuesday": "9:00 - 18:00",
+       "wednesday": "9:00 - 18:00",
+       "thursday": "9:00 - 18:00",
+       "friday": "9:00 - 18:00",
+       "saturday": "10:00 - 16:00",
+       "sunday": "Closed"
      }'::jsonb AS schedule),
      schedule_2 AS (SELECT '{
-       "Monday": "9:00 - 18:00",
-       "Tuesday": "9:00 - 18:00",
-       "Wednesday": "9:00 - 18:00",
-       "Thursday": "9:00 - 18:00",
-       "Friday": "9:00 - 18:00",
-       "Saturday": "Closed",
-       "Sunday": "Closed"
+       "monday": "9:00 - 18:00",
+       "tuesday": "9:00 - 18:00",
+       "wednesday": "9:00 - 18:00",
+       "thursday": "9:00 - 18:00",
+       "friday": "9:00 - 18:00",
+       "saturday": "Closed",
+       "sunday": "Closed"
      }'::jsonb AS schedule)
 INSERT
 INTO stores(retailer_id, address, phone, opening_hours)

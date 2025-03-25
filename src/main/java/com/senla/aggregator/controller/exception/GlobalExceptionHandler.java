@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.senla.aggregator.controller.ControllerMessages.VALIDATION_ERROR_MESSAGE;
+import static com.senla.aggregator.controller.ControllerMessages.DATA_INTEGRITY_VIOLATION_EXCEPTION;
 
 @Slf4j
 @RestControllerAdvice
@@ -23,32 +25,29 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             KeycloakException.class,
-            ClientErrorException.class
+            ClientErrorException.class,
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseInfoDto handleBadRequest(Exception exception) {
         String errorMessage = exception.getMessage();
 
-        log.error(errorMessage);
+        return logAndPrepareResponse(errorMessage);
+    }
 
-        return ResponseInfoDto.builder()
-                .message(errorMessage)
-                .build();
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseInfoDto handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        return logAndPrepareResponse(exception.getMessage(), DATA_INTEGRITY_VIOLATION_EXCEPTION, Map.of());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseInfoDto handleValidationErrors(MethodArgumentNotValidException exception) {
-        log.error(exception.getMessage());
-
         Map<String, String> details = new HashMap<>();
         exception.getFieldErrors()
                 .forEach(error -> details.put(error.getField(), error.getDefaultMessage()));
 
-        return ResponseInfoDto.builder()
-                .message(VALIDATION_ERROR_MESSAGE)
-                .details(details)
-                .build();
+        return logAndPrepareResponse(exception.getMessage(), VALIDATION_ERROR_MESSAGE, details);
     }
 
     @ExceptionHandler({
@@ -59,10 +58,21 @@ public class GlobalExceptionHandler {
     public ResponseInfoDto handleNotFound(Exception exception) {
         String errorMessage = exception.getMessage();
 
-        log.error(errorMessage);
+        return logAndPrepareResponse(errorMessage);
+    }
+
+    private ResponseInfoDto logAndPrepareResponse(String logMessage,
+                                                  String clientMessage,
+                                                  Map<String, String> details) {
+        log.error(logMessage);
 
         return ResponseInfoDto.builder()
-                .message(errorMessage)
+                .message(clientMessage)
+                .details(details)
                 .build();
+    }
+
+    private ResponseInfoDto logAndPrepareResponse(String errorMessage) {
+        return logAndPrepareResponse(errorMessage, errorMessage, Map.of());
     }
 }

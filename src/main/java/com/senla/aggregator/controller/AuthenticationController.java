@@ -5,6 +5,7 @@ import com.senla.aggregator.dto.auth.RegisterDto;
 import com.senla.aggregator.dto.auth.TokenDto;
 import com.senla.aggregator.dto.user.UserProfileDto;
 import com.senla.aggregator.service.keycloak.KeycloakService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication Resource", description = "Login/Sign Up actions")
 public class AuthenticationController {
 
     private final KeycloakService keycloakService;

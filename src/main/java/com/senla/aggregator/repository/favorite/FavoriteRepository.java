@@ -1,4 +1,4 @@
-package com.senla.aggregator.repository;
+package com.senla.aggregator.repository.favorite;
 
 import com.senla.aggregator.model.Favorite;
 import org.springframework.data.jpa.repository.JpaRepository;
