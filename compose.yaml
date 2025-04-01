@@ -16,9 +16,14 @@ services:
       interval: 5s
       retries: 5
 
+  redis:
+    image: redis:7.4.2-alpine
+    volumes:
+      - redis:/var/lib/redis/data
+
   keycloak:
     image: keycloak/keycloak:26.1
-    command: [ "start", "--http-enabled", "true", "--import-realm"]
+    command: [ "start", "--http-enabled", "true", "--import-realm" ]
     volumes:
       - ./keycloak-export:/opt/keycloak/data/import:z
       - keycloak:/opt/keycloak/data
@@ -40,12 +45,16 @@ services:
     environment:
       - DB_HOST=postgres
       - KC_HOST=keycloak
+      - REDIS_HOST=redis
     env_file:
       - .env
     depends_on:
+      redis:
+        condition: service_started
       postgres:
         condition: service_healthy
 
 volumes:
+  redis:
   postgres:
   keycloak:

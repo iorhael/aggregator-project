@@ -18,15 +18,14 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
                 SELECT id, name, description, parent_id, created_at
                 FROM categories
                 WHERE name = :parentName
-
+            
                 UNION ALL
-
+            
                 SELECT c.id, c.name, c.description, c.parent_id, c.created_at
                 FROM categories c
                 JOIN subcategories s ON c.parent_id = s.id
             )
             SELECT * FROM subcategories
-            WHERE name != :parentName;
             """)
     List<Category> findChildren(@Param("parentName") String parentName);
 }

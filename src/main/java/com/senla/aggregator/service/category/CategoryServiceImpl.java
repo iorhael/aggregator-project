@@ -48,13 +48,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryGetDto getCategoryBy(String name) {
-        return categoryRepository.findByName(name)
-                .map(categoryMapper::toCategoryGetDto)
-                .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
-    }
-
-    @Override
     public List<CategoryGetDto> getAllCategories(int pageNo, int pageSize) {
         return categoryRepository.findAll(PageRequest.of(pageNo, pageSize))
                 .map(categoryMapper::toCategoryGetDto)

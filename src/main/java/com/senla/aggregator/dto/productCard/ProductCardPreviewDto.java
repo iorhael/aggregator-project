@@ -1,7 +1,6 @@
 package com.senla.aggregator.dto.productCard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.senla.aggregator.model.ProductCardProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,13 +9,10 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ProductCardGetDto {
+public class ProductCardPreviewDto {
 
     @JsonProperty("product_card_id")
     private UUID id;
-
-    @JsonProperty("product_name")
-    private String productName;
 
     @JsonProperty("retailer_name")
     private String retailerName;
@@ -24,6 +20,6 @@ public class ProductCardGetDto {
     @JsonProperty("price")
     private BigDecimal price;
 
-    @JsonProperty("additional_properties")
-    private ProductCardProperties additionalProperties;
+    @JsonProperty("max_delivery_time")
+    private Short maxDeliveryTime;
 }

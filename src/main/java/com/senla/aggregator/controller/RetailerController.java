@@ -3,9 +3,6 @@ package com.senla.aggregator.controller;
 import com.senla.aggregator.aspect.VerifyPassword;
 import com.senla.aggregator.dto.PasswordDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
-import com.senla.aggregator.dto.category.CategoryCreateDto;
-import com.senla.aggregator.dto.category.CategoryGetDto;
-import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.dto.retailer.RetailerCreateDto;
 import com.senla.aggregator.dto.retailer.RetailerGetDto;
 import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
@@ -17,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +26,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.*;
+import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.ControllerMessages.RETAILER;
 
 @RestController
 @RequestMapping("api/retailers")

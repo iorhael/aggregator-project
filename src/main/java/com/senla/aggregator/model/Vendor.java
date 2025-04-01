@@ -3,14 +3,9 @@ package com.senla.aggregator.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -25,18 +20,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "categories")
-@Cache(region = "categoriesCache", usage = CacheConcurrencyStrategy.READ_WRITE)
+@Table(name = "vendors")
+@Cache(region = "vendorsCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 @Getter
 @Setter
-public class Category {
+public class Vendor {
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "product_categories",
-            joinColumns = {@JoinColumn(name = "category_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")}
-    )
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "vendor")
     List<Product> products = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,9 +38,4 @@ public class Category {
     @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "parent")
-    private List<Category> children;
 }

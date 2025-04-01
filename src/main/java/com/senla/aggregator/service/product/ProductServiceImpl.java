@@ -1,18 +1,25 @@
 package com.senla.aggregator.service.product;
 
-import com.senla.aggregator.dto.product.ProductDetailedViewDto;
-import com.senla.aggregator.dto.product.ProductSimpleViewDto;
+import com.senla.aggregator.dto.product.ProductCreateDto;
+import com.senla.aggregator.dto.product.ProductDetailedDto;
+import com.senla.aggregator.dto.product.ProductFilterDto;
+import com.senla.aggregator.dto.product.ProductInfoDto;
+import com.senla.aggregator.dto.product.ProductNameDescriptionDto;
+import com.senla.aggregator.dto.product.ProductPreviewDto;
 import com.senla.aggregator.dto.product.ProductUpdateDto;
 import com.senla.aggregator.mapper.ProductMapper;
 import com.senla.aggregator.model.Category;
 import com.senla.aggregator.model.Product;
-import com.senla.aggregator.model.ProductCreationType;
+import com.senla.aggregator.model.Product_;
 import com.senla.aggregator.repository.category.CategoryRepository;
 import com.senla.aggregator.repository.product.ProductRepository;
+import com.senla.aggregator.repository.vendor.VendorRepository;
+import com.senla.aggregator.specification.ProductSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,79 +38,107 @@ public class ProductServiceImpl implements ProductService {
 
     private final CategoryRepository categoryRepository;
 
+    private final VendorRepository vendorRepository;
+
     private final ProductMapper productMapper;
 
     @Override
     @Transactional
-    public ProductSimpleViewDto createProduct(ProductSimpleViewDto dto) {
-        Product product = productMapper.toProduct(dto);
-        List<Category> categories = new ArrayList<>();
+    public ProductDetailedDto getProduct(UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND));
 
-        for (String categoryName : dto.getCategories()) {
-            Category category = categoryRepository.findByName(categoryName)
-                    .orElseGet(() -> {
-                        Category newCategory = new Category();
-                        newCategory.setName(categoryName);
-                        return newCategory;
-                    });
-            categories.add(category);
-        }
-
-        product.setCategories(categories);
-        product.setCreationType(ProductCreationType.AUTOMATICALLY_ADDED);
-
-        productRepository.save(product);
-
-        return productMapper.toProductSimpleViewDto(product);
+        return productMapper.toProductDetailedDto(product);
     }
 
     @Override
-    public List<ProductDetailedViewDto> getAllProducts(int pageNo, int pageSize) {
-        return productRepository.findWithCategoriesBy(PageRequest.of(pageNo, pageSize,
-                Sort.by("name")))
+    @Transactional
+    public ProductInfoDto createProduct(ProductCreateDto dto, Boolean isCreatorTrusted) {
+        Product product = productMapper.toProduct(dto);
+
+        product.setVendor(vendorRepository.getReferenceById(dto.getVendorId()));
+        product.setCategories(dto.getCategoriesIds()
                 .stream()
-                .map(productMapper::toProductDetailedViewDto)
+                .map(categoryRepository::getReferenceById)
+                .toList());
+        product.setVerified(isCreatorTrusted);
+
+        return productMapper.toProductInfoDto(productRepository.save(product));
+    }
+
+    @Override
+    @Transactional
+    public List<ProductNameDescriptionDto> getProductsNameDescription(UUID categoryId, int pageNo, int pageSize) {
+        return productRepository.findAllProductsInCategoryTree(categoryId, PageRequest.of(pageNo, pageSize,
+                        Sort.by(Product_.NAME)))
+                .stream()
+                .map(productMapper::toProductNameDescriptionDto)
                 .toList();
     }
 
     @Override
     @Transactional
-    public ProductSimpleViewDto updateProduct(ProductUpdateDto dto, UUID id) {
-        Product product = productRepository.findWithCategoriesById(id)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND));
-
-        productMapper.updateProduct(product, dto);
-
-        return productMapper.toProductSimpleViewDto(product);
+    public List<ProductPreviewDto> getProductsPreviews(UUID categoryId, int pageNo, int pageSize) {
+        return productRepository.findAllProductsInCategoryTree(categoryId, PageRequest.of(pageNo, pageSize,
+                        Sort.by(Product_.NAME)))
+                .stream()
+                .map(productMapper::toProductPreviewDto)
+                .toList();
     }
 
     @Override
     @Transactional
-    public ProductSimpleViewDto customizeProduct(ProductUpdateDto dto, UUID id) {
-        Product product = productRepository.findWithCategoriesById(id)
-                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND));
-        List<Category> categories = new ArrayList<>(product.getCategories());
-
-        Product customizedProduct = new Product();
-        customizedProduct.setName(dto.getName());
-
-        if (Objects.nonNull(dto.getDescription())) {
-            customizedProduct.setDescription(dto.getDescription());
-        } else {
-            customizedProduct.setDescription(product.getDescription());
+    public List<ProductPreviewDto> filterProducts(ProductFilterDto dto,
+                                                  int pageNo,
+                                                  int pageSize) {
+        List<String> childCategoryNames = new ArrayList<>();
+        if (Objects.nonNull(dto.getCategoryName()) && !dto.getCategoryName().isBlank()) {
+            childCategoryNames = categoryRepository.findChildren(dto.getCategoryName())
+                    .stream()
+                    .map(Category::getName)
+                    .toList();
         }
 
-        customizedProduct.setParent(product);
-        customizedProduct.setCategories(categories);
-        customizedProduct.setCreationType(ProductCreationType.CUSTOM);
+        Specification<Product> specification = ProductSpecification.buildSpecification(
+                dto.getProductName(),
+                dto.getVendorName(),
+                dto.getVerificationStatus(),
+                dto.getMinPrice(),
+                dto.getMinOffersCount(),
+                dto.getAverageRating(),
+                childCategoryNames,
+                dto.getCharacteristics()
+        );
 
-        productRepository.save(customizedProduct);
+        List<Product> products = productRepository.findAll(specification, PageRequest.of(pageNo, pageSize,
+                        Sort.by(Product_.NAME)))
+                .toList();
 
-        return productMapper.toProductSimpleViewDto(customizedProduct);
+        return products.stream()
+                .map(productMapper::toProductPreviewDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public int verifyProducts(List<UUID> productIds) {
+        return productRepository.verifyProducts(productIds);
+    }
+
+    @Override
+    @Transactional
+    public ProductInfoDto updateProduct(ProductUpdateDto dto, UUID id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND));
+
+        productMapper.updateProduct(product, dto);
+        product.setVerified(true);
+
+        return productMapper.toProductInfoDto(product);
     }
 
     @Override
     public void deleteProduct(UUID id) {
-       productRepository.deleteById(id);
+        productRepository.deleteById(id);
     }
 }

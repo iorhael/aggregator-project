@@ -1,9 +1,6 @@
 package com.senla.aggregator.controller;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
-import com.senla.aggregator.dto.retailer.RetailerCreateDto;
-import com.senla.aggregator.dto.retailer.RetailerGetDto;
-import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
 import com.senla.aggregator.dto.store.StoreCreateDto;
 import com.senla.aggregator.dto.store.StoreGetDto;
 import com.senla.aggregator.dto.store.StoreUpdateDto;
@@ -28,7 +25,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.*;
+import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.ControllerMessages.STORE;
 
 @RestController
 @RequestMapping("api/stores")

@@ -1,9 +1,6 @@
 package com.senla.aggregator.dto.productCard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,29 +9,32 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ProductCardCreateDto {
+public class ProductCardDetailedDto {
 
-    @NotNull
-    @JsonProperty("product_id")
-    private UUID productId;
+    @JsonProperty("product_card_id")
+    private UUID id;
 
-    @NotBlank
+    @JsonProperty("name")
+    private String productName;
+
     @JsonProperty("description")
     private String description;
 
-    @Positive
-    @JsonProperty("warranty")
+    @JsonProperty("retailer_name")
+    private String retailerName;
+
+    @JsonProperty("vendor_name")
+    private String vendorName;
+
+    @JsonProperty("warranty_period")
     private Short warranty;
 
-    @Positive
     @JsonProperty("installment_period")
     private Short installmentPeriod;
 
-    @Positive
     @JsonProperty("max_delivery_time")
     private Short maxDeliveryTime;
 
-    @Positive
     @JsonProperty("price")
     private BigDecimal price;
 }

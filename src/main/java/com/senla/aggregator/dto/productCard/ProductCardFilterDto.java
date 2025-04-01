@@ -1,32 +1,22 @@
 package com.senla.aggregator.dto.productCard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
-public class ProductCardUpdateDto {
+public class ProductCardFilterDto {
 
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("retailer_name")
+    private String retailerName;
 
-    @Positive
     @JsonProperty("warranty")
     private Short warranty;
 
-    @Positive
     @JsonProperty("installment_period")
     private Short installmentPeriod;
 
-    @Positive
     @JsonProperty("max_delivery_time")
     private Short maxDeliveryTime;
-
-    @Positive
-    @JsonProperty("new_price")
-    private BigDecimal price;
 }

@@ -13,8 +13,6 @@ public interface CategoryService {
 
     CategoryGetDto getCategoryBy(UUID id);
 
-    CategoryGetDto getCategoryBy(String name);
-
     List<CategoryGetDto> getAllCategories(int pageNo, int pageSize);
 
     List<CategoryGetDto> getAllSubcategories(String parentName);

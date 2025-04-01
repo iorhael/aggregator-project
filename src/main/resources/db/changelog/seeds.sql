@@ -11,7 +11,7 @@ VALUES ('c765237f-2702-4a88-943d-8bbc2910f803', 'default_admin', 'admin@example.
        ('ca2d227c-f2df-45b8-acf4-443bc78d0b2b', 'default_user', 'user@example.com');
 
 INSERT INTO retailers(owner_id, name, description, email, website)
-VALUES ('f3315d1c-1ef4-4b61-aac4-ce6bc57a80a6', 'electrosila',
+VALUES ('ecaaa8a2-4100-4a9d-9b6f-f1f44f25fb13', 'electrosila',
         'We sell household electrical appliances at affordable prices', 'electrosila@example.com', 'electrosila.com'),
        ('41f7f2d7-0f95-4a7f-b19b-3794ebe1a9de', '7element',
         'From irons to powerful computers. You''ve come to the right place', '7element@example.com', '7element.com'),
@@ -65,32 +65,147 @@ SELECT id, '987 Birch St, Boston, MA, USA', '15556789012', schedule
 FROM store_of_everything_id,
      schedule_2;
 
-INSERT INTO products(name, description, parent_id, creation_type)
-VALUES ('Apple iPhone 15 Pro',
+INSERT INTO vendors(name, description)
+VALUES ('Apple',
+        'Innovative technology company known for premium smartphones, computers, and wearables, combining sleek design with cutting-edge performance'),
+       ('Dell',
+        'Leading computer manufacturer specializing in high-performance laptops, desktops, and enterprise solutions for professionals and creatives'),
+       ('Sony',
+        'Global electronics giant renowned for audio devices, gaming consoles, and entertainment technology, delivering exceptional sound and imaging quality'),
+       ('Samsung',
+        'South Korean tech powerhouse producing smartphones, wearables, and home appliances, known for innovation and high-quality displays'),
+       ('The North Face',
+        'Outdoor apparel and gear brand focused on durability and performance, trusted by adventurers for extreme weather conditions'),
+       ('Nike',
+        'World’s most iconic sportswear brand, designing athletic shoes and apparel with advanced technology for athletes and casual wearers alike');
+
+INSERT INTO products(vendor_id, name, description, characteristics, verified)
+VALUES ((SELECT id FROM vendors WHERE name = 'Apple'),
+        'Apple iPhone 15 Pro',
         'Flagship smartphone from Apple featuring a 6.1-inch OLED display, A17 Bionic chip, triple 48 MP camera system, and 5G support. Available in Space Black, Silver, Gold, and Deep Purple',
-        NULL, 'AUTOMATICALLY_ADDED'),
-       ('Dell XPS 13 (2023 Model)',
+        '{
+          "general": {
+            "type": "smartphone",
+            "purpose": "mobile communication, multimedia",
+            "color": "titanium black",
+            "size": "146.6 x 70.6 x 8.25 mm"
+          },
+          "specs": {
+            "display": "\"6.1\" Super Retina XDR",
+            "processor": "A17 Pro",
+            "storage": "128GB/256GB/512GB/1TB",
+            "camera": "Triple 48MP + 12MP + 12MP",
+            "battery": "3274 mAh"
+          },
+          "weight": {
+            "net": "187 g",
+            "with_package": "220 g"
+          }
+        }'::jsonb, TRUE),
+       ((SELECT id FROM vendors WHERE name = 'Dell'),
+        'Dell XPS 13 (2023 Model)',
         'Ultrabook with a 13.4-inch 4K UHD+ display, Intel Core i7 12th Gen processor, 16 GB RAM, and 512 GB SSD. Lightweight (1.2 kg) and compact, perfect for work and travel',
-        NULL, 'AUTOMATICALLY_ADDED'),
-       ('Sony WH-1000XM5',
+        '{
+          "general": {
+            "type": "laptop",
+            "purpose": "work, entertainment",
+            "color": "platinum silver",
+            "size": "295.3 x 199.04 x 13.99 mm"
+          },
+          "specs": {
+            "display": "13.4\" 4K UHD+ Touch",
+            "processor": "Intel Core i7-1360P",
+            "ram": "16GB LPDDR5",
+            "storage": "512GB SSD",
+            "os": "Windows 11 Pro"
+          },
+          "weight": {
+            "net": "1.17 kg",
+            "with_package": "1.8 kg"
+          }
+        }'::jsonb, TRUE),
+       ((SELECT id FROM vendors WHERE name = 'Sony'),
+        'Sony WH-1000XM5',
         'Wireless noise-canceling headphones with 30-hour battery life and support for high-quality audio via LDAC. Ideal for work, travel, and music listening',
-        NULL, 'AUTOMATICALLY_ADDED'),
-       ('Samsung Galaxy Watch 6 Classic',
+        '{
+          "general": {
+            "type": "headphones",
+            "purpose": "wireless noise-canceling",
+            "color": "black",
+            "size": "foldable design"
+          },
+          "specs": {
+            "driver": "30mm dynamic",
+            "battery": "30 hours (NC on)",
+            "bluetooth": "5.2",
+            "microphones": "8 for noise canceling"
+          },
+          "weight": {
+            "net": "250 g",
+            "with_case": "320 g"
+          }
+        }'::jsonb, TRUE),
+       ((SELECT id FROM vendors WHERE name = 'Samsung'),
+        'Samsung Galaxy Watch 6 Classic',
         'Smartwatch with a 1.4-inch round AMOLED display, Android and iOS compatibility, heart rate monitoring, SpO2 tracking, and GPS. Water-resistant up to 5 ATM, with up to 40 hours of battery life',
-        NULL, 'AUTOMATICALLY_ADDED'),
-       ('The North Face McMurdo Parka III',
+        '{
+          "general": {
+            "type": "smartwatch",
+            "purpose": "fitness tracking, notifications",
+            "color": "silver",
+            "size": "42mm/46mm case"
+          },
+          "specs": {
+            "display": "1.5\" Super AMOLED",
+            "os": "Wear OS",
+            "sensors": "heart rate, blood pressure, ECG",
+            "waterproof": "5ATM + IP68"
+          },
+          "weight": {
+            "net": "59 g (42mm)",
+            "with_strap": "85 g"
+          }
+        }'::jsonb, TRUE),
+       ((SELECT id FROM vendors WHERE name = 'The North Face'),
+        'The North Face McMurdo Parka III',
         'Warm winter jacket with ThermoBall™ Eco insulation, waterproof coating, and a fur-lined hood. Designed for extreme cold weather. Available in black, blue, and green',
-        NULL, 'AUTOMATICALLY_ADDED'),
-       ('Nike Air Max 270 React',
+        '{
+          "general": {
+            "type": "winter jacket",
+            "purpose": "extreme cold protection",
+            "color": "black",
+            "size": "XS-XXL"
+          },
+          "materials": {
+            "outer": "recycled polyester",
+            "insulation": "600-fill goose down",
+            "lining": "recycled nylon"
+          },
+          "weight": {
+            "net": "1.4 kg (size M)",
+            "with_package": "1.7 kg"
+          }
+        }'::jsonb, TRUE),
+       ((SELECT id FROM vendors WHERE name = 'Nike'),
+        'Nike Air Max 270 React',
         'Step into comfort and style with the Nike Air Max 270 React. Designed for runners and casual wearers alike, these shoes feature a lightweight React foam midsole for responsive cushioning and a Max Air unit for unparalleled comfort. The breathable mesh upper ensures all-day ventilation, while the durable rubber outsole provides excellent traction. Available in multiple colors to match your style. Perfect for running, gym workouts, or everyday wear',
-        NULL, 'AUTOMATICALLY_ADDED');
-INSERT INTO products(name, description, parent_id, creation_type)
-VALUES ('Premium Noise-Canceling Wireless Headphones XM5 by Sony',
-        'Experience unparalleled sound quality with the Sony XM5 Wireless Headphones. Designed for those who demand the best, these headphones feature advanced noise-canceling technology, 30-hour battery life, and seamless Bluetooth connectivity. Perfect for music lovers, frequent travelers, and professionals who need focus in any environment. Elevate your audio experience with Sony''s cutting-edge technology',
-        (SELECT id FROM products WHERE name = 'Sony WH-1000XM5'), 'CUSTOM'),
-       ('Pro Fitness Smartwatch Galaxy 6 Classic by Samsung',
-        'Stay connected and in control with the Samsung Galaxy 6 Classic Smartwatch. Designed for fitness enthusiasts and professionals, this smartwatch features a sleek round AMOLED display, advanced health monitoring (heart rate, SpO2, sleep tracking), and built-in GPS. With up to 40 hours of battery life and water resistance up to 5 ATM, it’s perfect for workouts, outdoor adventures, and everyday use. Elevate your lifestyle with Samsung’s cutting-edge wearable technology',
-        (SELECT id FROM products WHERE name = 'Samsung Galaxy Watch 6 Classic'), 'CUSTOM');
+        '{
+          "general": {
+            "type": "sneakers",
+            "purpose": "running, casual",
+            "color": "white/black/red",
+            "size": "US 5-13"
+          },
+          "specs": {
+            "upper": "breathable mesh",
+            "sole": "Nike React foam + Air Max unit",
+            "closure": "lace-up"
+          },
+          "weight": {
+            "net": "310 g (per shoe size 9)",
+            "pair_with_box": "850 g"
+          }
+        }'::jsonb, TRUE);
 
 INSERT INTO categories(name, description, parent_id)
 VALUES ('Electronics', 'Devices and gadgets for everyday use', NULL),
@@ -141,143 +256,64 @@ WITH electrosila_id AS (SELECT id FROM retailers WHERE name = 'electrosila'),
      iphone_id AS (SELECT id FROM products WHERE name = 'Apple iPhone 15 Pro'),
      dell_xps_id AS (SELECT id FROM products WHERE name = 'Dell XPS 13 (2023 Model)'),
      sony_xm5_id AS (SELECT id FROM products WHERE name = 'Sony WH-1000XM5'),
-     custom_sony_xm5_id AS (SELECT id
-                            FROM products
-                            WHERE name = 'Premium Noise-Canceling Wireless Headphones XM5 by Sony'),
      samsung_watch_id AS (SELECT id FROM products WHERE name = 'Samsung Galaxy Watch 6 Classic'),
-     custom_samsung_watch_id AS (SELECT id
-                                 FROM products
-                                 WHERE name = 'Pro Fitness Smartwatch Galaxy 6 Classic by Samsung'),
      north_face_id AS (SELECT id FROM products WHERE name = 'The North Face McMurdo Parka III'),
-     nike_air_max_id AS (SELECT id FROM products WHERE name = 'Nike Air Max 270 React'),
-
-     iphone_props AS (SELECT '{
-       "discount": "10%",
-       "installment_available": true,
-       "warranty": "1 year",
-       "color_options": [
-         "Space Black",
-         "Silver",
-         "Gold",
-         "Deep Purple"
-       ]
-     }'::jsonb AS additional_properties),
-     dell_xps_props AS (SELECT '{
-       "discount": "5%",
-       "installment_available": true,
-       "warranty": "2 years",
-       "ram_options": [
-         "16GB",
-         "32GB"
-       ]
-     }'::jsonb AS additional_properties),
-     sony_xm5_props AS (SELECT '{
-       "discount": "15%",
-       "installment_available": false,
-       "warranty": "1 year",
-       "color_options": [
-         "Black",
-         "Silver"
-       ]
-     }'::jsonb AS additional_properties),
-     samsung_watch_props AS (SELECT '{
-       "discount": "0%",
-       "installment_available": true,
-       "warranty": "1 year",
-       "strap_options": [
-         "Leather",
-         "Silicone"
-       ]
-     }'::jsonb AS additional_properties),
-     north_face_props AS (SELECT '{
-       "discount": "20%",
-       "installment_available": false,
-       "warranty": "6 months",
-       "size_options": [
-         "S",
-         "M",
-         "L",
-         "XL"
-       ]
-     }'::jsonb AS additional_properties),
-     nike_air_max_props AS (SELECT '{
-       "discount": "10%",
-       "installment_available": true,
-       "warranty": "3 months",
-       "color_options": [
-         "Black",
-         "White",
-         "Blue"
-       ]
-     }'::jsonb AS additional_properties)
-
+     nike_air_max_id AS (SELECT id FROM products WHERE name = 'Nike Air Max 270 React')
 INSERT
-INTO product_cards (product_id, retailer_id, additional_properties)
+INTO product_cards (product_id, retailer_id, description, warranty, installment_period, max_delivery_time)
 
 -- electrosila product_cards (without iphone, with custom sony x5)
-SELECT dell_xps_id.id, electrosila_id.id, dell_xps_props.additional_properties
+SELECT dell_xps_id.id, electrosila_id.id, 'Test description', 10, 12, 3
 FROM dell_xps_id,
-     electrosila_id,
-     dell_xps_props
+     electrosila_id
 UNION ALL
-SELECT custom_sony_xm5_id.id, electrosila_id.id, sony_xm5_props.additional_properties
-FROM custom_sony_xm5_id,
-     electrosila_id,
-     sony_xm5_props
+SELECT sony_xm5_id.id, electrosila_id.id, 'Test description', 8, NULL, NULL
+FROM sony_xm5_id,
+     electrosila_id
 UNION ALL
-SELECT samsung_watch_id.id, electrosila_id.id, samsung_watch_props.additional_properties
+SELECT samsung_watch_id.id, electrosila_id.id, 'Test description', 2, 2, 2
 FROM samsung_watch_id,
-     electrosila_id,
-     samsung_watch_props
+     electrosila_id
 UNION ALL
 
 -- 7element product_cards (without dell xps, with custom samsung watch)
-SELECT iphone_id.id, seventh_element_id.id, iphone_props.additional_properties
+SELECT iphone_id.id, seventh_element_id.id, 'Test description', 6, 6, 4
 FROM iphone_id,
-     seventh_element_id,
-     iphone_props
+     seventh_element_id
 UNION ALL
-SELECT sony_xm5_id.id, seventh_element_id.id, dell_xps_props.additional_properties
+SELECT sony_xm5_id.id, seventh_element_id.id, 'Test description', 6, 6, 2
 FROM sony_xm5_id,
-     seventh_element_id,
-     dell_xps_props
+     seventh_element_id
 UNION ALL
-SELECT custom_samsung_watch_id.id, seventh_element_id.id, samsung_watch_props.additional_properties
-FROM custom_samsung_watch_id,
-     seventh_element_id,
-     samsung_watch_props
+SELECT samsung_watch_id.id, seventh_element_id.id, 'Test description', NULL, 4, 3
+FROM samsung_watch_id,
+     seventh_element_id
 UNION ALL
 
 -- store_of_everything product_cards (all products, without custom)
-SELECT iphone_id.id, store_of_everything_id.id, iphone_props.additional_properties
+SELECT iphone_id.id, store_of_everything_id.id, 'Test description', 2, 2, 5
 FROM iphone_id,
-     store_of_everything_id,
-     iphone_props
+     store_of_everything_id
 UNION ALL
-SELECT dell_xps_id.id, store_of_everything_id.id, dell_xps_props.additional_properties
+SELECT dell_xps_id.id, store_of_everything_id.id, 'Test description', 5, 5, 10
 FROM dell_xps_id,
-     store_of_everything_id,
-     dell_xps_props
+     store_of_everything_id
 UNION ALL
-SELECT sony_xm5_id.id, store_of_everything_id.id, sony_xm5_props.additional_properties
+SELECT sony_xm5_id.id, store_of_everything_id.id, 'Test description', 1, NULL, 1
 FROM sony_xm5_id,
-     store_of_everything_id,
-     sony_xm5_props
+     store_of_everything_id
 UNION ALL
-SELECT samsung_watch_id.id, store_of_everything_id.id, samsung_watch_props.additional_properties
+SELECT samsung_watch_id.id, store_of_everything_id.id, 'Test description', 10, 10, NULL
 FROM samsung_watch_id,
-     store_of_everything_id,
-     samsung_watch_props
+     store_of_everything_id
 UNION ALL
-SELECT north_face_id.id, store_of_everything_id.id, north_face_props.additional_properties
+SELECT north_face_id.id, store_of_everything_id.id, 'Test description', 10, 10, 20
 FROM north_face_id,
-     store_of_everything_id,
-     north_face_props
+     store_of_everything_id
 UNION ALL
-SELECT nike_air_max_id.id, store_of_everything_id.id, nike_air_max_props.additional_properties
+SELECT nike_air_max_id.id, store_of_everything_id.id, 'Test description', NULL, NULL, NULL
 FROM nike_air_max_id,
-     store_of_everything_id,
-     nike_air_max_props;
+     store_of_everything_id;
 
 INSERT INTO price_histories (card_id, price, updated_at)
 SELECT pc.id                                  AS card_id,
@@ -293,6 +329,70 @@ FROM product_cards pc
          JOIN products p ON pc.product_id = p.id
          CROSS JOIN generate_series(1, 2);
 
+WITH default_user AS (SELECT id FROM users WHERE username = 'default_user'),
+     products AS (SELECT id, name
+                  FROM products
+                  WHERE name IN (
+                                 'Apple iPhone 15 Pro',
+                                 'Dell XPS 13 (2023 Model)',
+                                 'Sony WH-1000XM5',
+                                 'Samsung Galaxy Watch 6 Classic',
+                                 'The North Face McMurdo Parka III',
+                                 'Nike Air Max 270 React'
+                      ))
+
+INSERT
+INTO comments (author_id, product_id, content, product_rating)
+SELECT (SELECT id FROM default_user) AS author_id,
+       p.id                          AS product_id,
+       CASE
+           WHEN p.name = 'Apple iPhone 15 Pro' THEN
+               CASE
+                   WHEN sub.row_num = 1 THEN 'Great phone, the camera is amazing!'
+                   WHEN sub.row_num = 2 THEN 'Fast performance and excellent display.'
+                   WHEN sub.row_num = 3 THEN 'A bit pricey but the quality is top-notch.'
+                   END
+           WHEN p.name = 'Dell XPS 13 (2023 Model)' THEN
+               CASE
+                   WHEN sub.row_num = 1 THEN 'The best laptop for work, very lightweight.'
+                   WHEN sub.row_num = 2 THEN 'The screen is gorgeous, battery lasts long.'
+                   WHEN sub.row_num = 3 THEN 'Gets a bit noisy under load but overall excellent.'
+                   END
+           WHEN p.name = 'Sony WH-1000XM5' THEN
+               CASE
+                   WHEN sub.row_num = 1 THEN 'Best noise-canceling headphones ever!'
+                   WHEN sub.row_num = 2 THEN 'Very comfortable with clean, deep sound.'
+                   WHEN sub.row_num = 3 THEN 'Expensive but worth every penny.'
+                   END
+           WHEN p.name = 'Samsung Galaxy Watch 6 Classic' THEN
+               CASE
+                   WHEN sub.row_num = 1 THEN 'Excellent smartwatch with many features.'
+                   WHEN sub.row_num = 2 THEN 'Battery life could be better.'
+                   WHEN sub.row_num = 3 THEN 'Stylish design, intuitive interface.'
+                   END
+           WHEN p.name = 'The North Face McMurdo Parka III' THEN
+               CASE
+                   WHEN sub.row_num = 1 THEN 'Extremely warm jacket, fits perfectly.'
+                   WHEN sub.row_num = 2 THEN 'High-quality craftsmanship.'
+                   WHEN sub.row_num = 3 THEN 'A bit heavy but keeps you very warm.'
+                   END
+           WHEN p.name = 'Nike Air Max 270 React' THEN
+               CASE
+                   WHEN sub.row_num = 1 THEN 'Very comfortable sneakers!'
+                   WHEN sub.row_num = 2 THEN 'Stylish and lightweight, great for everyday wear.'
+                   WHEN sub.row_num = 3 THEN 'The sole could be a bit softer.'
+                   END
+           END                       AS content,
+       CASE
+           WHEN sub.row_num = 1 THEN 5
+           WHEN sub.row_num = 2 THEN 4
+           WHEN sub.row_num = 3 THEN 4
+           END                       AS product_rating
+FROM products p
+         CROSS JOIN
+         (SELECT 1 AS row_num UNION SELECT 2 UNION SELECT 3) AS sub
+ORDER BY p.id, sub.row_num;
+
 /* liquibase rollback
    rollback TRUNCATE users CASCADE
    rollback TRUNCATE retailers CASCADE
@@ -301,5 +401,7 @@ FROM product_cards pc
    rollback TRUNCATE product_cards CASCADE
    rollback TRUNCATE price_histories CASCADE
    rollback TRUNCATE categories CASCADE
+   rollback TRUNCATE vendors CASCADE
    rollback TRUNCATE product_categories CASCADE
+   rollback TRUNCATE comments CASCADE
  */

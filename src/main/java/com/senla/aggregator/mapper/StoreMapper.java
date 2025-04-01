@@ -1,11 +1,8 @@
 package com.senla.aggregator.mapper;
 
-import com.senla.aggregator.dto.retailer.RetailerGetDto;
-import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
 import com.senla.aggregator.dto.store.StoreCreateDto;
 import com.senla.aggregator.dto.store.StoreGetDto;
 import com.senla.aggregator.dto.store.StoreUpdateDto;
-import com.senla.aggregator.model.Retailer;
 import com.senla.aggregator.model.Store;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

@@ -1,8 +1,5 @@
 package com.senla.aggregator.service.store;
 
-import com.senla.aggregator.dto.retailer.RetailerCreateDto;
-import com.senla.aggregator.dto.retailer.RetailerGetDto;
-import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
 import com.senla.aggregator.dto.store.StoreCreateDto;
 import com.senla.aggregator.dto.store.StoreGetDto;
 import com.senla.aggregator.dto.store.StoreUpdateDto;

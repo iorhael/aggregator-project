@@ -2,7 +2,9 @@ package com.senla.aggregator.controller;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.dto.productCard.ProductCardCreateDto;
-import com.senla.aggregator.dto.productCard.ProductCardGetDto;
+import com.senla.aggregator.dto.productCard.ProductCardDetailedDto;
+import com.senla.aggregator.dto.productCard.ProductCardFilterDto;
+import com.senla.aggregator.dto.productCard.ProductCardPreviewDto;
 import com.senla.aggregator.dto.productCard.ProductCardUpdateDto;
 import com.senla.aggregator.service.productCard.ProductCardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,66 +25,44 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.*;
+import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.ControllerMessages.PRODUCT_CARD;
 
 @RestController
 @RequestMapping("api/product_cards")
 @RequiredArgsConstructor
-@Tag(name = "Products Cards Resource", description = "View and customize product cards")
+@Tag(name = "Product Cards Resource", description = "CRUD and filtration")
 public class ProductCardController {
 
     private final ProductCardService productCardService;
 
-    @GetMapping("/retailer/{retailerName}")
-    public List<ProductCardGetDto> findAllProductCardsOfRetailer(@RequestParam(defaultValue = "0") int pageNo,
-                                                                 @RequestParam(defaultValue = "15") int pageSize,
-                                                                 @PathVariable String retailerName) {
-        return productCardService.getAllProductCardsOfRetailer(retailerName, pageNo, pageSize);
+    @GetMapping("/{id}")
+    public ProductCardDetailedDto findProductCard(@PathVariable UUID id) {
+        return productCardService.getProductCard(id);
     }
 
-    @GetMapping("/search")
-    public List<ProductCardGetDto> searchProductCards(
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String retailerName,
-            @RequestParam(required = false) String discount,
-            @RequestParam(required = false) Boolean installmentAvailable,
-            @RequestParam(required = false) String color,
-            @RequestParam(required = false) String ram,
-            @RequestParam(required = false) String size,
-            @RequestParam(required = false) String strap,
-            @RequestParam(required = false) String warranty,
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "15") int pageSize
-    ) {
-        return productCardService.getProductCardsBySpecification(
-                productName,
-                retailerName,
-                discount,
-                installmentAvailable,
-                color,
-                ram,
-                size,
-                strap,
-                warranty,
-                pageNo,
-                pageSize
-        );
-    }
-
-    @GetMapping("/my")
+    @GetMapping("/retailer")
     @PreAuthorize("hasRole('RETAILER')")
-    public List<ProductCardGetDto> findMyProductCards(@RequestParam(defaultValue = "0") int pageNo,
-                                                      @RequestParam(defaultValue = "15") int pageSize,
-                                                      Principal principal) {
+    public List<ProductCardDetailedDto> findRetailerProductCards(@RequestParam(defaultValue = "0") int pageNo,
+                                                                 @RequestParam(defaultValue = "15") int pageSize,
+                                                                 Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
-        return productCardService.getMyProductCards(ownerId, pageNo, pageSize);
+        return productCardService.getRetailerProductCards(ownerId, pageNo, pageSize);
+    }
+
+    @PostMapping("/search/{productId}")
+    public List<ProductCardPreviewDto> searchProductCards(@RequestBody ProductCardFilterDto dto,
+                                                          @PathVariable UUID productId,
+                                                          @RequestParam(defaultValue = "0") int pageNo,
+                                                          @RequestParam(defaultValue = "15") int pageSize) {
+        return productCardService.filterProductCards(dto, productId, pageNo, pageSize);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('RETAILER')")
-    public ProductCardGetDto createProduct(@Valid @RequestBody ProductCardCreateDto product,
-                                           Principal principal) {
+    public ProductCardPreviewDto createProduct(@Valid @RequestBody ProductCardCreateDto product,
+                                               Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
         return productCardService.createProductCard(product, ownerId);
@@ -90,9 +70,9 @@ public class ProductCardController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('RETAILER')")
-    public ProductCardGetDto updateProduct(@Valid @RequestBody ProductCardUpdateDto product,
-                                           @PathVariable UUID id,
-                                           Principal principal) {
+    public ProductCardDetailedDto updateProduct(@Valid @RequestBody ProductCardUpdateDto product,
+                                                @PathVariable UUID id,
+                                                Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
         return productCardService.updateProductCard(product, id, ownerId);

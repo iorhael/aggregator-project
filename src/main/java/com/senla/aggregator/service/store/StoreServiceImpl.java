@@ -6,8 +6,8 @@ import com.senla.aggregator.dto.store.StoreUpdateDto;
 import com.senla.aggregator.mapper.StoreMapper;
 import com.senla.aggregator.model.Retailer;
 import com.senla.aggregator.model.Store;
-import com.senla.aggregator.repository.store.StoreRepository;
 import com.senla.aggregator.repository.retailer.RetailerRepository;
+import com.senla.aggregator.repository.store.StoreRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.service.exception.ExceptionMessages.*;
+import static com.senla.aggregator.service.exception.ExceptionMessages.RETAILER_NOT_FOUND;
+import static com.senla.aggregator.service.exception.ExceptionMessages.STORE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +87,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void deleteStore(UUID id, UUID ownerId) {
         storeRepository.findByIdAndRetailerOwnerId(id, ownerId)
-                        .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND));
 
         storeRepository.deleteById(id);
     }

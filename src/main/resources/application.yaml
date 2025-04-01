@@ -15,6 +15,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        cache:
+          region:
+            factory_class: org.redisson.hibernate.RedissonRegionFactory
+          use_query_cache: true
+          use_second_level_cache: true
 
   security:
     oauth2:
@@ -22,6 +27,9 @@ spring:
         jwt:
           issuer-uri: http://${KC_HOST}:8080/realms/${KC_REALM}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+  jackson:
+    default-property-inclusion: non_null
 
 keycloak:
   server-url: http://${KC_HOST}:8080

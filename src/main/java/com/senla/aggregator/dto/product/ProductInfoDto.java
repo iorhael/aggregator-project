@@ -5,9 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
-public class ProductUpdateDto {
+public class ProductInfoDto {
+
+    @JsonProperty("id")
+    private UUID id;
 
     @JsonProperty("name")
     private String name;
@@ -15,6 +20,9 @@ public class ProductUpdateDto {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("technical_characteristics")
+    @JsonProperty("characteristics")
     private JsonNode characteristics;
+
+    @JsonProperty("is_verified")
+    private Boolean verified;
 }

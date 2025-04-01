@@ -5,8 +5,8 @@ import com.senla.aggregator.dto.retailer.RetailerGetDto;
 import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
 import com.senla.aggregator.mapper.RetailerMapper;
 import com.senla.aggregator.model.Retailer;
-import com.senla.aggregator.repository.user.UserRepository;
 import com.senla.aggregator.repository.retailer.RetailerRepository;
+import com.senla.aggregator.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.service.exception.ExceptionMessages.*;
+import static com.senla.aggregator.service.exception.ExceptionMessages.RETAILER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
