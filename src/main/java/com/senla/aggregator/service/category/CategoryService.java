@@ -11,7 +11,7 @@ public interface CategoryService {
 
     CategoryGetDto createCategory(CategoryCreateDto category);
 
-    CategoryGetDto getCategoryBy(UUID id);
+    CategoryGetDto getCategory(UUID id);
 
     List<CategoryGetDto> getAllCategories(int pageNo, int pageSize);
 

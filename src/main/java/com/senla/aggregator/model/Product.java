@@ -37,6 +37,51 @@ import java.util.UUID;
 @Setter
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private UUID id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "characteristics")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private JsonNode characteristics;
+
+    @Column(name = "verified")
+    private Boolean verified;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private Instant updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn(name = "product_id")
+    private ProductSummary summary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    private List<ProductCard> cards = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "product")
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    private List<Favorite> favorites = new ArrayList<>();
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "product_categories",
@@ -44,36 +89,4 @@ public class Product {
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     List<Category> categories = new ArrayList<>();
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "description")
-    private String description;
-    @Column(name = "characteristics")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private JsonNode characteristics;
-    @Column(name = "verified")
-    private Boolean verified;
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private Instant createdAt;
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Instant updatedAt;
-    @OneToOne(fetch = FetchType.LAZY)
-    @PrimaryKeyJoinColumn(name = "product_id")
-    private ProductSummary summary;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
-    private List<ProductCard> cards = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "product")
-    private List<Review> reviews = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
-    private List<Favorite> favorites = new ArrayList<>();
 }

@@ -13,6 +13,7 @@ import com.senla.aggregator.service.product.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -68,6 +70,7 @@ public class ProductController {
 
     @PostMapping
     @PreAuthorize("hasRole('RETAILER')")
+    @ResponseStatus(HttpStatus.CREATED)
     public ProductInfoDto createProduct(@Valid @RequestBody ProductCreateDto product, Authentication authentication) {
         Boolean isCreatorTrusted = authentication.getAuthorities()
                 .contains(new SimpleGrantedAuthority(Role.ADMIN.getPrefixedRole()));

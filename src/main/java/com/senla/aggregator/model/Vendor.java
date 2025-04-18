@@ -26,16 +26,20 @@ import java.util.UUID;
 @Setter
 public class Vendor {
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "vendor")
-    List<Product> products = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private Instant createdAt;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "vendor")
+    List<Product> products = new ArrayList<>();
 }

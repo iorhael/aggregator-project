@@ -48,7 +48,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<StoreGetDto> getAllStores(int pageNo, int pageSize) {
-        return storeRepository.findWithRetailerBy(PageRequest.of(pageNo, pageSize,
+        return storeRepository.findAllWithRetailerBy(PageRequest.of(pageNo, pageSize,
                         Sort.by("retailer.name", "address")))
                 .stream()
                 .map(storeMapper::toStoreGetDto)
@@ -65,8 +65,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreGetDto> getStoresOfRetailer(String retailerName, int pageNo, int pageSize) {
-        return storeRepository.findByRetailerName(retailerName, PageRequest.of(pageNo, pageSize,
+    public List<StoreGetDto> getStoresOfRetailer(UUID retailerId, int pageNo, int pageSize) {
+        return storeRepository.findByRetailerId(retailerId, PageRequest.of(pageNo, pageSize,
                         Sort.by("address")))
                 .stream()
                 .map(storeMapper::toStoreGetDto)

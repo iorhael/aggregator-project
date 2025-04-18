@@ -66,7 +66,13 @@ public class RetailerServiceImpl implements RetailerService {
     }
 
     @Override
-    public void deleteRetailer(UUID ownerId) {
+    @Transactional
+    public void checkOwnershipAndDeleteRetailer(UUID ownerId) {
         retailerRepository.deleteByOwnerId(ownerId);
+    }
+
+    @Override
+    public void deleteRetailer(UUID retailerId) {
+        retailerRepository.deleteById(retailerId);
     }
 }

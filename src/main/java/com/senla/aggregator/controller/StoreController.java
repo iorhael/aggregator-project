@@ -42,11 +42,11 @@ public class StoreController {
         return storeService.getAllStores(pageNo, pageSize);
     }
 
-    @GetMapping("/{retailerName}")
-    public List<StoreGetDto> findAllStoresByRetailerName(@RequestParam(defaultValue = "0") int pageNo,
+    @GetMapping("/{retailerId}")
+    public List<StoreGetDto> findAllStoresByRetailerId(@RequestParam(defaultValue = "0") int pageNo,
                                                          @RequestParam(defaultValue = "15") int pageSize,
-                                                         @PathVariable String retailerName) {
-        return storeService.getStoresOfRetailer(retailerName, pageNo, pageSize);
+                                                         @PathVariable UUID retailerId) {
+        return storeService.getStoresOfRetailer(retailerId, pageNo, pageSize);
     }
 
     @PostMapping

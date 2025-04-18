@@ -15,7 +15,7 @@ public interface StoreService {
 
     List<StoreGetDto> getMyStores(UUID ownerId, int pageNo, int pageSize);
 
-    List<StoreGetDto> getStoresOfRetailer(String retailerName, int pageNo, int pageSize);
+    List<StoreGetDto> getStoresOfRetailer(UUID retailerId, int pageNo, int pageSize);
 
     StoreGetDto updateStore(StoreUpdateDto store, UUID ownerId);
 

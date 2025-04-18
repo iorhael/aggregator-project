@@ -15,13 +15,13 @@ public interface StoreRepository extends JpaRepository<Store, UUID> {
     Optional<Store> findByRetailerOwnerId(UUID ownerId);
 
     @EntityGraph(attributePaths = {"retailer"})
-    List<Store> findWithRetailerBy(Pageable pageable); // сортировка по имени ретейлера
+    List<Store> findAllWithRetailerBy(Pageable pageable); // сортировка по имени ретейлера
 
     @EntityGraph(attributePaths = {"retailer"})
     List<Store> findAllByRetailerOwnerId(UUID ownerId, Pageable pageable);
 
     @EntityGraph(attributePaths = {"retailer"})
-    List<Store> findByRetailerName(String retailerName, Pageable pageable);
+    List<Store> findByRetailerId(UUID retailerId, Pageable pageable);
 
     Optional<Store> findByIdAndRetailerOwnerId(UUID storeId, UUID ownerId);
 }

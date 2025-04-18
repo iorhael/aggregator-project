@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-    DEFAULT("DEFAULT_ROLE"),
-    AUTHOR("AUTHOR_ROLE"),
-    RETAILER("RETAILER_ROLE"),
-    ADMIN("ADMIN_ROLE");
+    DEFAULT("ROLE_DEFAULT"),
+    AUTHOR("ROLE_AUTHOR"),
+    RETAILER("ROLE_RETAILER"),
+    ADMIN("ROLE_ADMIN");
 
     private final String prefixedRole;
 }

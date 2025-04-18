@@ -10,6 +10,7 @@ import com.senla.aggregator.service.productCard.ProductCardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -61,7 +63,8 @@ public class ProductCardController {
 
     @PostMapping
     @PreAuthorize("hasRole('RETAILER')")
-    public ProductCardPreviewDto createProduct(@Valid @RequestBody ProductCardCreateDto product,
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductCardPreviewDto createProductCard(@Valid @RequestBody ProductCardCreateDto product,
                                                Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
@@ -70,7 +73,7 @@ public class ProductCardController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('RETAILER')")
-    public ProductCardDetailedDto updateProduct(@Valid @RequestBody ProductCardUpdateDto product,
+    public ProductCardDetailedDto updateProductCard(@Valid @RequestBody ProductCardUpdateDto product,
                                                 @PathVariable UUID id,
                                                 Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
@@ -80,7 +83,7 @@ public class ProductCardController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('RETAILER')")
-    public ResponseInfoDto deleteProduct(@PathVariable UUID id, Principal principal) {
+    public ResponseInfoDto deleteProductCard(@PathVariable UUID id, Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
         productCardService.deleteProductCard(id, ownerId);

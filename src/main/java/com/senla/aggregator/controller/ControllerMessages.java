@@ -10,9 +10,13 @@ public final class ControllerMessages {
 
     public static final String USER = "User";
     public static final String STORE = "Store";
+    public static final String REVIEW = "Review";
+    public static final String VENDOR = "Vendor";
     public static final String PRODUCT = "Product";
+    public static final String COMMENT = "Comment";
     public static final String CATEGORY = "Category";
     public static final String RETAILER = "Retailer";
+    public static final String FAVORITE = "Favorite";
     public static final String PRODUCT_CARD = "Product card";
 
     private ControllerMessages() {

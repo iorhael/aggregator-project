@@ -48,7 +48,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public CategoryGetDto findCategoryById(@PathVariable UUID id) {
-        return categoryService.getCategoryBy(id);
+        return categoryService.getCategory(id);
     }
 
     @PostMapping

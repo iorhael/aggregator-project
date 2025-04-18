@@ -17,5 +17,7 @@ public interface RetailerService {
 
     RetailerGetDto updateRetailer(RetailerUpdateDto retailer, UUID ownerId);
 
-    void deleteRetailer(UUID ownerId);
+    void checkOwnershipAndDeleteRetailer(UUID ownerId);
+
+    void deleteRetailer(UUID retailerId);
 }

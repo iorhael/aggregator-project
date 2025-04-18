@@ -8,6 +8,7 @@ CREATE TABLE favorites
     product_id UUID NOT NULL REFERENCES products,
     notes      TEXT,
     user_tag   VARCHAR(50),
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (user_id, product_id)
 );
 

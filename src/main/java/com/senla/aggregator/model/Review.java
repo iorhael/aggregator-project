@@ -9,6 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +21,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "reviews")
+@Cache(region = "reviewsCache", usage = CacheConcurrencyStrategy.READ_WRITE)
+@Getter
+@Setter
 public class Review {
 
     @Id

@@ -6,14 +6,18 @@ import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.dto.retailer.RetailerCreateDto;
 import com.senla.aggregator.dto.retailer.RetailerGetDto;
 import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
+import com.senla.aggregator.model.Role;
 import com.senla.aggregator.service.retailer.RetailerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,13 +30,12 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.RETAILER;
+import static com.senla.aggregator.controller.ControllerMessages.*;
 
 @RestController
 @RequestMapping("api/retailers")
 @RequiredArgsConstructor
-@Tag(name = "Retailers Resource", description = "Manage retailers")
+@Tag(name = "Retailers Resource", description = "CRUD")
 public class RetailerController {
 
     private final RetailerService retailerService;
@@ -71,10 +74,10 @@ public class RetailerController {
         return retailerService.updateRetailer(retailer, ownerId);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/me")
     @PreAuthorize("hasRole('RETAILER')")
     @VerifyPassword(password = "#dto.password")
-    public ResponseInfoDto deleteRetailer(@Valid @RequestBody PasswordDto dto,
+    public ResponseInfoDto deleteMyRetailer(@Valid @RequestBody PasswordDto dto,
                                           Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
@@ -82,6 +85,16 @@ public class RetailerController {
 
         return ResponseInfoDto.builder()
                 .message(String.format(DELETION_MESSAGE, RETAILER, ownerId))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseInfoDto deleteComment(@PathVariable UUID id, Authentication authentication) {
+        retailerService.deleteRetailer(id);
+
+        return ResponseInfoDto.builder()
+                .message(String.format(DELETION_MESSAGE, COMMENT, id))
                 .build();
     }
 }

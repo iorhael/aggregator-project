@@ -5,10 +5,12 @@ import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.mapper.CategoryMapper;
 import com.senla.aggregator.model.Category;
+import com.senla.aggregator.model.Category_;
 import com.senla.aggregator.repository.category.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryGetDto getCategoryBy(UUID id) {
+    public CategoryGetDto getCategory(UUID id) {
         return categoryRepository.findById(id)
                 .map(categoryMapper::toCategoryGetDto)
                 .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND));
@@ -49,7 +51,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryGetDto> getAllCategories(int pageNo, int pageSize) {
-        return categoryRepository.findAll(PageRequest.of(pageNo, pageSize))
+        return categoryRepository.findAll(PageRequest.of(pageNo, pageSize,
+                        Sort.by(Category_.NAME)))
                 .map(categoryMapper::toCategoryGetDto)
                 .toList();
     }

@@ -1,6 +1,7 @@
-package com.senla.aggregator.dto.product;
+package com.senla.aggregator.dto.favorite;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.senla.aggregator.model.UserTag;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,13 +10,22 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ProductPreviewDto {
+public class FavoriteGetDto {
 
     @JsonProperty("id")
     private UUID id;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("product_id")
+    private UUID productId;
+
+    @JsonProperty("product_name")
+    private String productName;
+
+    @JsonProperty("user_notes")
+    private String notes;
+
+    @JsonProperty("user_tag")
+    private UserTag tag;
 
     @JsonProperty("vendor_name")
     private String vendorName;
