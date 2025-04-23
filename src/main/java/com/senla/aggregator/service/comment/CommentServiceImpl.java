@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void checkOwnershipAndDeleteComment(UUID commentId, UUID authorId) {
-       commentRepository.deleteByIdAndAuthorId(commentId, authorId);
+        commentRepository.deleteByIdAndAuthorId(commentId, authorId);
     }
 
     @Override

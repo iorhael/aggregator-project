@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.senla.aggregator.controller.ControllerMessages.DATA_INTEGRITY_VIOLATION_EXCEPTION;
-import static com.senla.aggregator.controller.ControllerMessages.VALIDATION_ERROR_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.DATA_INTEGRITY_VIOLATION_EXCEPTION;
+import static com.senla.aggregator.controller.helper.Messages.VALIDATION_ERROR_MESSAGE;
 
 @Slf4j
 @RestControllerAdvice

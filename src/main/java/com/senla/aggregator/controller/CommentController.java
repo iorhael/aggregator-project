@@ -27,8 +27,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.COMMENT;
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.COMMENT;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
 
 @RestController
 @RequestMapping("api/comments")
@@ -63,9 +63,9 @@ public class CommentController {
     public CommentGetDto updateComment(@Valid @RequestBody CommentUpdateDto dto,
                                        @PathVariable UUID id,
                                        Principal principal) {
-       UUID authorId = UUID.fromString(principal.getName());
+        UUID authorId = UUID.fromString(principal.getName());
 
-       return commentService.updateComment(dto, id, authorId);
+        return commentService.updateComment(dto, id, authorId);
     }
 
     @DeleteMapping("/{id}")

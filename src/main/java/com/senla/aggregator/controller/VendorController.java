@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.VENDOR;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.VENDOR;
 
 @RestController
 @RequestMapping("api/vendors")

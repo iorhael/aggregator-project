@@ -27,6 +27,6 @@ public interface ProductCardRepository extends JpaRepository<ProductCard, UUID>,
     List<ProductCard> findAllByRetailerOwnerId(UUID retailerOwnerId, Pageable pageable);
 
     @NonNull
-    @EntityGraph(value = "product-card-brief")
+    @EntityGraph(attributePaths = "latestPrice")
     Page<ProductCard> findAll(Specification<ProductCard> spec, @NonNull Pageable pageable);
 }

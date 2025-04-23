@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.*;
+import static com.senla.aggregator.controller.helper.Messages.*;
 
 @RestController
 @RequestMapping("api/users")

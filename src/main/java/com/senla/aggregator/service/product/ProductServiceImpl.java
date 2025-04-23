@@ -8,7 +8,6 @@ import com.senla.aggregator.dto.product.ProductNameDescriptionDto;
 import com.senla.aggregator.dto.product.ProductPreviewDto;
 import com.senla.aggregator.dto.product.ProductUpdateDto;
 import com.senla.aggregator.mapper.ProductMapper;
-import com.senla.aggregator.model.Category;
 import com.senla.aggregator.model.Product;
 import com.senla.aggregator.model.Product_;
 import com.senla.aggregator.repository.category.CategoryRepository;
@@ -93,10 +92,7 @@ public class ProductServiceImpl implements ProductService {
                                                   int pageSize) {
         List<String> childCategoryNames = new ArrayList<>();
         if (Objects.nonNull(dto.getCategoryName()) && !dto.getCategoryName().isBlank()) {
-            childCategoryNames = categoryRepository.findChildren(dto.getCategoryName())
-                    .stream()
-                    .map(Category::getName)
-                    .toList();
+            childCategoryNames = categoryRepository.getChildrenNamesBy(dto.getCategoryName());
         }
 
         Specification<Product> specification = ProductSpecification.buildSpecification(

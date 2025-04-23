@@ -6,7 +6,6 @@ import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.dto.retailer.RetailerCreateDto;
 import com.senla.aggregator.dto.retailer.RetailerGetDto;
 import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
-import com.senla.aggregator.model.Role;
 import com.senla.aggregator.service.retailer.RetailerService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +28,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.*;
+import static com.senla.aggregator.controller.helper.Messages.*;
 
 @RestController
 @RequestMapping("api/retailers")
@@ -78,7 +76,7 @@ public class RetailerController {
     @PreAuthorize("hasRole('RETAILER')")
     @VerifyPassword(password = "#dto.password")
     public ResponseInfoDto deleteMyRetailer(@Valid @RequestBody PasswordDto dto,
-                                          Principal principal) {
+                                            Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
         retailerService.deleteRetailer(ownerId);

@@ -25,8 +25,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.FAVORITE;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.FAVORITE;
 
 @RestController
 @RequestMapping("api/favorites")
@@ -50,10 +50,10 @@ public class FavoriteController {
         return favoriteService.getMyFavorites(userId, pageNo, pageSize);
     }
 
-    @GetMapping("/me/filter/{userTag}")
+    @GetMapping("/me/filter")
     public List<FavoriteGetDto> findMyFavorites(@RequestParam(defaultValue = "0") int pageNo,
                                                 @RequestParam(defaultValue = "15") int pageSize,
-                                                @PathVariable UserTag userTag,
+                                                @RequestParam(defaultValue = "wishlist") UserTag userTag,
                                                 Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
 

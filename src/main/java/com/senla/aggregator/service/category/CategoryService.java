@@ -3,19 +3,20 @@ package com.senla.aggregator.service.category;
 import com.senla.aggregator.dto.category.CategoryCreateDto;
 import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
+import com.senla.aggregator.dto.category.CategoryWithChildrenDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface CategoryService {
 
-    CategoryGetDto createCategory(CategoryCreateDto category);
-
     CategoryGetDto getCategory(UUID id);
 
-    List<CategoryGetDto> getAllCategories(int pageNo, int pageSize);
+    CategoryGetDto createCategory(CategoryCreateDto category);
 
-    List<CategoryGetDto> getAllSubcategories(String parentName);
+    List<CategoryGetDto> getAllTopLevelCategories(int pageNo, int pageSize);
+
+    CategoryWithChildrenDto getAllSubcategories(UUID parentId);
 
     CategoryGetDto updateCategory(CategoryUpdateDto category, UUID id);
 

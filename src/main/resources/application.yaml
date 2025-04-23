@@ -10,6 +10,11 @@ spring:
   jpa:
     open-in-view: false
     show-sql: true
+    mapping-resources:
+      - query/category-tree.xml
+      - query/child-categories-names.xml
+      - query/daily-price-dynamics.xml
+      - query/monthly-price-dynamics.xml
     hibernate:
       ddl-auto: none
     properties:
@@ -20,6 +25,32 @@ spring:
             factory_class: org.redisson.hibernate.RedissonRegionFactory
           use_query_cache: true
           use_second_level_cache: true
+          redisson:
+            productsSummaryCache:
+              expiration:
+                max_entities: 1000
+                time_to_live: 3600000
+            categoriesCache:
+              expiration:
+                max_entities: 1000
+                time_to_live: 259200000
+            vendorsCache:
+              expiration:
+                max_entities: 1000
+                time_to_live: 259200000
+            productsCache:
+              expiration:
+                max_entities: 1000
+                time_to_live: 3600000
+            reviewsCache:
+              expiration:
+                max_entities: 100
+                time_to_live: 259200000
+            query:
+              eviction:
+                max_entries: 500
+                expiration:
+                  time_to_live: 14400000
 
   security:
     oauth2:
@@ -29,7 +60,7 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
 
   jackson:
-    default-property-inclusion: non_null
+    default-property-inclusion: non_empty
 
 keycloak:
   server-url: http://${KC_HOST}:8080

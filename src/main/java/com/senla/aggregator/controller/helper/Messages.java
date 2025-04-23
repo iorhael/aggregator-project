@@ -1,6 +1,6 @@
-package com.senla.aggregator.controller;
+package com.senla.aggregator.controller.helper;
 
-public final class ControllerMessages {
+public final class Messages {
     public static final String DELETION_MESSAGE = "%s with id %s deleted successfully";
     public static final String PROMOTION_MESSAGE = "User with id %s promoted successfully";
     public static final String VALIDATION_ERROR_MESSAGE = "Validation failed";
@@ -19,6 +19,6 @@ public final class ControllerMessages {
     public static final String FAVORITE = "Favorite";
     public static final String PRODUCT_CARD = "Product card";
 
-    private ControllerMessages() {
+    private Messages() {
     }
 }

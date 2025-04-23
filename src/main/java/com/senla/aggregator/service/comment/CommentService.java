@@ -3,9 +3,6 @@ package com.senla.aggregator.service.comment;
 import com.senla.aggregator.dto.comment.CommentCreateDto;
 import com.senla.aggregator.dto.comment.CommentGetDto;
 import com.senla.aggregator.dto.comment.CommentUpdateDto;
-import com.senla.aggregator.dto.store.StoreCreateDto;
-import com.senla.aggregator.dto.store.StoreGetDto;
-import com.senla.aggregator.dto.store.StoreUpdateDto;
 
 import java.util.List;
 import java.util.UUID;

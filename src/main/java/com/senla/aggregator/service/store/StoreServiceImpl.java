@@ -6,6 +6,7 @@ import com.senla.aggregator.dto.store.StoreUpdateDto;
 import com.senla.aggregator.mapper.StoreMapper;
 import com.senla.aggregator.model.Retailer;
 import com.senla.aggregator.model.Store;
+import com.senla.aggregator.model.Store_;
 import com.senla.aggregator.repository.retailer.RetailerRepository;
 import com.senla.aggregator.repository.store.StoreRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,7 +41,6 @@ public class StoreServiceImpl implements StoreService {
                 .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
 
         store.setRetailer(retailer);
-
         storeRepository.save(store);
 
         return storeMapper.toStoreGetDto(store);
@@ -49,7 +49,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreGetDto> getAllStores(int pageNo, int pageSize) {
         return storeRepository.findAllWithRetailerBy(PageRequest.of(pageNo, pageSize,
-                        Sort.by("retailer.name", "address")))
+                        Sort.by("retailer.name", Store_.ADDRESS)))
                 .stream()
                 .map(storeMapper::toStoreGetDto)
                 .toList();
@@ -58,7 +58,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreGetDto> getMyStores(UUID ownerId, int pageNo, int pageSize) {
         return storeRepository.findAllByRetailerOwnerId(ownerId, PageRequest.of(pageNo, pageSize,
-                        Sort.by("address")))
+                        Sort.by(Store_.ADDRESS)))
                 .stream()
                 .map(storeMapper::toStoreGetDto)
                 .toList();
@@ -67,7 +67,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreGetDto> getStoresOfRetailer(UUID retailerId, int pageNo, int pageSize) {
         return storeRepository.findByRetailerId(retailerId, PageRequest.of(pageNo, pageSize,
-                        Sort.by("address")))
+                        Sort.by(Store_.ADDRESS)))
                 .stream()
                 .map(storeMapper::toStoreGetDto)
                 .toList();

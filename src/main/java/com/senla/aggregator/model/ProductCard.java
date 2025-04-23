@@ -30,7 +30,6 @@ import java.util.UUID;
 @NamedEntityGraph(
         name = "product-card-detailed",
         attributeNodes = {
-                @NamedAttributeNode(value = "retailer"),
                 @NamedAttributeNode(value = "latestPrice"),
                 @NamedAttributeNode(value = "product", subgraph = "product-with-vendor")
         },
@@ -39,13 +38,6 @@ import java.util.UUID;
                         name = "product-with-vendor",
                         attributeNodes = @NamedAttributeNode(value = "vendor")
                 )
-        }
-)
-@NamedEntityGraph(
-        name = "product-card-brief",
-        attributeNodes = {
-                @NamedAttributeNode(value = "retailer"),
-                @NamedAttributeNode(value = "latestPrice")
         }
 )
 @Getter

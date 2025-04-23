@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+    <named-native-query name="monthly-price-dynamics">
+        <query><![CDATA[
+            WITH month_series AS (
+                SELECT date_trunc('month', current_date)::timestamp - (n || ' month')::interval AS month_start
+                FROM generate_series(0, :monthsOffset - 1) AS n
+            ),
+            card_monthly_avg AS (
+                SELECT
+                    pc.id AS card_id,
+                    ms.month_start,
+                    (WITH last_prev_change AS (
+                        SELECT
+                            ph.price,
+                            ph.updated_at
+                        FROM price_histories ph
+                        WHERE
+                            ph.card_id = pc.id
+                            AND ph.updated_at < ms.month_start
+                        ORDER BY ph.updated_at DESC
+                        LIMIT 1
+                    ),
+                    first_current_change AS (
+                        SELECT
+                            ph.price,
+                            ph.updated_at
+                        FROM price_histories ph
+                        WHERE
+                            ph.card_id = pc.id
+                            AND ph.updated_at >= ms.month_start
+                            AND ph.updated_at < ms.month_start + interval '1 month'
+                        ORDER BY ph.updated_at ASC
+                        LIMIT 1
+                    ),
+                    all_periods AS (
+                        SELECT
+                            lpc.price,
+                            ms.month_start AS period_start,
+                            COALESCE(
+                                (SELECT updated_at FROM first_current_change),
+                                ms.month_start + interval '1 month'
+                            ) AS period_end
+                        FROM last_prev_change lpc
+
+                        UNION ALL
+
+                        SELECT
+                            fcc.price,
+                            ms.month_start AS period_start,
+                            fcc.updated_at AS period_end
+                        FROM first_current_change fcc
+                        WHERE NOT EXISTS (SELECT 1 FROM last_prev_change)
+
+                        UNION ALL
+
+                        SELECT
+                            ph.price,
+                            ph.updated_at AS period_start,
+                            COALESCE(
+                                LEAD(ph.updated_at) OVER (ORDER BY ph.updated_at),
+                                ms.month_start + interval '1 month'
+                            ) AS period_end
+                        FROM
+                            price_histories ph
+                        WHERE
+                            ph.card_id = pc.id
+                            AND ph.updated_at >= ms.month_start
+                            AND ph.updated_at < ms.month_start + interval '1 month'
+                    )
+                    SELECT
+                        ROUND(
+                            SUM(ap.price * EXTRACT(EPOCH FROM (ap.period_end - ap.period_start))) /
+                            EXTRACT(EPOCH FROM (ms.month_start + interval '1 month' - ms.month_start)),
+                        2)
+                    FROM
+                        all_periods ap
+                    ) AS card_avg_price
+                FROM product_cards pc
+                CROSS JOIN month_series ms
+                WHERE pc.product_id = :productId
+            )
+            SELECT
+                cma.month_start AS date,
+                ROUND(AVG(cma.card_avg_price), 2) AS average_price
+            FROM card_monthly_avg cma
+            WHERE cma.card_avg_price IS NOT NULL
+            GROUP BY cma.month_start
+            ORDER BY date DESC
+        ]]></query>
+    </named-native-query>
+</entity-mappings>

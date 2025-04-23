@@ -25,8 +25,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.STORE;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.STORE;
 
 @RestController
 @RequestMapping("api/stores")
@@ -44,8 +44,8 @@ public class StoreController {
 
     @GetMapping("/{retailerId}")
     public List<StoreGetDto> findAllStoresByRetailerId(@RequestParam(defaultValue = "0") int pageNo,
-                                                         @RequestParam(defaultValue = "15") int pageSize,
-                                                         @PathVariable UUID retailerId) {
+                                                       @RequestParam(defaultValue = "15") int pageSize,
+                                                       @PathVariable UUID retailerId) {
         return storeService.getStoresOfRetailer(retailerId, pageNo, pageSize);
     }
 

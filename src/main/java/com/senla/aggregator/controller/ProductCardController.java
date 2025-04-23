@@ -27,8 +27,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.ControllerMessages.PRODUCT_CARD;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.PRODUCT_CARD;
 
 @RestController
 @RequestMapping("api/product_cards")
@@ -65,7 +65,7 @@ public class ProductCardController {
     @PreAuthorize("hasRole('RETAILER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ProductCardPreviewDto createProductCard(@Valid @RequestBody ProductCardCreateDto product,
-                                               Principal principal) {
+                                                   Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
         return productCardService.createProductCard(product, ownerId);
@@ -74,8 +74,8 @@ public class ProductCardController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('RETAILER')")
     public ProductCardDetailedDto updateProductCard(@Valid @RequestBody ProductCardUpdateDto product,
-                                                @PathVariable UUID id,
-                                                Principal principal) {
+                                                    @PathVariable UUID id,
+                                                    Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
 
         return productCardService.updateProductCard(product, id, ownerId);

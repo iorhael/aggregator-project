@@ -28,7 +28,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.*;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.REVIEW;
 
 @RestController
 @RequestMapping("api/reviews")
@@ -45,8 +46,8 @@ public class ReviewController {
 
     @GetMapping("/products/{productId}")
     public List<ReviewGetDto> findReviewsOfProduct(@PathVariable UUID productId,
-                                                     @RequestParam(defaultValue = "0") int pageNo,
-                                                     @RequestParam(defaultValue = "15") int pageSize) {
+                                                   @RequestParam(defaultValue = "0") int pageNo,
+                                                   @RequestParam(defaultValue = "15") int pageSize) {
         return reviewService.getReviewsOfProduct(productId, pageNo, pageSize);
     }
 
@@ -61,7 +62,7 @@ public class ReviewController {
     @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewGetDto createReview(@Valid @RequestBody ReviewCreateDto dto,
-                                       Principal principal) {
+                                     Principal principal) {
         UUID authorId = UUID.fromString(principal.getName());
 
         return reviewService.createReview(dto, authorId);

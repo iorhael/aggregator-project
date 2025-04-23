@@ -4,6 +4,7 @@ import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.dto.category.CategoryCreateDto;
 import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
+import com.senla.aggregator.dto.category.CategoryWithChildrenDto;
 import com.senla.aggregator.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.ControllerMessages.CATEGORY;
-import static com.senla.aggregator.controller.ControllerMessages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Messages.CATEGORY;
+import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
 
 @RestController
 @RequestMapping("api/categories")
@@ -35,20 +36,20 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping
-    public List<CategoryGetDto> findAllCategories(@RequestParam(defaultValue = "0") int pageNo,
-                                                  @RequestParam(defaultValue = "15") int pageSize) {
-        return categoryService.getAllCategories(pageNo, pageSize);
-    }
-
-    @GetMapping("/subcategories/{parentName}")
-    public List<CategoryGetDto> findAllSubcategories(@PathVariable String parentName) {
-        return categoryService.getAllSubcategories(parentName);
-    }
-
     @GetMapping("/{id}")
     public CategoryGetDto findCategoryById(@PathVariable UUID id) {
         return categoryService.getCategory(id);
+    }
+
+    @GetMapping
+    public List<CategoryGetDto> findTopLevelCategories(@RequestParam(defaultValue = "0") int pageNo,
+                                                       @RequestParam(defaultValue = "15") int pageSize) {
+        return categoryService.getAllTopLevelCategories(pageNo, pageSize);
+    }
+
+    @GetMapping("/subcategories/{parentId}")
+    public CategoryWithChildrenDto findAllSubcategories(@PathVariable UUID parentId) {
+        return categoryService.getAllSubcategories(parentId);
     }
 
     @PostMapping

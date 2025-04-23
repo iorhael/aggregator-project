@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+    <named-native-query name="daily-price-dynamics">
+        <query><![CDATA[
+            WITH date_series AS (
+                SELECT current_date - (n || ' day')::interval AS day_date
+                FROM generate_series(0, :daysOffset - 1) AS n
+            )
+            SELECT
+                ds.day_date AS date,
+                ROUND(AVG(ph.price), 2) AS average_price
+            FROM product_cards pc
+            CROSS JOIN date_series ds
+            LEFT JOIN LATERAL (
+                SELECT ph.price
+                FROM price_histories ph
+                WHERE
+                    ph.card_id = pc.id
+                    AND ph.updated_at <= ds.day_date + interval '1 day' - interval '1 microsecond'
+                ORDER BY ph.updated_at DESC
+                LIMIT 1
+            ) ph ON true
+            WHERE
+                pc.product_id = :productId
+                AND ph.price IS NOT NULL
+            GROUP BY date
+            ORDER BY date DESC
+        ]]></query>
+    </named-native-query>
+</entity-mappings>
