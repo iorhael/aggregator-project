@@ -31,6 +31,7 @@ import java.util.UUID;
 @Setter
 public class Category {
 
+    // move generation type to uuid to enable batching
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;

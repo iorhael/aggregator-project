@@ -15,11 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -71,6 +67,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> batchInsertCategories(List<CategoryCreateDto> categories) {
+        List<Category> list = categories.stream()
+                .map(categoryMapper::toCategory)
+                .toList();
+
+        return categoryRepository.saveAll(list);
+    }
+
+    @Override
     @Transactional
     public CategoryGetDto updateCategory(CategoryUpdateDto dto, UUID id) {
         Category category = categoryRepository.findById(id)
@@ -84,69 +89,5 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(UUID id) {
         categoryRepository.deleteById(id);
-    }
-
-//    public Category buildCategoryTreeWithRoot(List<Category> flatList) {
-//        Map<UUID, Category> map = new HashMap<>();
-//
-//        // Гарантируем, что у каждой категории инициализирован children
-//        for (Category category : flatList) {
-//            category.setChildren(new ArrayList<>());
-//            map.put(category.getId(), category);
-//        }
-//
-//        Category root = null;
-//
-//        for (Category category : flatList) {
-//            if (category.getParent() != null) {
-//                UUID parentId = category.getParent().getId();
-//                Category parent = map.get(parentId);
-//                if (parent != null) {
-//                    parent.getChildren().add(category);
-//                }
-//            } else {
-//                // если родитель = null — это и есть корень
-//                root = category;
-//            }
-//        }
-//
-//        return root;
-//    }
-
-
-    public Category buildTree(List<Category> flatList, String rootName) {
-        Map<UUID, Category> map = new HashMap<>();
-        Category root = null;
-
-        for (Category category : flatList) {
-            map.put(category.getId(), category);
-            if (rootName.equals(category.getName())) {
-                root = category;
-            }
-        }
-
-        if (Objects.isNull(root)) {
-            throw new IllegalStateException("Root category not found: " + rootName);
-        }
-
-        for (Category category : flatList) {
-            // Не трогаем root — на нём getParent() не вызываем
-            if (!Objects.equals(category.getId(), root.getId())) {
-                Category parentRef = category.getParent();
-                if (Objects.nonNull(parentRef)) {
-                    Category parent = map.get(parentRef.getId());
-                    if (Objects.nonNull(parent)) {
-                        List<Category> children = parent.getChildren();
-                        if (Objects.isNull(children)) {
-                            children = new ArrayList<>();
-                            parent.setChildren(children);
-                        }
-                        children.add(category);
-                    }
-                }
-            }
-        }
-
-        return root;
     }
 }

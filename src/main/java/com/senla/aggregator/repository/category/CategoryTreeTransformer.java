@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CategoryTreeTransformer implements TupleTransformer<Category> {
-    private Category root;
     private final Map<UUID, Category> categoryMap = new HashMap<>();
+    private Category root;
 
     @Override
     public Category transformTuple(Object[] tuple, String[] aliases) {

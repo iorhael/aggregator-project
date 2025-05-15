@@ -27,8 +27,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
-import static com.senla.aggregator.controller.helper.Messages.PRODUCT_CARD;
+import static com.senla.aggregator.controller.helper.Messages.*;
 
 @RestController
 @RequestMapping("api/product_cards")
@@ -43,7 +42,7 @@ public class ProductCardController {
         return productCardService.getProductCard(id);
     }
 
-    @GetMapping("/retailer")
+    @GetMapping("/my")
     @PreAuthorize("hasRole('RETAILER')")
     public List<ProductCardDetailedDto> findRetailerProductCards(@RequestParam(defaultValue = "0") int pageNo,
                                                                  @RequestParam(defaultValue = "15") int pageSize,
@@ -90,6 +89,17 @@ public class ProductCardController {
 
         return ResponseInfoDto.builder()
                 .message(String.format(DELETION_MESSAGE, PRODUCT_CARD, id))
+                .build();
+    }
+
+    @DeleteMapping("/all")
+    @PreAuthorize("hasRole('RETAILER')")
+    public ResponseInfoDto deleteAllProductCards(Principal principal) {
+        UUID ownerId = UUID.fromString(principal.getName());
+        int count = productCardService.deleteAllProductCards(ownerId);
+
+        return ResponseInfoDto.builder()
+                .message(String.format(PRODUCT_CARDS_DELETION_MESSAGE, count))
                 .build();
     }
 }

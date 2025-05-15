@@ -9,7 +9,7 @@ import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.mapper.UserMapper;
 import com.senla.aggregator.model.Role;
 import com.senla.aggregator.model.User;
-import com.senla.aggregator.repository.user.UserRepository;
+import com.senla.aggregator.repository.UserRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
 import com.senla.aggregator.service.exception.KeycloakException;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -57,7 +57,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
             return new TokenDto(keycloak.tokenManager().getAccessTokenString());
         } catch (NotAuthorizedException e) {
-            throw new KeycloakException(ExceptionMessages.KEYCLOAK_BAD_CREDENTIALS);
+            throw new KeycloakException(ExceptionMessages.KEYCLOAK_BAD_CREDENTIALS, e);
         }
     }
 

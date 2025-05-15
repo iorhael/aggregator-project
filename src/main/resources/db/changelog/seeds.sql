@@ -260,63 +260,64 @@ WITH electrosila_id AS (SELECT id FROM retailers WHERE name = 'electrosila'),
      north_face_id AS (SELECT id FROM products WHERE name = 'The North Face McMurdo Parka III'),
      nike_air_max_id AS (SELECT id FROM products WHERE name = 'Nike Air Max 270 React')
 INSERT
-INTO product_cards (product_id, retailer_id, description, warranty, installment_period, max_delivery_time)
+INTO product_cards (id, product_id, retailer_id, description, warranty, installment_period, max_delivery_time)
 
 -- electrosila product_cards (without iphone, with custom sony x5)
-SELECT dell_xps_id.id, electrosila_id.id, 'Test description', 10, 12, 3
+SELECT gen_random_uuid(), dell_xps_id.id, electrosila_id.id, 'Test description', 10, 12, 3
 FROM dell_xps_id,
      electrosila_id
 UNION ALL
-SELECT sony_xm5_id.id, electrosila_id.id, 'Test description', 8, NULL, NULL
+SELECT gen_random_uuid(), sony_xm5_id.id, electrosila_id.id, 'Test description', 8, NULL, NULL
 FROM sony_xm5_id,
      electrosila_id
 UNION ALL
-SELECT samsung_watch_id.id, electrosila_id.id, 'Test description', 2, 2, 2
+SELECT gen_random_uuid(), samsung_watch_id.id, electrosila_id.id, 'Test description', 2, 2, 2
 FROM samsung_watch_id,
      electrosila_id
 UNION ALL
 
 -- 7element product_cards (without dell xps, with custom samsung watch)
-SELECT iphone_id.id, seventh_element_id.id, 'Test description', 6, 6, 4
+SELECT gen_random_uuid(), iphone_id.id, seventh_element_id.id, 'Test description', 6, 6, 4
 FROM iphone_id,
      seventh_element_id
 UNION ALL
-SELECT sony_xm5_id.id, seventh_element_id.id, 'Test description', 6, 6, 2
+SELECT gen_random_uuid(), sony_xm5_id.id, seventh_element_id.id, 'Test description', 6, 6, 2
 FROM sony_xm5_id,
      seventh_element_id
 UNION ALL
-SELECT samsung_watch_id.id, seventh_element_id.id, 'Test description', NULL, 4, 3
+SELECT gen_random_uuid(), samsung_watch_id.id, seventh_element_id.id, 'Test description', NULL, 4, 3
 FROM samsung_watch_id,
      seventh_element_id
 UNION ALL
 
 -- store_of_everything product_cards (all products, without custom)
-SELECT iphone_id.id, store_of_everything_id.id, 'Test description', 2, 2, 5
+SELECT gen_random_uuid(), iphone_id.id, store_of_everything_id.id, 'Test description', 2, 2, 5
 FROM iphone_id,
      store_of_everything_id
 UNION ALL
-SELECT dell_xps_id.id, store_of_everything_id.id, 'Test description', 5, 5, 10
+SELECT gen_random_uuid(), dell_xps_id.id, store_of_everything_id.id, 'Test description', 5, 5, 10
 FROM dell_xps_id,
      store_of_everything_id
 UNION ALL
-SELECT sony_xm5_id.id, store_of_everything_id.id, 'Test description', 1, NULL, 1
+SELECT gen_random_uuid(), sony_xm5_id.id, store_of_everything_id.id, 'Test description', 1, NULL, 1
 FROM sony_xm5_id,
      store_of_everything_id
 UNION ALL
-SELECT samsung_watch_id.id, store_of_everything_id.id, 'Test description', 10, 10, NULL
+SELECT gen_random_uuid(), samsung_watch_id.id, store_of_everything_id.id, 'Test description', 10, 10, NULL
 FROM samsung_watch_id,
      store_of_everything_id
 UNION ALL
-SELECT north_face_id.id, store_of_everything_id.id, 'Test description', 10, 10, 20
+SELECT gen_random_uuid(), north_face_id.id, store_of_everything_id.id, 'Test description', 10, 10, 20
 FROM north_face_id,
      store_of_everything_id
 UNION ALL
-SELECT nike_air_max_id.id, store_of_everything_id.id, 'Test description', NULL, NULL, NULL
+SELECT gen_random_uuid(), nike_air_max_id.id, store_of_everything_id.id, 'Test description', NULL, NULL, NULL
 FROM nike_air_max_id,
      store_of_everything_id;
 
-INSERT INTO price_histories (card_id, price, updated_at)
-SELECT pc.id                                  AS card_id,
+INSERT INTO price_histories (id, card_id, price, updated_at)
+SELECT gen_random_uuid() as id,
+       pc.id                                  AS card_id,
        CASE
            WHEN p.name = 'Apple iPhone 15 Pro' THEN ROUND((random() * 200 + 800)::numeric, 2) -- Price from 800 to 1000
            WHEN p.name = 'Dell XPS 13 (2023 Model)'

@@ -82,7 +82,6 @@ public class StoreController {
     @PreAuthorize("hasRole('RETAILER')")
     public ResponseInfoDto deleteRetailer(@PathVariable UUID id, Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         storeService.deleteStore(id, ownerId);
 
         return ResponseInfoDto.builder()

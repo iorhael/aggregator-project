@@ -86,7 +86,6 @@ public class FavoriteController {
     @DeleteMapping("/{id}")
     public ResponseInfoDto deleteFavorite(@PathVariable UUID id, Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
-
         favoriteService.checkOwnershipAndDeleteFavorite(id, userId);
 
         return ResponseInfoDto.builder()

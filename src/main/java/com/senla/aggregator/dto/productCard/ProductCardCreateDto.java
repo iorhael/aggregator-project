@@ -34,6 +34,7 @@ public class ProductCardCreateDto {
     @JsonProperty("max_delivery_time")
     private Short maxDeliveryTime;
 
+    @NotNull
     @Positive
     @JsonProperty("price")
     private BigDecimal price;

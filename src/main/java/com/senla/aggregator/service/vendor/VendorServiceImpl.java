@@ -5,7 +5,7 @@ import com.senla.aggregator.dto.vendor.VendorGetDto;
 import com.senla.aggregator.mapper.VendorMapper;
 import com.senla.aggregator.model.Vendor;
 import com.senla.aggregator.model.Vendor_;
-import com.senla.aggregator.repository.vendor.VendorRepository;
+import com.senla.aggregator.repository.VendorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

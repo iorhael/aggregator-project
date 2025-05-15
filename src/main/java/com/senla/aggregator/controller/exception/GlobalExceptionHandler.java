@@ -1,8 +1,10 @@
 package com.senla.aggregator.controller.exception;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
+import com.senla.aggregator.service.exception.FileParseException;
 import com.senla.aggregator.service.exception.KeycloakException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +31,9 @@ public class GlobalExceptionHandler {
             KeycloakException.class,
             ClientErrorException.class,
             HttpMessageNotReadableException.class,
+            ConstraintViolationException.class,
+            MultipartException.class,
+            FileParseException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseInfoDto handleBadRequest(Exception exception) {

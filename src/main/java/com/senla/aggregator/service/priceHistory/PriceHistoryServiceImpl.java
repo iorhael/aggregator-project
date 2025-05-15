@@ -1,7 +1,7 @@
 package com.senla.aggregator.service.priceHistory;
 
 import com.senla.aggregator.dto.priceHistory.PriceDynamics;
-import com.senla.aggregator.repository.priceHistory.PriceHistoryRepository;
+import com.senla.aggregator.repository.PriceHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

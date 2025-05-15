@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,8 +77,7 @@ public class RetailerController {
     public ResponseInfoDto deleteMyRetailer(@Valid @RequestBody PasswordDto dto,
                                             Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
-        retailerService.deleteRetailer(ownerId);
+        retailerService.checkOwnershipAndDeleteRetailer(ownerId);
 
         return ResponseInfoDto.builder()
                 .message(String.format(DELETION_MESSAGE, RETAILER, ownerId))
@@ -88,7 +86,7 @@ public class RetailerController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseInfoDto deleteComment(@PathVariable UUID id, Authentication authentication) {
+    public ResponseInfoDto deleteRetailer(@PathVariable UUID id) {
         retailerService.deleteRetailer(id);
 
         return ResponseInfoDto.builder()

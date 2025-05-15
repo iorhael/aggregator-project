@@ -5,6 +5,7 @@ import com.senla.aggregator.dto.category.CategoryCreateDto;
 import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.dto.category.CategoryWithChildrenDto;
+import com.senla.aggregator.model.Category;
 import com.senla.aggregator.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -74,5 +75,10 @@ public class CategoryController {
         return ResponseInfoDto.builder()
                 .message(String.format(DELETION_MESSAGE, CATEGORY, id))
                 .build();
+    }
+
+    @PostMapping("/batch")
+    public List<Category> batchInsertCategories(@Valid @RequestBody List<CategoryCreateDto> categoryCreateDtos) {
+        return categoryService.batchInsertCategories(categoryCreateDtos);
     }
 }

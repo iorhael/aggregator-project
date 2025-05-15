@@ -62,6 +62,7 @@ public class Product {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    // Ленивая загрузка не работает, всегда eager
     @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn(name = "product_id")
     private ProductSummary summary;

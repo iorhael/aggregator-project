@@ -83,7 +83,6 @@ public class ReviewController {
     public ResponseInfoDto deleteReview(@PathVariable UUID id, Authentication authentication) {
         boolean isAdmin = authentication.getAuthorities()
                 .contains(new SimpleGrantedAuthority(Role.ADMIN.getPrefixedRole()));
-
         UUID authorId = UUID.fromString(authentication.getName());
 
         if (isAdmin) reviewService.deleteReview(id);

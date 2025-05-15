@@ -10,9 +10,9 @@ import com.senla.aggregator.model.PriceHistory;
 import com.senla.aggregator.model.ProductCard;
 import com.senla.aggregator.model.ProductCard_;
 import com.senla.aggregator.model.Retailer;
-import com.senla.aggregator.repository.product.ProductRepository;
-import com.senla.aggregator.repository.productCard.ProductCardRepository;
-import com.senla.aggregator.repository.retailer.RetailerRepository;
+import com.senla.aggregator.repository.ProductCardRepository;
+import com.senla.aggregator.repository.ProductRepository;
+import com.senla.aggregator.repository.RetailerRepository;
 import com.senla.aggregator.specification.ProductCardSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +43,7 @@ public class ProductCardServiceImpl implements ProductCardService {
     private final ProductCardMapper productCardMapper;
 
     @Override
+    @Transactional
     public ProductCardDetailedDto getProductCard(UUID id) {
         return productCardRepository.findDetailedById(id)
                 .map(productCardMapper::toProductCardDetailedDto)
@@ -50,6 +51,7 @@ public class ProductCardServiceImpl implements ProductCardService {
     }
 
     @Override
+    @Transactional
     public List<ProductCardDetailedDto> getRetailerProductCards(UUID retailerOwnerId, int pageNo, int pageSize) {
         return productCardRepository.findAllByRetailerOwnerId(retailerOwnerId, PageRequest.of(pageNo, pageSize,
                         Sort.by("product.name")))
@@ -130,10 +132,17 @@ public class ProductCardServiceImpl implements ProductCardService {
     }
 
     @Override
+    @Transactional
     public void deleteProductCard(UUID productCardId, UUID retailerOwnerId) {
         productCardRepository.findByIdAndRetailerOwnerId(productCardId, retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_CARD_NOT_FOUND));
 
         productCardRepository.deleteById(productCardId);
+    }
+
+    @Override
+    @Transactional
+    public int deleteAllProductCards(UUID retailerOwnerId) {
+        return productCardRepository.deleteAllByRetailerOwnerId(retailerOwnerId);
     }
 }

@@ -22,4 +22,6 @@ public interface ProductCardService {
     ProductCardDetailedDto updateProductCard(ProductCardUpdateDto productCard, UUID productCardId, UUID retailerOwnerId);
 
     void deleteProductCard(UUID productCardId, UUID retailerOwnerId);
+
+    int deleteAllProductCards(UUID retailerOwnerId);
 }
