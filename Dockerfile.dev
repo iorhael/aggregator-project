@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-21-alpine
+FROM maven:3-eclipse-temurin-24-alpine
 WORKDIR /app
 COPY ./docker-entrypoint-dev.sh /docker-entrypoint-dev.sh
 RUN apk add --no-cache inotify-tools && \
