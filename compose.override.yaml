@@ -15,6 +15,9 @@ services:
       - '6379:6379'
 
   webapp:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
     volumes:
       - m2-cache:/root/.m2
     develop:
