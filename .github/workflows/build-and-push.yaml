@@ -50,3 +50,11 @@ jobs:
           provenance: mode=max
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      -
+        name: Cleanup untagged images of backend
+        uses: actions/delete-package-versions@v5.0.0
+        with:
+          package-type: container
+          package-name: aggregator-backend
+          delete-only-untagged-versions: true
+          min-versions-to-keep: 0
