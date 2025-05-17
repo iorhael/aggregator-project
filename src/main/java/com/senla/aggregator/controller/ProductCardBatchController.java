@@ -4,6 +4,7 @@ import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.controller.helper.Messages;
 import com.senla.aggregator.dto.JobInfoDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
+import com.senla.aggregator.service.mail.GmailApiService;
 import com.senla.aggregator.service.productCard.ProductCardBatchService;
 import com.senla.aggregator.validation.AllowedFileTypes;
 import io.swagger.v3.oas.annotations.tags.Tag;

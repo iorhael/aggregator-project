@@ -1,7 +1,6 @@
 package com.senla.aggregator.controller.exception;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
-import com.senla.aggregator.service.exception.FileParseException;
 import com.senla.aggregator.service.exception.KeycloakException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -33,7 +32,6 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
             MultipartException.class,
-            FileParseException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseInfoDto handleBadRequest(Exception exception) {

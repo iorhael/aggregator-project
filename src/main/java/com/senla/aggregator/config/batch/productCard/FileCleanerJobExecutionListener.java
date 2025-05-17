@@ -20,6 +20,7 @@ public class FileCleanerJobExecutionListener implements JobExecutionListener {
     @Override
     public void afterJob(@NonNull JobExecution jobExecution) {
         String path = jobExecution.getJobParameters().getString(IMPORT_FILE_PARAM);
+
         try {
             Files.deleteIfExists(Paths.get(Objects.requireNonNull(path)));
         } catch (IOException e) {

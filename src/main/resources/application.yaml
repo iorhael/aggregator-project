@@ -89,3 +89,13 @@ swagger:
   application:
     title: Price Aggregator Project
     description: An application that helps you choose a store with the best prices
+
+org:
+  jobrunr:
+    dashboard:
+      enabled: true
+    background-job-server:
+      enabled: true
+
+schedule:
+  every-morning: "0 0 8 * * *"

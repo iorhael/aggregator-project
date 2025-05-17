@@ -1,6 +1,6 @@
 package com.senla.aggregator.config.batch.productCard.writer;
 
-import com.senla.aggregator.config.batch.productCard.ProductCardItemWriter;
+import com.senla.aggregator.config.batch.FileItemWriter;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -20,7 +20,7 @@ import static com.senla.aggregator.config.batch.helper.Constants.JSON_EXPORT_WRI
 
 @Component
 @StepScope
-public class JsonProductCardItemWriter implements ProductCardItemWriter {
+public class JsonProductCardItemWriter implements FileItemWriter<ProductCardImportDto> {
 
     private final JsonFileItemWriter<ProductCardImportDto> delegate;
 

@@ -12,6 +12,7 @@ import com.senla.aggregator.model.User;
 import com.senla.aggregator.repository.UserRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
 import com.senla.aggregator.service.exception.KeycloakException;
+import com.senla.aggregator.service.mail.GmailApiService;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +75,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         addClientRoleToUser(userId, Role.DEFAULT.name());
 
         User dbUser = userMapper.toUser(user);
+        dbUser.setRole(Role.DEFAULT);
         dbUser.setId(userId);
 
         userRepository.save(dbUser);

@@ -1,5 +1,6 @@
 package com.senla.aggregator.config.batch.productCard;
 
+import com.senla.aggregator.config.batch.FileItemReader;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -15,10 +16,11 @@ public class CommonJobConfig {
 
     @Bean
     @StepScope
-    public ProductCardItemReader reader(List<ProductCardItemReader> readers,
-                                        @Value("#{jobParameters['contentType']}") String contentType) {
+    public FileItemReader<ProductCardImportDto> reader(List<FileItemReader<ProductCardImportDto>> readers,
+                                                       @Value("#{jobParameters['contentType']}") String contentType) {
         return readers.stream()
-                .filter(r -> r.getContentType().equals(ContentType.fromValue(contentType)))
+                .filter(r ->
+                        r.getContentType().equals(ContentType.fromValue(contentType)))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Invalid content type: " + contentType));
     }

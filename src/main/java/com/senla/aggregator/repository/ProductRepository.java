@@ -12,6 +12,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +27,11 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     @Query("SELECT p FROM Product p WHERE p.name IN :names AND (:verifiedOnly = FALSE OR p.verified = TRUE)")
     List<Product> findByNames(@Param("names") List<String> names,
                               @Param("verifiedOnly") Boolean verifiedOnly
+    );
+
+    @Query("SELECT p FROM Product p WHERE p.verified = false AND p.createdAt BETWEEN :periodStart AND :periodEnd")
+    List<Product> findUnverified(@Param("periodStart") Instant periodStart,
+                                 @Param("periodEnd") Instant periodEnd
     );
 
     @NativeQuery(name = "products-in-category-tree")
