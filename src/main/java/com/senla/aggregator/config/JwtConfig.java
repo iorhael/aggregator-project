@@ -1,4 +1,4 @@
-package com.senla.aggregator.config.security;
+package com.senla.aggregator.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,5 +1,6 @@
-package com.senla.aggregator.config.keycloak;
+package com.senla.aggregator.config;
 
+import com.senla.aggregator.model.credential.KeycloakCredentials;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;

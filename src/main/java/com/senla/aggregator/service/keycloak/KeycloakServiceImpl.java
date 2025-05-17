@@ -1,6 +1,6 @@
 package com.senla.aggregator.service.keycloak;
 
-import com.senla.aggregator.config.keycloak.KeycloakCredentials;
+import com.senla.aggregator.model.credential.KeycloakCredentials;
 import com.senla.aggregator.dto.auth.LoginDto;
 import com.senla.aggregator.dto.auth.RegisterDto;
 import com.senla.aggregator.dto.auth.TokenDto;

@@ -84,7 +84,8 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
         return launchAndPersistJob(updateProductCardsJob, jobParameters, retailer);
     }
 
-    public Path exportProductCards(UUID retailerOwnerId, ContentType contentType) throws Exception {
+    // Fix with minio
+    public Path exportProductCards(UUID retailerOwnerId, ContentType contentType) {
         Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
         try {

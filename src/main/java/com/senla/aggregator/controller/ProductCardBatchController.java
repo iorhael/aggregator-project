@@ -90,9 +90,9 @@ public class ProductCardBatchController {
 
     @GetMapping("/job_executions")
     @PreAuthorize("hasRole('RETAILER')")
-    public List<JobInfoDto> get(@RequestParam(defaultValue = "0") int pageNo,
-                                @RequestParam(defaultValue = "15") int pageSize,
-                                Principal principal) {
+    public List<JobInfoDto> getJobHistory(@RequestParam(defaultValue = "0") int pageNo,
+                                          @RequestParam(defaultValue = "15") int pageSize,
+                                          Principal principal) {
         UUID retailerOwnerId = UUID.fromString(principal.getName());
 
         return productCardBatchService.getExecutionsHistory(retailerOwnerId, pageNo, pageSize);

@@ -1,4 +1,4 @@
-package com.senla.aggregator.config.keycloak;
+package com.senla.aggregator.model.credential;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

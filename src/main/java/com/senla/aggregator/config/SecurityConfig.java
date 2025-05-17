@@ -1,4 +1,4 @@
-package com.senla.aggregator.config.security;
+package com.senla.aggregator.config;
 
 import com.senla.aggregator.security.KeycloakJwtTokenConverter;
 import lombok.RequiredArgsConstructor;

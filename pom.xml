@@ -22,6 +22,8 @@
         <hibernate.version>6.5.2.Final</hibernate.version>
         <redisson.version>3.45.1</redisson.version>
         <xstream.version>1.4.21</xstream.version>
+        <google-api.version>2.7.2</google-api.version>
+        <google-api-services-gmail.version>v1-rev20250331-2.0.0</google-api-services-gmail.version>
     </properties>
 
     <dependencies>
@@ -93,14 +95,18 @@
             <version>${xstream.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>${google-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-gmail</artifactId>
+            <version>${google-api-services-gmail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
