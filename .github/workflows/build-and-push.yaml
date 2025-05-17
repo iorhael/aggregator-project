@@ -1,0 +1,52 @@
+name: Build and publish container images
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - 'master'
+
+jobs:
+  build_and_push_backend:
+    name: Build and push backend
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      -
+        name: Log in into container registry
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        id: meta
+        name: Generate tags and labels for an image
+        uses: docker/metadata-action@v5.7.0
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/aggregator-backend
+          tags: |
+            type=ref,event=pr
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.10.0
+      -
+        name: Build and push Docker image
+        uses: docker/build-push-action@v6.17.0
+        with:
+          tags: ${{ steps.meta.outputs.tags }}
+          push: true
+          provenance: mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
