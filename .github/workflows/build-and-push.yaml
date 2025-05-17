@@ -46,10 +46,8 @@ jobs:
         uses: docker/build-push-action@v6.17.0
         with:
           tags: ${{ steps.meta.outputs.tags }}
+          provenance: false
           push: true
-          provenance: mode=max
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
       -
         name: Cleanup untagged images of backend
         uses: actions/delete-package-versions@v5.0.0
