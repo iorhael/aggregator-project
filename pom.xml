@@ -20,7 +20,7 @@
         <keycloak-admin.version>26.0.4</keycloak-admin.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <hibernate.version>6.5.2.Final</hibernate.version>
-        <redisson.version>3.45.1</redisson.version>
+        <redisson.version>3.46.0</redisson.version>
         <xstream.version>1.4.21</xstream.version>
         <google-api.version>2.7.2</google-api.version>
         <google-api-services-gmail.version>v1-rev20250331-2.0.0</google-api-services-gmail.version>
