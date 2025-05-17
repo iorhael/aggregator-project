@@ -17,7 +17,7 @@
     <properties>
         <java.version>21</java.version>
         <springdoc-openapi.version>2.8.8</springdoc-openapi.version>
-        <keycloak-admin.version>26.0.4</keycloak-admin.version>
+        <keycloak-admin.version>26.0.5</keycloak-admin.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <hibernate.version>6.5.2.Final</hibernate.version>
         <redisson.version>3.45.1</redisson.version>
