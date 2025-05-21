@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.helper.Messages.CATEGORY;
-import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Constants.CATEGORY;
+import static com.senla.aggregator.controller.helper.Constants.DELETION_MESSAGE;
 
 @RestController
 @RequestMapping("api/categories")

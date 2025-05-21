@@ -27,8 +27,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.helper.Messages.COMMENT;
-import static com.senla.aggregator.controller.helper.Messages.DELETION_MESSAGE;
+import static com.senla.aggregator.controller.helper.Constants.COMMENT;
+import static com.senla.aggregator.controller.helper.Constants.DELETION_MESSAGE;
 
 @RestController
 @RequestMapping("api/comments")

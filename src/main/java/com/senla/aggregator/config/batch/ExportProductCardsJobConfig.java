@@ -58,7 +58,7 @@ public class ExportProductCardsJobConfig {
                 .filter(r ->
                         r.getContentType().equals(ContentType.valueOf(contentType)))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid content type: " + contentType));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(INVALID_CONTENT_TYPE, contentType)));
     }
 
     @Bean

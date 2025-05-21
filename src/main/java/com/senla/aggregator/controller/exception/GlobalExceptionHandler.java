@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.senla.aggregator.controller.helper.Messages.DATA_INTEGRITY_VIOLATION_EXCEPTION;
-import static com.senla.aggregator.controller.helper.Messages.VALIDATION_ERROR_MESSAGE;
+import static com.senla.aggregator.controller.helper.Constants.DATA_INTEGRITY_VIOLATION_EXCEPTION;
+import static com.senla.aggregator.controller.helper.Constants.VALIDATION_ERROR_MESSAGE;
 
 @Slf4j
 @RestControllerAdvice

@@ -1,7 +1,6 @@
 package com.senla.aggregator.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.senla.aggregator.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 

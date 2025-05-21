@@ -1,6 +1,7 @@
 package com.senla.aggregator.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.ResponseInfoDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,8 +15,6 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
-    private static final String JSON_CONTENT_TYPE = "application/json";
-
     private final ObjectMapper objectMapper;
 
     @Override
@@ -27,7 +26,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
                 .message(authException.getMessage())
                 .build();
 
-        response.setContentType(JSON_CONTENT_TYPE);
+        response.setContentType(ContentType.JSON.getValue());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(objectMapper.writeValueAsString(error));
     }

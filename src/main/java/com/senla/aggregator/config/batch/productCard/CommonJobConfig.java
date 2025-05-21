@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+import static com.senla.aggregator.config.batch.helper.Constants.INVALID_CONTENT_TYPE;
+
 @Configuration
 public class CommonJobConfig {
 
@@ -22,7 +24,7 @@ public class CommonJobConfig {
                 .filter(r ->
                         r.getContentType().equals(ContentType.fromValue(contentType)))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid content type: " + contentType));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(INVALID_CONTENT_TYPE, contentType)));
     }
 
     @Bean

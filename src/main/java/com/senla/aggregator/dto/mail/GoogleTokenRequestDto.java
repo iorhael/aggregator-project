@@ -1,4 +1,4 @@
-package com.senla.aggregator.dto;
+package com.senla.aggregator.dto.mail;
 
 import jakarta.annotation.Nullable;
 

@@ -2,8 +2,8 @@ package com.senla.aggregator.service.mail;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
-import com.senla.aggregator.dto.GoogleTokenRequestDto;
-import com.senla.aggregator.dto.GoogleTokenResponse;
+import com.senla.aggregator.dto.mail.GoogleTokenRequestDto;
+import com.senla.aggregator.dto.mail.GoogleTokenResponse;
 import com.senla.aggregator.service.exception.GmailException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.senla.aggregator.service.exception.ExceptionMessages.*;
+import static com.senla.aggregator.service.exception.ExceptionMessages.ACCESS_TOKEN_NOT_UPDATED;
 
 @Component
 @RequiredArgsConstructor
@@ -33,9 +33,11 @@ public class GoogleCredentialManager {
     private Instant expiryTime = Instant.EPOCH;
 
     @PostConstruct
-    public void authorize() { refreshCredential(); }
+    public void authorize() {
+        refreshCredential();
+    }
 
-    public synchronized Credential getCredential() {
+    public Credential getCredential() {
         if (notExpired()) return credential;
 
         synchronized (this) {

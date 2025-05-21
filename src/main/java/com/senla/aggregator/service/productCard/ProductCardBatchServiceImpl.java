@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.senla.aggregator.config.batch.helper.Constants.*;
+import static com.senla.aggregator.util.CommonConstants.TMP_FILE_EXTENSION;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +49,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     @Override
     public Long importProductCards(MultipartFile file, UUID retailerOwnerId, Boolean verifiedProductsOnly) throws Exception {
         ContentType contentType = ContentType.fromValue(file.getContentType());
-        File tempFile = File.createTempFile(IMPORT_CARDS_FILE_PREFIX, TMP_FILE_SUFFIX);
+        File tempFile = File.createTempFile(IMPORT_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
         file.transferTo(tempFile);
 
         Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
@@ -68,7 +69,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     @Override
     public Long updateProductCards(MultipartFile file, UUID retailerOwnerId) throws Exception {
         ContentType contentType = ContentType.fromValue(file.getContentType());
-        File tempFile = File.createTempFile(UPDATE_CARDS_FILE_PREFIX, TMP_FILE_SUFFIX);
+        File tempFile = File.createTempFile(UPDATE_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
         file.transferTo(tempFile);
 
         Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
