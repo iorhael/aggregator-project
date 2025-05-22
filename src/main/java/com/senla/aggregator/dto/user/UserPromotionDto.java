@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserPromotionDto {
-
     @NotNull
     private Role role;
 }

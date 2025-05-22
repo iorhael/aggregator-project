@@ -1,7 +1,6 @@
 package com.senla.aggregator.config.batch;
 
 import com.senla.aggregator.config.batch.helper.StepExceptionListener;
-import com.senla.aggregator.config.batch.productCard.ProductCardItemWriter;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import com.senla.aggregator.mapper.ProductCardMapper;
@@ -53,12 +52,13 @@ public class ExportProductCardsJobConfig {
 
     @Bean
     @StepScope
-    public ProductCardItemWriter writer(List<ProductCardItemWriter> writers,
-                                        @Value("#{jobParameters['contentType']}") String contentType) {
+    public FileItemWriter<ProductCardImportDto> writer(List<FileItemWriter<ProductCardImportDto>> writers,
+                                                       @Value("#{jobParameters['contentType']}") String contentType) {
         return writers.stream()
-                .filter(r -> r.getContentType().equals(ContentType.valueOf(contentType)))
+                .filter(r ->
+                        r.getContentType().equals(ContentType.valueOf(contentType)))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid content type: " + contentType));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(INVALID_CONTENT_TYPE, contentType)));
     }
 
     @Bean
@@ -74,7 +74,7 @@ public class ExportProductCardsJobConfig {
                                        PlatformTransactionManager transactionManager,
                                        JpaPagingItemReader<ProductCard> reader,
                                        ItemProcessor<ProductCard, ProductCardImportDto> productCardProcessor,
-                                       ProductCardItemWriter writer,
+                                       FileItemWriter<ProductCardImportDto> writer,
                                        StepExceptionListener stepExceptionListener) {
         return new StepBuilder(MAIN_STEP_NAME, jobRepository)
                 .<ProductCard, ProductCardImportDto>chunk(100, transactionManager)

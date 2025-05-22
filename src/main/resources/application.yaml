@@ -15,6 +15,7 @@ spring:
       - query/child-categories-names.xml
       - query/monthly-price-dynamics.xml
       - query/products-in-category-tree.xml
+      - query/best-offers-report.xml
     hibernate:
       ddl-auto: none
     properties:
@@ -89,3 +90,14 @@ swagger:
   application:
     title: Price Aggregator Project
     description: An application that helps you choose a store with the best prices
+
+org:
+  jobrunr:
+    dashboard:
+      enabled: true
+    background-job-server:
+      enabled: true
+
+schedule:
+  admin-morning: "0 0 8 * * *"
+  retailer-morning: "0 0 10 * * *"

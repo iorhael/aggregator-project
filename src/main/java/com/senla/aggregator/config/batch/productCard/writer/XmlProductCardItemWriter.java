@@ -1,6 +1,6 @@
 package com.senla.aggregator.config.batch.productCard.writer;
 
-import com.senla.aggregator.config.batch.productCard.ProductCardItemWriter;
+import com.senla.aggregator.config.batch.FileItemWriter;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -22,7 +22,7 @@ import static com.senla.aggregator.config.batch.helper.Constants.*;
 
 @Component
 @StepScope
-public class XmlProductCardItemWriter implements ProductCardItemWriter {
+public class XmlProductCardItemWriter implements FileItemWriter<ProductCardImportDto> {
 
     private final StaxEventItemWriter<ProductCardImportDto> delegate;
 

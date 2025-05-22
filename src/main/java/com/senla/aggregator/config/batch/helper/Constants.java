@@ -1,9 +1,8 @@
 package com.senla.aggregator.config.batch.helper;
 
-public class Constants {
+public final class Constants {
     public static final String IMPORT_CARDS_FILE_PREFIX = "import-cards-";
     public static final String UPDATE_CARDS_FILE_PREFIX = "update-cards-";
-    public static final String TMP_FILE_SUFFIX = ".tmp";
     public static final String IMPORT_CARDS_JOB_NAME = "importProductCardsJob";
     public static final String UPDATE_CARDS_JOB_NAME = "updateProductCardsJob";
     public static final String EXPORT_CARDS_JOB_NAME = "exportProductCardsJob";
@@ -23,6 +22,7 @@ public class Constants {
     public static final String PRODUCT_CARD_NAME = "productCard";
     public static final String PRODUCT_CARDS_NAME = "productCards";
     public static final String CSV_DELIMITER = ",";
+    public static final String INVALID_CONTENT_TYPE = "Invalid content type: %s";
     public static final String[] PRODUCT_CARD_FIELDS_FILE = {"product_name", "description", "warranty", "installment_period", "max_delivery_time", "price"};
     public static final String[] PRODUCT_CARD_FIELDS_MODEL = {"productName", "description", "warranty", "installmentPeriod", "maxDeliveryTime", "price"};
 

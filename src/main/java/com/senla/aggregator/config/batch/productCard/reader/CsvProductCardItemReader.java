@@ -1,6 +1,6 @@
 package com.senla.aggregator.config.batch.productCard.reader;
 
-import com.senla.aggregator.config.batch.productCard.ProductCardItemReader;
+import com.senla.aggregator.config.batch.FileItemReader;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -17,7 +17,7 @@ import static com.senla.aggregator.config.batch.helper.Constants.*;
 
 @Component
 @StepScope
-public class CsvProductCardItemReader implements ProductCardItemReader {
+public class CsvProductCardItemReader implements FileItemReader<ProductCardImportDto> {
 
     private final FlatFileItemReader<ProductCardImportDto> delegate;
 

@@ -1,7 +1,7 @@
 package com.senla.aggregator.controller;
 
+import com.senla.aggregator.controller.helper.Constants;
 import com.senla.aggregator.controller.helper.ContentType;
-import com.senla.aggregator.controller.helper.Messages;
 import com.senla.aggregator.dto.JobInfoDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.service.productCard.ProductCardBatchService;
@@ -51,7 +51,7 @@ public class ProductCardBatchController {
         Long executionId = productCardBatchService.importProductCards(file, retailerOwnerId, verifiedProductsOnly);
 
         return ResponseInfoDto.builder()
-                .message(String.format(Messages.JOB_SUCCESSFULLY_STARTED, executionId))
+                .message(String.format(Constants.JOB_SUCCESSFULLY_STARTED, executionId))
                 .build();
     }
 
@@ -68,7 +68,7 @@ public class ProductCardBatchController {
         Long executionId = productCardBatchService.updateProductCards(file, retailerOwnerId);
 
         return ResponseInfoDto.builder()
-                .message(String.format(Messages.JOB_SUCCESSFULLY_STARTED, executionId))
+                .message(String.format(Constants.JOB_SUCCESSFULLY_STARTED, executionId))
                 .build();
     }
 

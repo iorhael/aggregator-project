@@ -12,6 +12,8 @@ public final class ExceptionMessages {
     public static final String FAVORITE_NOT_FOUND = "Favorite not found";
     public static final String RETAILER_NOT_FOUND = "Retailer not found";
     public static final String PRODUCT_CARD_NOT_FOUND = "Product card not found";
+    public static final String ACCESS_TOKEN_NOT_UPDATED = "Problems with access token update";
+    public static final String GMAIL_NOT_SENT = "Mail not sent";
 
     private ExceptionMessages() {
     }
