@@ -9,7 +9,6 @@ import com.senla.aggregator.model.credential.GoogleCredentials;
 import com.senla.aggregator.service.exception.GmailException;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
-import jakarta.activation.FileDataSource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import jakarta.mail.Part;
@@ -18,9 +17,11 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -33,14 +34,17 @@ import java.util.Objects;
 import java.util.Properties;
 
 import static com.senla.aggregator.service.exception.ExceptionMessages.GMAIL_NOT_SENT;
+import static com.senla.aggregator.util.CommonConstants.*;
 import static com.senla.aggregator.util.CommonConstants.COMMA;
 
 @Service
 @RequiredArgsConstructor
 public class GmailApiServiceImpl implements GmailApiService {
     private static final String SENT_LABEL = "SENT";
+    private static final String LOGO_FILE_NAME = "logo.png";
     private static final String HTML_CONTENT_TYPE = "text/html; charset=utf-8";
     private static final String RELATED_MULTIPART_SUBTYPE = "related";
+
 
     private final JsonFactory jsonFactory;
     private final HttpTransport httpTransport;
@@ -49,7 +53,7 @@ public class GmailApiServiceImpl implements GmailApiService {
     private final GoogleCredentialManager credentialManager;
 
     @Value("classpath:static/logo.png")
-    private File logoImage;
+    private Resource logoImage;
 
     @Override
     public void sendEmail(EmailRequest request) {
@@ -123,13 +127,13 @@ public class GmailApiServiceImpl implements GmailApiService {
         multipart.addBodyPart(filePart);
     }
 
-    private void attachImagePart(File image, Multipart multipart) throws MessagingException {
+    private void attachImagePart(Resource image, Multipart multipart) throws MessagingException, IOException {
         MimeBodyPart imagePart = new MimeBodyPart();
-        DataSource source = new FileDataSource(image);
+        DataSource source = new ByteArrayDataSource(image.getInputStream(), PNG_CONTENT_TYPE);
         imagePart.setDataHandler(new DataHandler(source));
-        imagePart.setFileName(image.getName());
+        imagePart.setFileName(LOGO_FILE_NAME);
         imagePart.setDisposition(Part.INLINE);
-        imagePart.setContentID(image.getName());
+        imagePart.setContentID(LOGO_FILE_NAME);
         multipart.addBodyPart(imagePart);
     }
 
