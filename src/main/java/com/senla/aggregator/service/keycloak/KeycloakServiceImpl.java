@@ -1,6 +1,5 @@
 package com.senla.aggregator.service.keycloak;
 
-import com.senla.aggregator.model.credential.KeycloakCredentials;
 import com.senla.aggregator.dto.auth.LoginDto;
 import com.senla.aggregator.dto.auth.RegisterDto;
 import com.senla.aggregator.dto.auth.TokenDto;
@@ -9,6 +8,7 @@ import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.mapper.UserMapper;
 import com.senla.aggregator.model.Role;
 import com.senla.aggregator.model.User;
+import com.senla.aggregator.model.credential.KeycloakCredentials;
 import com.senla.aggregator.repository.UserRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
 import com.senla.aggregator.service.exception.KeycloakException;
@@ -74,6 +74,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         addClientRoleToUser(userId, Role.DEFAULT.name());
 
         User dbUser = userMapper.toUser(user);
+        dbUser.setRole(Role.DEFAULT);
         dbUser.setId(userId);
 
         userRepository.save(dbUser);

@@ -8,13 +8,13 @@ SELECT p.id                                                                     
        ROUND(COALESCE((SELECT AVG(product_rating) FROM comments WHERE product_id = p.id), 0), 2) AS average_rating,
        (SELECT MIN(ph.price)
         FROM product_cards pc
-        JOIN LATERAL (
+                 JOIN LATERAL (
             SELECT price
             FROM price_histories
             WHERE card_id = pc.id
             ORDER BY updated_at DESC
             LIMIT 1
-        ) ph ON true
+            ) ph ON true
         WHERE pc.product_id = p.id)                                                              AS minimal_price
 FROM products p;
 

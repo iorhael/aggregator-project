@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.helper.Messages.*;
+import static com.senla.aggregator.controller.helper.Constants.*;
 
 @RestController
 @RequestMapping("api/users")
@@ -65,7 +65,6 @@ public class UserController {
     public ResponseInfoDto deleteUser(@Valid @RequestBody PasswordDto dto,
                                       Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
-
         keycloakService.deleteUser(userId);
 
         return ResponseInfoDto.builder()
@@ -78,7 +77,6 @@ public class UserController {
     public ResponseInfoDto promoteUser(@Valid @RequestBody UserPromotionDto dto,
                                        @PathVariable UUID id) {
         String roleName = dto.getRole().name();
-
         keycloakService.addClientRoleToUser(id, roleName);
 
         return ResponseInfoDto.builder()

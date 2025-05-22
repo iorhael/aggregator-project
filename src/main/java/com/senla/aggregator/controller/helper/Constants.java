@@ -1,6 +1,6 @@
 package com.senla.aggregator.controller.helper;
 
-public final class Messages {
+public final class Constants {
     public static final String DELETION_MESSAGE = "%s with id %s deleted successfully";
     public static final String PROMOTION_MESSAGE = "User with id %s promoted successfully";
     public static final String JOB_SUCCESSFULLY_STARTED = "Job with execution id %d successfully started";
@@ -21,6 +21,6 @@ public final class Messages {
     public static final String FAVORITE = "Favorite";
     public static final String PRODUCT_CARD = "Product card";
 
-    private Messages() {
+    private Constants() {
     }
 }

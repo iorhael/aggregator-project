@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f6ff;
+            margin: 0;
+            padding: 40px 0;
+            color: #003366;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #cce0ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 51, 153, 0.15);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 120px;
+            width: auto;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #0055aa;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #666;
+            border-top: 1px solid #cce0ff;
+            padding-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img alt="Logo" class="logo" src="cid:logo.png">
+    </div>
+
+    <div class="content">
+        <p><strong>Dear Administrators,</strong></p>
+
+        <p>This is an automated report regarding unverified products added during the following period:</p>
+
+        <p class="highlight"
+           th:text="${#temporals.format(periodStart, 'dd.MM.yyyy')} + ' - ' + ${#temporals.format(periodEnd, 'dd.MM.yyyy')}">
+        </p>
+
+        <p>Total number of unverified product entries: <span class="highlight" th:text="${productCount}"></span></p>
+
+        <p>Please review the attached file for a detailed list of the products requiring verification.</p>
+    </div>
+
+    <div class="footer">
+        Best regards,<br/>
+        Price Aggregator Notification System
+    </div>
+</div>
+</body>
+</html>

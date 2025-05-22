@@ -1,6 +1,6 @@
 package com.senla.aggregator.config.batch.productCard.reader;
 
-import com.senla.aggregator.config.batch.productCard.ProductCardItemReader;
+import com.senla.aggregator.config.batch.FileItemReader;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -19,7 +19,7 @@ import static com.senla.aggregator.config.batch.helper.Constants.JSON_IMPORT_REA
 
 @Component
 @StepScope
-public class JsonProductCardItemReader implements ProductCardItemReader {
+public class JsonProductCardItemReader implements FileItemReader<ProductCardImportDto> {
 
     private final JsonItemReader<ProductCardImportDto> delegate;
 

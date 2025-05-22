@@ -2,13 +2,13 @@
 
 --changeset iorhael:1742203729372 labels:seeds
 
-INSERT INTO users(id, username, email)
-VALUES ('c765237f-2702-4a88-943d-8bbc2910f803', 'default_admin', 'admin@example.com'),
-       ('ecaaa8a2-4100-4a9d-9b6f-f1f44f25fb13', 'default_retailer', 'retailer@example.com'),
-       ('41f7f2d7-0f95-4a7f-b19b-3794ebe1a9de', 'retailer_1', 'retailer1@example.com'),
-       ('3737e712-400b-4379-989b-919048f674c6', 'retailer_2', 'retailer2@example.com'),
-       ('f3315d1c-1ef4-4b61-aac4-ce6bc57a80a6', 'default_author', 'author@example.com'),
-       ('ca2d227c-f2df-45b8-acf4-443bc78d0b2b', 'default_user', 'user@example.com');
+INSERT INTO users(id, username, email, role)
+VALUES ('c765237f-2702-4a88-943d-8bbc2910f803', 'default_admin', 'admin@example.com', 'ADMIN'),
+       ('ecaaa8a2-4100-4a9d-9b6f-f1f44f25fb13', 'default_retailer', 'retailer@example.com', 'RETAILER'),
+       ('41f7f2d7-0f95-4a7f-b19b-3794ebe1a9de', 'retailer_1', 'retailer1@example.com', 'RETAILER'),
+       ('3737e712-400b-4379-989b-919048f674c6', 'retailer_2', 'retailer2@example.com', 'RETAILER'),
+       ('f3315d1c-1ef4-4b61-aac4-ce6bc57a80a6', 'default_author', 'author@example.com', 'AUTHOR'),
+       ('ca2d227c-f2df-45b8-acf4-443bc78d0b2b', 'default_user', 'user@example.com', 'DEFAULT');
 
 INSERT INTO retailers(owner_id, name, description, email, website)
 VALUES ('ecaaa8a2-4100-4a9d-9b6f-f1f44f25fb13', 'electrosila',

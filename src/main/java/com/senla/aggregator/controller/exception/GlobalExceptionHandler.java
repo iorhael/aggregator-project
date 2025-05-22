@@ -1,7 +1,6 @@
 package com.senla.aggregator.controller.exception;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
-import com.senla.aggregator.service.exception.FileParseException;
 import com.senla.aggregator.service.exception.KeycloakException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -20,8 +19,8 @@ import org.springframework.web.multipart.MultipartException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.senla.aggregator.controller.helper.Messages.DATA_INTEGRITY_VIOLATION_EXCEPTION;
-import static com.senla.aggregator.controller.helper.Messages.VALIDATION_ERROR_MESSAGE;
+import static com.senla.aggregator.controller.helper.Constants.DATA_INTEGRITY_VIOLATION_EXCEPTION;
+import static com.senla.aggregator.controller.helper.Constants.VALIDATION_ERROR_MESSAGE;
 
 @Slf4j
 @RestControllerAdvice
@@ -33,7 +32,6 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
             MultipartException.class,
-            FileParseException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseInfoDto handleBadRequest(Exception exception) {

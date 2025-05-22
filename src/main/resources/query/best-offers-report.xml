@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+    <named-native-query name="best-offers-report">
+        <query><![CDATA[
+            WITH our_offers AS (
+                SELECT
+                    pc.id AS card_id,
+                    pc.product_id,
+                    ph.price
+                FROM product_cards pc
+                JOIN price_histories ph ON ph.card_id = pc.id
+                WHERE
+                    pc.retailer_id = :retailerId
+                    AND ph.updated_at = (
+                        SELECT MAX(ph2.updated_at)
+                        FROM price_histories ph2
+                        WHERE ph2.card_id = pc.id
+                    )
+            ),
+            competitor_offers AS (
+                SELECT DISTINCT ON (pc1.product_id)
+                    pc1.product_id,
+                    r1.name AS retailer_name,
+                    ph1.price,
+                    pc1.warranty,
+                    pc1.installment_period,
+                    pc1.max_delivery_time
+                FROM product_cards pc1
+                JOIN retailers r1 ON r1.id = pc1.retailer_id
+                JOIN our_offers of ON of.product_id = pc1.product_id
+                JOIN LATERAL (
+                    SELECT ph1.price
+                    FROM price_histories ph1
+                    WHERE ph1.card_id = pc1.id
+                    ORDER BY ph1.updated_at DESC
+                    LIMIT 1
+                ) ph1 ON true
+                WHERE
+                    pc1.retailer_id != :retailerId
+                    AND ph1.price <= of.price
+                ORDER BY pc1.product_id, ph1.price
+            )
+            SELECT
+                p.name as product_name,
+                co.retailer_name,
+                of.price AS our_price,
+                co.price AS best_price,
+                co.warranty,
+                co.installment_period,
+                co.max_delivery_time
+            FROM our_offers of
+            JOIN products p ON p.id = of.product_id
+            JOIN competitor_offers co ON co.product_id = of.product_id
+            WHERE co.retailer_name IS NOT NULL
+            ORDER BY p.name;
+        ]]></query>
+    </named-native-query>
+</entity-mappings>

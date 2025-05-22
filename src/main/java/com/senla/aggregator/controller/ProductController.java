@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-import static com.senla.aggregator.controller.helper.Messages.*;
+import static com.senla.aggregator.controller.helper.Constants.*;
 
 @RestController
 @RequestMapping("api/products")

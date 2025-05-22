@@ -6,7 +6,6 @@ import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
 import com.senla.aggregator.model.Retailer;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
@@ -15,7 +14,6 @@ public interface RetailerMapper {
 
     Retailer toRetailer(RetailerCreateDto retailer);
 
-    @Mapping(source = "owner.username", target = "ownerName")
     RetailerGetDto toRetailerGetDto(Retailer retailer);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
