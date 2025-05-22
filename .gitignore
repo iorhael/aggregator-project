@@ -34,3 +34,6 @@ build/
 
 ### Environment variables file ###
 .env
+
+### SSL certificate ###
+certificate.p12
