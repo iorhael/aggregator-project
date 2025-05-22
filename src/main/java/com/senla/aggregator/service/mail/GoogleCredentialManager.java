@@ -33,9 +33,7 @@ public class GoogleCredentialManager {
     private Instant expiryTime = Instant.EPOCH;
 
     @PostConstruct
-    public void authorize() {
-        refreshCredential();
-    }
+    public void authorize() { refreshCredential(); }
 
     public Credential getCredential() {
         if (notExpired()) return credential;

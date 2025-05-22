@@ -41,14 +41,14 @@ public class RetailerServiceImpl implements RetailerService {
 
     @Override
     public RetailerGetDto getRetailerByOwnerId(UUID id) {
-        return retailerRepository.findWithOwnerByOwnerId(id)
+        return retailerRepository.findByOwnerId(id)
                 .map(retailerMapper::toRetailerGetDto)
                 .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
     }
 
     @Override
     public List<RetailerGetDto> getAllRetailers(int pageNo, int pageSize) {
-        return retailerRepository.findWithOwnerBy(PageRequest.of(pageNo, pageSize))
+        return retailerRepository.findAllBy(PageRequest.of(pageNo, pageSize))
                 .stream()
                 .map(retailerMapper::toRetailerGetDto)
                 .toList();
@@ -57,7 +57,7 @@ public class RetailerServiceImpl implements RetailerService {
     @Override
     @Transactional
     public RetailerGetDto updateRetailer(RetailerUpdateDto dto, UUID ownerId) {
-        Retailer retailer = retailerRepository.findWithOwnerByOwnerId(ownerId)
+        Retailer retailer = retailerRepository.findByOwnerId(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
 
         retailerMapper.updateRetailer(retailer, dto);
