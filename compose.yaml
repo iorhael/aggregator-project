@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready --username=${WEBAPP_DB_USERNAME} && 
+      test: [ "CMD-SHELL", "pg_isready --username=${WEBAPP_DB_USERNAME} &&
                             pg_isready --username=${KC_DB_USERNAME}" ]
       timeout: 5s
       interval: 5s
@@ -41,10 +41,9 @@ services:
   webapp:
     build: .
     ports:
-      - '8000:8000'
-      - '8080:8080'
+      - '443:8080'
     volumes:
-      - ./certificate.p12:${KEY_STORE}
+      - ./certificate.p12:${KEY_STORE}:z
     env_file:
       - .env
     depends_on:
