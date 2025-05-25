@@ -10,6 +10,7 @@ import com.senla.aggregator.dto.product.ProductPreviewDto;
 import com.senla.aggregator.dto.product.ProductUpdateDto;
 import com.senla.aggregator.model.Role;
 import com.senla.aggregator.service.product.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +43,19 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @Operation(
+            summary = "Get product by ID",
+            description = "Returns detailed information about a product including rating, characteristics and offers"
+    )
     @GetMapping("/{id}")
     public ProductDetailedDto getProduct(@PathVariable UUID id) {
         return productService.getProduct(id);
     }
 
+    @Operation(
+            summary = "Filter products",
+            description = "Performs filtering based on provided product name, vendor, category, rating, and characteristics"
+    )
     @PostMapping("/search")
     public List<ProductPreviewDto> searchProducts(@RequestBody ProductFilterDto dto,
                                                   @RequestParam(defaultValue = "0") int pageNo,
@@ -54,6 +63,10 @@ public class ProductController {
         return productService.filterProducts(dto, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Get product names and descriptions by category",
+            description = "Returns product IDs, names and short descriptions from a specified category"
+    )
     @GetMapping("/info/{categoryId}")
     public List<ProductNameDescriptionDto> getProductsInfo(@PathVariable UUID categoryId,
                                                            @RequestParam(defaultValue = "0") int pageNo,
@@ -61,6 +74,10 @@ public class ProductController {
         return productService.getProductsNameDescription(categoryId, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Get product previews by category",
+            description = "Returns a list of product preview cards for a given category"
+    )
     @GetMapping("/previews/{categoryId}")
     public List<ProductPreviewDto> getProductsPreviews(@PathVariable UUID categoryId,
                                                        @RequestParam(defaultValue = "0") int pageNo,
@@ -68,38 +85,52 @@ public class ProductController {
         return productService.getProductsPreviews(categoryId, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Create new product",
+            description = "Allows a retailer to create a product. Admin-created products are marked as trusted"
+    )
     @PostMapping
     @PreAuthorize("hasRole('RETAILER')")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductInfoDto createProduct(@Valid @RequestBody ProductCreateDto product, Authentication authentication) {
+    public ProductInfoDto createProduct(@Valid @RequestBody ProductCreateDto product,
+                                        Authentication authentication) {
         Boolean isCreatorTrusted = authentication.getAuthorities()
                 .contains(new SimpleGrantedAuthority(Role.ADMIN.getPrefixedRole()));
 
         return productService.createProduct(product, isCreatorTrusted);
     }
 
+    @Operation(
+            summary = "Verify products",
+            description = "Allows admin to verify a list of products by their IDs"
+    )
     @PatchMapping("/verification")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseInfoDto verifyProduct(@RequestBody List<UUID> productIds) {
         int verifiedCount = productService.verifyProducts(productIds);
-
         return ResponseInfoDto.builder()
                 .message(String.format(PRODUCTS_VERIFICATION_MESSAGE, verifiedCount))
                 .build();
     }
 
+    @Operation(
+            summary = "Update product",
+            description = "Allows admin to update product name, description and characteristics"
+    )
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ProductInfoDto updateProduct(@RequestBody ProductUpdateDto product,
-                                        @PathVariable UUID id) {
+    public ProductInfoDto updateProduct(@RequestBody ProductUpdateDto product, @PathVariable UUID id) {
         return productService.updateProduct(product, id);
     }
 
+    @Operation(
+            summary = "Delete product",
+            description = "Allows admin to delete a product by ID"
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseInfoDto deleteProduct(@PathVariable UUID id) {
         productService.deleteProduct(id);
-
         return ResponseInfoDto.builder()
                 .message(String.format(DELETION_MESSAGE, PRODUCT, id))
                 .build();

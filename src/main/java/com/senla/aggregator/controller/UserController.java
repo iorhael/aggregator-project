@@ -8,6 +8,7 @@ import com.senla.aggregator.dto.user.UserProfileDto;
 import com.senla.aggregator.dto.user.UserPromotionDto;
 import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.service.keycloak.KeycloakService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,26 +34,36 @@ public class UserController {
 
     private final KeycloakService keycloakService;
 
+    @Operation(
+            summary = "Get current user profile",
+            description = "Retrieve profile information of the currently authenticated user"
+    )
     @GetMapping
     public UserProfileDto getProfileInfo(Principal principal) {
         return keycloakService.getUser(principal.getName());
     }
 
+    @Operation(
+            summary = "Update user profile",
+            description = "Update the profile information of the authenticated user"
+    )
     @PutMapping
     public UserProfileDto updateProfileInfo(@Valid @RequestBody UserUpdateDto dto,
                                             Principal principal) {
         UUID userId = UUID.fromString(principal.getName());
-
         return keycloakService.updateUser(dto, userId);
     }
 
+    @Operation(
+            summary = "Update password",
+            description = "Update the password of the authenticated user"
+    )
     @PutMapping("/password")
     @VerifyPassword(password = "#dto.oldPassword")
     public ResponseInfoDto updatePassword(@Valid @RequestBody PasswordUpdateDto dto,
                                           Principal principal) {
         String userId = principal.getName();
         String newPassword = dto.getNewPassword();
-
         keycloakService.updatePassword(userId, newPassword);
 
         return ResponseInfoDto.builder()
@@ -60,6 +71,10 @@ public class UserController {
                 .build();
     }
 
+    @Operation(
+            summary = "Delete user account",
+            description = "Delete the authenticated user's account"
+    )
     @DeleteMapping
     @VerifyPassword(password = "#dto.password")
     public ResponseInfoDto deleteUser(@Valid @RequestBody PasswordDto dto,
@@ -72,6 +87,10 @@ public class UserController {
                 .build();
     }
 
+    @Operation(
+            summary = "Promote user",
+            description = "Assign a new role to a user (admin only)"
+    )
     @PutMapping("/promotion/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseInfoDto promoteUser(@Valid @RequestBody UserPromotionDto dto,

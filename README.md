@@ -13,7 +13,7 @@ cp .env.sample .env
 2. Then build images and run containers by command:
 
 ```shell
-docker compose up --build --watch
+docker compose -f compose.yaml -f compose.dev.yaml up --build --watch
 ```
 
 *`compose.override.yaml` helps to launch the application in a comfortable development environment: you do not need to

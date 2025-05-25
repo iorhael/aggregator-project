@@ -5,6 +5,7 @@ import com.senla.aggregator.dto.store.StoreCreateDto;
 import com.senla.aggregator.dto.store.StoreGetDto;
 import com.senla.aggregator.dto.store.StoreUpdateDto;
 import com.senla.aggregator.service.store.StoreService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +37,20 @@ public class StoreController {
 
     private final StoreService storeService;
 
+    @Operation(
+            summary = "Get all stores",
+            description = "Retrieve a paginated list of all stores"
+    )
     @GetMapping
     public List<StoreGetDto> findAllStores(@RequestParam(defaultValue = "0") int pageNo,
                                            @RequestParam(defaultValue = "15") int pageSize) {
         return storeService.getAllStores(pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Get stores of a specific retailer",
+            description = "Retrieve a paginated list of stores by retailer ID"
+    )
     @GetMapping("/{retailerId}")
     public List<StoreGetDto> findAllStoresByRetailerId(@RequestParam(defaultValue = "0") int pageNo,
                                                        @RequestParam(defaultValue = "15") int pageSize,
@@ -49,35 +58,48 @@ public class StoreController {
         return storeService.getStoresOfRetailer(retailerId, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Create a store",
+            description = "Create a new store for the authenticated retailer"
+    )
     @PostMapping
     @PreAuthorize("hasRole('RETAILER')")
     @ResponseStatus(HttpStatus.CREATED)
     public StoreGetDto createStore(@Valid @RequestBody StoreCreateDto store,
                                    Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         return storeService.createStore(store, ownerId);
     }
 
+    @Operation(
+            summary = "Get my stores",
+            description = "Retrieve a paginated list of stores owned by the authenticated retailer"
+    )
     @GetMapping("/my")
     @PreAuthorize("hasRole('RETAILER')")
     public List<StoreGetDto> findMyStores(@RequestParam(defaultValue = "0") int pageNo,
                                           @RequestParam(defaultValue = "15") int pageSize,
                                           Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         return storeService.getMyStores(ownerId, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Update a store",
+            description = "Update the details of a store owned by the authenticated retailer"
+    )
     @PutMapping
     @PreAuthorize("hasRole('RETAILER')")
     public StoreGetDto updateStore(@Valid @RequestBody StoreUpdateDto store,
                                    Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         return storeService.updateStore(store, ownerId);
     }
 
+    @Operation(
+            summary = "Delete a store",
+            description = "Delete a store owned by the authenticated retailer"
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('RETAILER')")
     public ResponseInfoDto deleteRetailer(@PathVariable UUID id, Principal principal) {

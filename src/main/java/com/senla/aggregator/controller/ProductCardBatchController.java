@@ -6,6 +6,7 @@ import com.senla.aggregator.dto.JobInfoDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.service.productCard.ProductCardBatchService;
 import com.senla.aggregator.validation.AllowedFileTypes;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
@@ -37,6 +38,10 @@ public class ProductCardBatchController {
 
     private final ProductCardBatchService productCardBatchService;
 
+    @Operation(
+            summary = "Import product cards",
+            description = "Start batch import of product cards from a CSV, JSON or XML file. Returns job execution ID."
+    )
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('RETAILER')")
     public ResponseInfoDto importProductCards(@RequestPart("file")
@@ -55,6 +60,10 @@ public class ProductCardBatchController {
                 .build();
     }
 
+    @Operation(
+            summary = "Update product cards",
+            description = "Start batch update of product cards from a CSV, JSON or XML file. Returns job execution ID."
+    )
     @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('RETAILER')")
     public ResponseInfoDto updateProductCards(@RequestPart("file")
@@ -72,6 +81,10 @@ public class ProductCardBatchController {
                 .build();
     }
 
+    @Operation(
+            summary = "Export product cards",
+            description = "Export all product cards of the current retailer in the specified format (CSV, JSON, XML)."
+    )
     @GetMapping("/export")
     @PreAuthorize("hasRole('RETAILER')")
     public ResponseEntity<Resource> exportProductCards(@RequestParam ContentType type,
@@ -88,13 +101,16 @@ public class ProductCardBatchController {
                 .body(resource);
     }
 
+    @Operation(
+            summary = "Get job execution history",
+            description = "Retrieve paginated list of batch import/update jobs for the current retailer."
+    )
     @GetMapping("/job_executions")
     @PreAuthorize("hasRole('RETAILER')")
     public List<JobInfoDto> getJobHistory(@RequestParam(defaultValue = "0") int pageNo,
                                           @RequestParam(defaultValue = "15") int pageSize,
                                           Principal principal) {
         UUID retailerOwnerId = UUID.fromString(principal.getName());
-
         return productCardBatchService.getExecutionsHistory(retailerOwnerId, pageNo, pageSize);
     }
 }
