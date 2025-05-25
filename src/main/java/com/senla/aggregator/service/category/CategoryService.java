@@ -19,7 +19,7 @@ public interface CategoryService {
 
     CategoryWithChildrenDto getAllSubcategories(UUID parentId);
 
-    List<Category> batchInsertCategories(List<CategoryCreateDto> list);
+    List<CategoryGetDto> batchInsertCategories(List<CategoryCreateDto> list);
 
     CategoryGetDto updateCategory(CategoryUpdateDto category, UUID id);
 

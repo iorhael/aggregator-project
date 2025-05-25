@@ -7,6 +7,7 @@ import com.senla.aggregator.dto.retailer.RetailerCreateDto;
 import com.senla.aggregator.dto.retailer.RetailerGetDto;
 import com.senla.aggregator.dto.retailer.RetailerUpdateDto;
 import com.senla.aggregator.service.retailer.RetailerService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +33,17 @@ import static com.senla.aggregator.controller.helper.Constants.*;
 @RestController
 @RequestMapping("api/retailers")
 @RequiredArgsConstructor
-@Tag(name = "Retailers Resource", description = "CRUD")
+@Tag(name = "Retailers Resource",
+        description = "CRUD operations for retailer accounts"
+)
 public class RetailerController {
 
     private final RetailerService retailerService;
 
+    @Operation(
+            summary = "Get all retailers (admin only)",
+            description = "Retrieve a paginated list of all retailers. Requires admin privileges."
+    )
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<RetailerGetDto> findAllRetailers(@RequestParam(defaultValue = "0") int pageNo,
@@ -44,33 +51,46 @@ public class RetailerController {
         return retailerService.getAllRetailers(pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Get current retailer (self)",
+            description = "Retrieve details of the retailer account associated with the currently authenticated user"
+    )
     @GetMapping("/me")
     @PreAuthorize("hasRole('RETAILER')")
     public RetailerGetDto findRetailer(Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         return retailerService.getRetailerByOwnerId(ownerId);
     }
 
+    @Operation(
+            summary = "Create a new retailer",
+            description = "Register a new retailer account. Requires retailer role."
+    )
     @PostMapping
     @PreAuthorize("hasRole('RETAILER')")
     @ResponseStatus(HttpStatus.CREATED)
     public RetailerGetDto createRetailer(@Valid @RequestBody RetailerCreateDto retailer,
                                          Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         return retailerService.registerRetailer(retailer, ownerId);
     }
 
+    @Operation(
+            summary = "Update current retailer",
+            description = "Update the authenticated user's retailer profile"
+    )
     @PutMapping
     @PreAuthorize("hasRole('RETAILER')")
     public RetailerGetDto updateRetailer(@Valid @RequestBody RetailerUpdateDto retailer,
                                          Principal principal) {
         UUID ownerId = UUID.fromString(principal.getName());
-
         return retailerService.updateRetailer(retailer, ownerId);
     }
 
+    @Operation(
+            summary = "Delete current retailer",
+            description = "Delete the currently authenticated retailer account. Requires password verification."
+    )
     @DeleteMapping("/me")
     @PreAuthorize("hasRole('RETAILER')")
     @VerifyPassword(password = "#dto.password")
@@ -84,6 +104,10 @@ public class RetailerController {
                 .build();
     }
 
+    @Operation(
+            summary = "Delete retailer by ID (admin only)",
+            description = "Delete a specific retailer by their unique identifier. Requires admin privileges."
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseInfoDto deleteRetailer(@PathVariable UUID id) {

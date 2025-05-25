@@ -4,6 +4,7 @@ import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.dto.vendor.VendorCreateDto;
 import com.senla.aggregator.dto.vendor.VendorGetDto;
 import com.senla.aggregator.service.vendor.VendorService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,22 +30,34 @@ import static com.senla.aggregator.controller.helper.Constants.VENDOR;
 @RestController
 @RequestMapping("api/vendors")
 @RequiredArgsConstructor
-@Tag(name = "Vendors Resource", description = "CRUD")
+@Tag(name = "Vendors Resource", description = "Manage vendors")
 public class VendorController {
 
     private final VendorService vendorService;
 
+    @Operation(
+            summary = "Get vendor by ID",
+            description = "Retrieve a vendor by its unique identifier"
+    )
     @GetMapping("/{id}")
     public VendorGetDto findVendorById(@PathVariable UUID id) {
         return vendorService.getVendor(id);
     }
 
+    @Operation(
+            summary = "Get all vendors",
+            description = "Retrieve a paginated list of all vendors"
+    )
     @GetMapping
     public List<VendorGetDto> findAllVendors(@RequestParam(defaultValue = "0") int pageNo,
                                              @RequestParam(defaultValue = "15") int pageSize) {
         return vendorService.getAllVendors(pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Create vendor",
+            description = "Create a new vendor (admin only)"
+    )
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -52,6 +65,10 @@ public class VendorController {
         return vendorService.createVendor(vendor);
     }
 
+    @Operation(
+            summary = "Update vendor",
+            description = "Update an existing vendor by ID (admin only)"
+    )
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public VendorGetDto updateVendor(@RequestBody VendorCreateDto vendor,
@@ -59,6 +76,10 @@ public class VendorController {
         return vendorService.updateVendor(vendor, id);
     }
 
+    @Operation(
+            summary = "Delete vendor",
+            description = "Delete a vendor by its ID (admin only)"
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseInfoDto deleteVendor(@PathVariable UUID id) {

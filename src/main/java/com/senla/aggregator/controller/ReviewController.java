@@ -6,6 +6,7 @@ import com.senla.aggregator.dto.review.ReviewGetDto;
 import com.senla.aggregator.dto.review.ReviewUpdateDto;
 import com.senla.aggregator.model.Role;
 import com.senla.aggregator.service.review.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,16 +35,24 @@ import static com.senla.aggregator.controller.helper.Constants.REVIEW;
 @RestController
 @RequestMapping("api/reviews")
 @RequiredArgsConstructor
-@Tag(name = "Review Resource", description = "CRUD")
+@Tag(name = "Review Resource", description = "CRUD operations for product reviews")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @Operation(
+            summary = "Get review by ID",
+            description = "Retrieve a single review by its unique identifier"
+    )
     @GetMapping("/{id}")
     public ReviewGetDto findReview(@PathVariable UUID id) {
         return reviewService.getReview(id);
     }
 
+    @Operation(
+            summary = "Get product reviews",
+            description = "Retrieve a paginated list of reviews for a specific product"
+    )
     @GetMapping("/products/{productId}")
     public List<ReviewGetDto> findReviewsOfProduct(@PathVariable UUID productId,
                                                    @RequestParam(defaultValue = "0") int pageNo,
@@ -51,6 +60,10 @@ public class ReviewController {
         return reviewService.getReviewsOfProduct(productId, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Get reviews by author",
+            description = "Retrieve a paginated list of reviews written by a specific author"
+    )
     @GetMapping("/authors/{authorName}")
     public List<ReviewGetDto> findReviewsOfProduct(@PathVariable String authorName,
                                                    @RequestParam(defaultValue = "0") int pageNo,
@@ -58,26 +71,36 @@ public class ReviewController {
         return reviewService.getReviewsOfAuthor(authorName, pageNo, pageSize);
     }
 
+    @Operation(
+            summary = "Create a review",
+            description = "Submit a new review for a product. Requires author role."
+    )
     @PostMapping
     @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewGetDto createReview(@Valid @RequestBody ReviewCreateDto dto,
                                      Principal principal) {
         UUID authorId = UUID.fromString(principal.getName());
-
         return reviewService.createReview(dto, authorId);
     }
 
+    @Operation(
+            summary = "Update a review",
+            description = "Update an existing review. Requires author role and ownership."
+    )
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('AUTHOR')")
     public ReviewGetDto updateReview(@Valid @RequestBody ReviewUpdateDto dto,
                                      @PathVariable UUID id,
                                      Principal principal) {
         UUID authorId = UUID.fromString(principal.getName());
-
         return reviewService.updateReview(dto, id, authorId);
     }
 
+    @Operation(
+            summary = "Delete a review",
+            description = "Delete a review by ID. Admins can delete any review, authors can delete their own."
+    )
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('AUTHOR')")
     public ResponseInfoDto deleteReview(@PathVariable UUID id, Authentication authentication) {

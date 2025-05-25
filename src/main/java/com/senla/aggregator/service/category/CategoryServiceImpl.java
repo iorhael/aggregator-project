@@ -67,12 +67,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> batchInsertCategories(List<CategoryCreateDto> categories) {
+    public List<CategoryGetDto> batchInsertCategories(List<CategoryCreateDto> categories) {
         List<Category> list = categories.stream()
                 .map(categoryMapper::toCategory)
                 .toList();
 
-        return categoryRepository.saveAll(list);
+        return categoryRepository.saveAll(list)
+                .stream()
+                .map(categoryMapper::toCategoryGetDto)
+                .toList();
     }
 
     @Override
