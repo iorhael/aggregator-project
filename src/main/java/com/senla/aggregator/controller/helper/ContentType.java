@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 public enum ContentType {
     CSV("text/csv"),
     JSON("application/json"),
-    XML("text/xml");
+    XML("text/xml"),
+    PNG("image/png"),
+    JPEG("image/jpeg");
 
     private final String value;
 

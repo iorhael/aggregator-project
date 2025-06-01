@@ -5,7 +5,6 @@ import com.senla.aggregator.dto.category.CategoryCreateDto;
 import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.dto.category.CategoryWithChildrenDto;
-import com.senla.aggregator.model.Category;
 import com.senla.aggregator.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

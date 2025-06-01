@@ -4,7 +4,6 @@ import com.senla.aggregator.dto.category.CategoryCreateDto;
 import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.dto.category.CategoryWithChildrenDto;
-import com.senla.aggregator.model.Category;
 
 import java.util.List;
 import java.util.UUID;
