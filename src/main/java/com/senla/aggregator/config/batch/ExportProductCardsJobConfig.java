@@ -1,6 +1,5 @@
 package com.senla.aggregator.config.batch;
 
-import com.senla.aggregator.config.batch.helper.StepExceptionListener;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import com.senla.aggregator.mapper.ProductCardMapper;
@@ -41,7 +40,7 @@ public class ExportProductCardsJobConfig {
                 WHERE pc.retailer.id = :retailerId
                 """);
         reader.setParameterValues(Map.of(RETAILER_ID_PARAM, UUID.fromString(retailerId)));
-        reader.setPageSize(50);
+        reader.setPageSize(100);
         return reader;
     }
 
@@ -74,14 +73,12 @@ public class ExportProductCardsJobConfig {
                                        PlatformTransactionManager transactionManager,
                                        JpaPagingItemReader<ProductCard> reader,
                                        ItemProcessor<ProductCard, ProductCardImportDto> productCardProcessor,
-                                       FileItemWriter<ProductCardImportDto> writer,
-                                       StepExceptionListener stepExceptionListener) {
+                                       FileItemWriter<ProductCardImportDto> writer) {
         return new StepBuilder(MAIN_STEP_NAME, jobRepository)
                 .<ProductCard, ProductCardImportDto>chunk(100, transactionManager)
                 .reader(reader)
                 .processor(productCardProcessor)
                 .writer(writer)
-                .listener(stepExceptionListener)
                 .build();
     }
 }

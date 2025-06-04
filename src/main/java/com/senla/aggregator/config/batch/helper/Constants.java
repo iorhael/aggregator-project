@@ -8,6 +8,8 @@ public final class Constants {
     public static final String EXPORT_CARDS_JOB_NAME = "exportProductCardsJob";
     public static final String VERIFIED_PRODUCTS_ONLY_PARAM = "verifiedProductsOnly";
     public static final String RETAILER_ID_PARAM = "retailerId";
+    public static final String RETAILER_NAME_PARAM = "retailerName";
+    public static final String CONTACT_EMAIL_PARAM = "contactEmail";
     public static final String CONTENT_TYPE_PARAM = "contentType";
     public static final String TIME_PARAM = "time";
     public static final String IMPORT_FILE_PARAM = "importFile";

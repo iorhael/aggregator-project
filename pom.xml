@@ -26,6 +26,7 @@
         <google-api-services-gmail.version>v1-rev20250331-2.0.0</google-api-services-gmail.version>
         <jobrunr-version>7.5.1</jobrunr-version>
         <minio-version>8.5.17</minio-version>
+        <datafaker-version>2.4.3</datafaker-version>
     </properties>
 
     <dependencies>
@@ -123,6 +124,11 @@
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
             <version>${minio-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>${datafaker-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

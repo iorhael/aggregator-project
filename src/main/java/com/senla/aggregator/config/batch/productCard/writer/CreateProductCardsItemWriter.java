@@ -1,16 +1,17 @@
 package com.senla.aggregator.config.batch.productCard.writer;
 
+import com.senla.aggregator.dto.priceHistory.PriceHistoryBatchCreateDto;
+import com.senla.aggregator.dto.product.ProductIdName;
+import com.senla.aggregator.dto.productCard.ProductCardBatchCreateDto;
+import com.senla.aggregator.dto.productCard.ProductCardIdProductName;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
-import com.senla.aggregator.mapper.ProductCardMapper;
-import com.senla.aggregator.model.PriceHistory;
-import com.senla.aggregator.model.Product;
-import com.senla.aggregator.model.ProductCard;
-import com.senla.aggregator.model.Retailer;
-import com.senla.aggregator.repository.PriceHistoryRepository;
-import com.senla.aggregator.repository.ProductCardRepository;
+import com.senla.aggregator.mapper.ProductCardBatchCreateDtoMapper;
+import com.senla.aggregator.repository.priceHistory.PriceHistoryBatchRepository;
 import com.senla.aggregator.repository.ProductRepository;
-import com.senla.aggregator.repository.RetailerRepository;
+import com.senla.aggregator.repository.productCard.ProductCardRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.batch.core.annotation.BeforeWrite;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
@@ -18,7 +19,8 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.AbstractMap;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,13 +32,13 @@ import java.util.stream.Collectors;
 @Component
 @StepScope
 @RequiredArgsConstructor
+@Slf4j(topic = "batchLogger")
 public class CreateProductCardsItemWriter implements ItemWriter<ProductCardImportDto> {
 
     private final ProductRepository productRepository;
-    private final RetailerRepository retailerRepository;
     private final ProductCardRepository productCardRepository;
-    private final PriceHistoryRepository priceHistoryRepository;
-    private final ProductCardMapper productCardMapper;
+    private final PriceHistoryBatchRepository priceHistoryBatchRepository;
+    private final ProductCardBatchCreateDtoMapper batchCreateProductCardMapper;
 
     @Value("#{jobParameters['retailerId']}")
     private String retailerId;
@@ -44,57 +46,83 @@ public class CreateProductCardsItemWriter implements ItemWriter<ProductCardImpor
     @Value("#{jobParameters['verfiedProductsOnly'] ?: false}")
     private Boolean verifiedProductsOnly;
 
-    private Retailer retailer;
-    private Map<String, Product> productMap;
+    private UUID retailerUUID;
+    private List<String> productNames;
+    private Map<String, UUID> productNameIdMap;
+    private Map<String, BigDecimal> productNamePriceMap;
+    private List<? extends ProductCardImportDto> importCards;
 
     @BeforeWrite
     public void beforeWrite(Chunk<? extends ProductCardImportDto> chunk) {
-        List<String> productNames = chunk.getItems()
-                .stream()
-                .map(ProductCardImportDto::getProductName)
-                .toList();
-
-        productMap = productRepository.findByNames(productNames, verifiedProductsOnly)
-                .stream()
-                .collect(Collectors.toMap(
-                        Product::getName,
-                        Function.identity())
-                );
-
-        retailer = retailerRepository.getReferenceById(UUID.fromString(retailerId));
+        importCards = chunk.getItems();
+        retailerUUID = UUID.fromString(retailerId);
+        initializeCollections();
     }
 
     @Override
-    public void write(Chunk<? extends ProductCardImportDto> chunk) {
-        List<Map.Entry<ProductCard, PriceHistory>> pairs = chunk.getItems()
-                .stream()
-                .map(this::createPair)
+    public void write(@NotNull Chunk<? extends ProductCardImportDto> chunk) {
+        List<ProductCardBatchCreateDto> cards = importCards.stream()
+                .map(this::filterAndConvertCards)
                 .flatMap(Optional::stream)
                 .toList();
 
-        productCardRepository.saveAll(pairs.stream()
-                .map(Map.Entry::getKey)
-                .toList()
-        );
+        productCardRepository.batchUpsert(cards);
 
-        priceHistoryRepository.saveAll(pairs.stream()
-                .map(Map.Entry::getValue)
-                .toList()
-        );
+        Map<String, UUID> createdCardsProductNameIdMap = productCardRepository
+                .findIdProductNames(productNames, retailerUUID)
+                .stream()
+                .collect(Collectors.toMap(
+                        ProductCardIdProductName::getProductName,
+                        ProductCardIdProductName::getId
+                ));
+
+        insertPrices(createdCardsProductNameIdMap);
     }
 
-    private Optional<Map.Entry<ProductCard, PriceHistory>> createPair(ProductCardImportDto dto) {
-        Product product = productMap.get(dto.getProductName());
-        if (Objects.isNull(product)) return Optional.empty();
+    private void initializeCollections() {
+        productNames = importCards.stream()
+                .map(ProductCardImportDto::getProductName)
+                .toList();
 
-        ProductCard card = productCardMapper.toProductCard(dto);
-        card.setProduct(product);
-        card.setRetailer(retailer);
+        productNameIdMap = productRepository.findByNames(productNames, verifiedProductsOnly)
+                .stream()
+                .collect(Collectors.toMap(
+                        ProductIdName::getName,
+                        ProductIdName::getId)
+                );
 
-        PriceHistory priceHistory = new PriceHistory();
-        priceHistory.setCard(card);
-        priceHistory.setPrice(dto.getPrice());
+        productNamePriceMap = importCards.stream()
+                .collect(Collectors.toMap(
+                        ProductCardImportDto::getProductName,
+                        ProductCardImportDto::getPrice)
+                );
+    }
 
-        return Optional.of(new AbstractMap.SimpleEntry<>(card, priceHistory));
+    private Optional<ProductCardBatchCreateDto> filterAndConvertCards(ProductCardImportDto dto) {
+        return Optional.ofNullable(productNameIdMap.get(dto.getProductName()))
+                .map(productId -> {
+                    ProductCardBatchCreateDto card = batchCreateProductCardMapper.toDto(dto);
+                    card.setProductId(productId);
+                    card.setRetailerId(retailerUUID);
+                    return card;
+                }).or(() -> {
+                    log.warn("Item was skipped {}. Reason: Product with such name doesn't exist", dto);
+                    return Optional.empty();
+                });
+    }
+
+    private void insertPrices(Map<String, UUID> createdCardsProductNameIdMap) {
+        List<PriceHistoryBatchCreateDto> prices = new ArrayList<>();
+
+        productNamePriceMap.forEach((name, price) -> {
+            UUID cardId = createdCardsProductNameIdMap.get(name);
+            if (Objects.isNull(cardId)) {
+                log.warn("Price wasn't inserted. Product with name {} doesn't exist", name);
+                return;
+            }
+            prices.add(new PriceHistoryBatchCreateDto(cardId, price));
+        });
+
+        priceHistoryBatchRepository.batchInsert(prices);
     }
 }

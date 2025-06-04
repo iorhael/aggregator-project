@@ -10,7 +10,7 @@ import com.senla.aggregator.model.PriceHistory;
 import com.senla.aggregator.model.ProductCard;
 import com.senla.aggregator.model.ProductCard_;
 import com.senla.aggregator.model.Retailer;
-import com.senla.aggregator.repository.ProductCardRepository;
+import com.senla.aggregator.repository.productCard.ProductCardRepository;
 import com.senla.aggregator.repository.ProductRepository;
 import com.senla.aggregator.repository.RetailerRepository;
 import com.senla.aggregator.specification.ProductCardSpecification;

@@ -11,9 +11,8 @@ import java.util.Objects;
 
 public class AllowedFileTypesValidator implements ConstraintValidator<AllowedFileTypes, MultipartFile> {
 
-    private List<String> allowedFileTypes;
     private int maxFileSize;
-
+    private List<String> allowedFileTypes;
 
     @Override
     public void initialize(AllowedFileTypes constraintAnnotation) {

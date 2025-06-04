@@ -15,4 +15,13 @@ public class MinioConfig {
                 .credentials(minioCredentials.accessKey(), minioCredentials.secretKey())
                 .build();
     }
+
+    @Bean
+    public MinioClient signMinioClient(MinioCredentials minioCredentials) {
+        return MinioClient.builder()
+                .endpoint(minioCredentials.externalServerUrl())
+                .credentials(minioCredentials.accessKey(), minioCredentials.secretKey())
+                .build();
+
+    }
 }

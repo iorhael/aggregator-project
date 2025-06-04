@@ -32,6 +32,7 @@ public class MinioServiceImpl implements MinioService {
     private static final String PRODUCTS_DIRECTORY = "products";
 
     private final MinioClient minioClient;
+    private final MinioClient signMinioClient;
 
     private String imageBucketUrl;
 
@@ -101,7 +102,7 @@ public class MinioServiceImpl implements MinioService {
                     .contentType(contentType.getValue())
                     .build());
 
-            return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+            return signMinioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                     .method(Method.GET)
                     .bucket(bucket)
                     .object(objectPath)

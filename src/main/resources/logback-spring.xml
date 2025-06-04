@@ -1,0 +1,39 @@
+<configuration>
+    <property name="BATCH_LOG_DIR" value="logs/batch"/>
+
+    <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>batchLogFile</key>
+            <defaultValue>unknown-job</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${batchLogFile}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${BATCH_LOG_DIR}/${batchLogFile}.log</file>
+
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>${BATCH_LOG_DIR}/archive/${batchLogFile}.%d{yyyy-MM-dd}.log</fileNamePattern>
+                    <maxHistory>7</maxHistory>
+                    <cleanHistoryOnStart>true</cleanHistoryOnStart>
+                </rollingPolicy>
+
+                <encoder>
+                    <pattern>%-5level: %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <logger name="batchLogger" level="INFO" additivity="false">
+        <appender-ref ref="SIFT"/>
+    </logger>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID} --- [%15.15t] %-40.40logger{39} : %m%n%ex</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

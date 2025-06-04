@@ -1,6 +1,7 @@
-package com.senla.aggregator.repository;
+package com.senla.aggregator.repository.productCard;
 
 import com.senla.aggregator.dto.productCard.BestOffer;
+import com.senla.aggregator.dto.productCard.ProductCardIdProductName;
 import com.senla.aggregator.model.ProductCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ProductCardRepository extends JpaRepository<ProductCard, UUID>, JpaSpecificationExecutor<ProductCard> {
+public interface ProductCardRepository extends JpaRepository<ProductCard, UUID>,
+        CustomProductCardRepository, JpaSpecificationExecutor<ProductCard> {
 
     @EntityGraph("product-card-detailed")
     Optional<ProductCard> findDetailedById(UUID id);
@@ -38,6 +40,18 @@ public interface ProductCardRepository extends JpaRepository<ProductCard, UUID>,
               AND pc.retailer.id = :retailerId
             """)
     List<ProductCard> findByProductNamesAndRetailerId(
+            @Param("productNames") List<String> productNames,
+            @Param("retailerId") UUID retailerId
+    );
+
+    @NativeQuery("""
+            SELECT pc.id, p.name AS productName
+            FROM product_cards pc
+            JOIN products p ON p.id = pc.product_id
+            WHERE p.name IN :productNames
+                AND pc.retailer_id = :retailerId
+            """)
+    List<ProductCardIdProductName> findIdProductNames(
             @Param("productNames") List<String> productNames,
             @Param("retailerId") UUID retailerId
     );

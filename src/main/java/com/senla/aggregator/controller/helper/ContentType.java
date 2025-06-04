@@ -9,6 +9,7 @@ public enum ContentType {
     CSV("text/csv"),
     JSON("application/json"),
     XML("text/xml"),
+    PLAIN_TEXT("text/plain"),
     PNG("image/png"),
     JPEG("image/jpeg");
 

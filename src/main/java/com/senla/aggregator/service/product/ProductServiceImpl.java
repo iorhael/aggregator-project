@@ -162,7 +162,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND));
 
-        minioService.deleteProductImage(product.getImageLink());
+        if (Objects.nonNull(product.getImageLink()))
+            minioService.deleteProductImage(product.getImageLink());
+
         productRepository.delete(product);
     }
 }

@@ -31,3 +31,5 @@ databaseChangeLog:
       file: db/changelog/014-create-user-job-execution.sql
   - include:
       file: db/changelog/001-alter-product.sql
+  - include:
+      file: db/changelog/015-create-used-seed.sql

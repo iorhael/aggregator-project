@@ -107,6 +107,7 @@ public class CategoryController {
             description = "Insert multiple categories in a single request"
     )
     @PostMapping("/batch")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryGetDto> batchInsertCategories(@Valid @RequestBody List<CategoryCreateDto> dtos) {
         return categoryService.batchInsertCategories(dtos);
     }

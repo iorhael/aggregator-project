@@ -35,7 +35,4 @@ public class MailConfig {
     public JsonFactory jsonFactory() {
         return GsonFactory.getDefaultInstance();
     }
-
-    @Bean
-    public RestTemplate restTemplate() { return new RestTemplate(); }
 }

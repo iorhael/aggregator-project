@@ -2,11 +2,13 @@ package com.senla.aggregator.controller.exception;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.service.exception.KeycloakException;
+import com.senla.aggregator.service.exception.SpringBatchException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.JobExecutionException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -31,6 +33,7 @@ public class GlobalExceptionHandler {
             ClientErrorException.class,
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
+            SpringBatchException.class,
             MultipartException.class,
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)

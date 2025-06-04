@@ -1,7 +1,6 @@
 package com.senla.aggregator.config.batch;
 
 import com.senla.aggregator.config.batch.helper.Constants;
-import com.senla.aggregator.config.batch.helper.StepExceptionListener;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
@@ -34,8 +33,7 @@ public class UpdateProductCardsJobConfig {
                                        PlatformTransactionManager transactionManager,
                                        FileItemReader<ProductCardImportDto> reader,
                                        BeanValidatingItemProcessor<ProductCardImportDto> beanValidatingItemProcessor,
-                                       ItemWriter<ProductCardImportDto> updateProductCardsItemWriter,
-                                       StepExceptionListener stepExceptionListener) {
+                                       ItemWriter<ProductCardImportDto> updateProductCardsItemWriter) {
         return new StepBuilder(Constants.MAIN_STEP_NAME, jobRepository)
                 .<ProductCardImportDto, ProductCardImportDto>chunk(100, transactionManager)
                 .reader(reader)
@@ -43,7 +41,7 @@ public class UpdateProductCardsJobConfig {
                 .writer(updateProductCardsItemWriter)
                 .faultTolerant()
                 .skip(DataIntegrityViolationException.class)
-                .listener(stepExceptionListener)
+//                .listener(stepExceptionListener)
                 .build();
     }
 }

@@ -4,7 +4,7 @@ import com.senla.aggregator.dto.mail.EmailRequest;
 import com.senla.aggregator.dto.productCard.BestOffer;
 import com.senla.aggregator.dto.retailer.RetailerGetDto;
 import com.senla.aggregator.mapper.RetailerMapper;
-import com.senla.aggregator.repository.ProductCardRepository;
+import com.senla.aggregator.repository.productCard.ProductCardRepository;
 import com.senla.aggregator.repository.RetailerRepository;
 import com.senla.aggregator.schedule.helper.JobHelper;
 import com.senla.aggregator.service.mail.GmailApiService;

@@ -7,12 +7,15 @@ import com.senla.aggregator.model.Retailer;
 import com.senla.aggregator.model.RetailerJob;
 import com.senla.aggregator.repository.RetailerJobRepository;
 import com.senla.aggregator.repository.RetailerRepository;
+import com.senla.aggregator.repository.UserRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
+import com.senla.aggregator.service.exception.SpringBatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionException;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.explore.JobExplorer;
@@ -35,15 +38,15 @@ import static com.senla.aggregator.util.CommonConstants.TMP_FILE_EXTENSION;
 @RequiredArgsConstructor
 public class ProductCardBatchServiceImpl implements ProductCardBatchService {
 
+    private final UserRepository userRepository;
     private final RetailerRepository retailerRepository;
     private final RetailerJobRepository retailerJobRepository;
 
-    private final JobLauncher jobLauncher;
     private final JobExplorer jobExplorer;
     private final Job importProductCardsJob;
     private final Job updateProductCardsJob;
     private final Job exportProductCardsJob;
-
+    private final JobLauncher asyncJobLauncher;
     private final JobExecutionMapper jobExecutionMapper;
 
     @Override
@@ -59,6 +62,8 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
                 .addString(IMPORT_FILE_PARAM, tempFile.getAbsolutePath())
                 .addString(VERIFIED_PRODUCTS_ONLY_PARAM, Boolean.toString(verifiedProductsOnly))
                 .addString(RETAILER_ID_PARAM, retailer.getId().toString())
+                .addString(RETAILER_NAME_PARAM, retailer.getName())
+                .addString(CONTACT_EMAIL_PARAM, retailer.getEmail())
                 .addString(CONTENT_TYPE_PARAM, contentType.getValue())
                 .addLong(TIME_PARAM, System.currentTimeMillis())
                 .toJobParameters();
@@ -78,6 +83,8 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString(IMPORT_FILE_PARAM, tempFile.getAbsolutePath())
                 .addString(RETAILER_ID_PARAM, retailer.getId().toString())
+                .addString(RETAILER_NAME_PARAM, retailer.getName())
+                .addString(CONTACT_EMAIL_PARAM, retailer.getEmail())
                 .addString(CONTENT_TYPE_PARAM, contentType.getValue())
                 .addLong(TIME_PARAM, System.currentTimeMillis())
                 .toJobParameters();
@@ -101,7 +108,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
                     .addLong(TIME_PARAM, System.currentTimeMillis())
                     .toJobParameters();
 
-            JobExecution jobExecution = jobLauncher.run(exportProductCardsJob, jobParameters);
+            JobExecution jobExecution = asyncJobLauncher.run(exportProductCardsJob, jobParameters);
 
             // 4. Ожидаем завершения (синхронно)
             while (jobExecution.isRunning()) {
@@ -137,14 +144,18 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
                 .toList();
     }
 
-    private Long launchAndPersistJob(Job job, JobParameters jobParameters, Retailer retailer) throws Exception {
-        Long jobExecutionId = jobLauncher.run(job, jobParameters).getId();
+    private Long launchAndPersistJob(Job job, JobParameters jobParameters, Retailer retailer) {
+        try {
+            long jobExecutionId = asyncJobLauncher.run(job, jobParameters).getId();
 
-        RetailerJob retailerJob = new RetailerJob();
-        retailerJob.setJobExecutionId(jobExecutionId);
-        retailerJob.setRetailer(retailer);
-        retailerJobRepository.save(retailerJob);
+            RetailerJob retailerJob = new RetailerJob();
+            retailerJob.setJobExecutionId(jobExecutionId);
+            retailerJob.setRetailer(retailer);
+            retailerJobRepository.save(retailerJob);
 
-        return retailerJob.getJobExecutionId();
+            return retailerJob.getJobExecutionId();
+        } catch (JobExecutionException  e) {
+            throw new SpringBatchException(ExceptionMessages.JOB_LAUNCH_FAILED, e);
+        }
     }
 }
