@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -38,7 +39,6 @@ import static com.senla.aggregator.util.CommonConstants.TMP_FILE_EXTENSION;
 @RequiredArgsConstructor
 public class ProductCardBatchServiceImpl implements ProductCardBatchService {
 
-    private final UserRepository userRepository;
     private final RetailerRepository retailerRepository;
     private final RetailerJobRepository retailerJobRepository;
 
@@ -50,7 +50,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     private final JobExecutionMapper jobExecutionMapper;
 
     @Override
-    public Long importProductCards(MultipartFile file, UUID retailerOwnerId, Boolean verifiedProductsOnly) throws Exception {
+    public Long importProductCards(MultipartFile file, UUID retailerOwnerId, Boolean verifiedProductsOnly) throws IOException {
         ContentType contentType = ContentType.fromValue(file.getContentType());
         File tempFile = File.createTempFile(IMPORT_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
         file.transferTo(tempFile);
@@ -59,7 +59,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
 
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString(IMPORT_FILE_PARAM, tempFile.getAbsolutePath())
+                .addString(TEMP_FILE_PARAM, tempFile.getAbsolutePath())
                 .addString(VERIFIED_PRODUCTS_ONLY_PARAM, Boolean.toString(verifiedProductsOnly))
                 .addString(RETAILER_ID_PARAM, retailer.getId().toString())
                 .addString(RETAILER_NAME_PARAM, retailer.getName())
@@ -72,7 +72,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     }
 
     @Override
-    public Long updateProductCards(MultipartFile file, UUID retailerOwnerId) throws Exception {
+    public Long updateProductCards(MultipartFile file, UUID retailerOwnerId) throws IOException {
         ContentType contentType = ContentType.fromValue(file.getContentType());
         File tempFile = File.createTempFile(UPDATE_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
         file.transferTo(tempFile);
@@ -81,7 +81,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
 
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString(IMPORT_FILE_PARAM, tempFile.getAbsolutePath())
+                .addString(TEMP_FILE_PARAM, tempFile.getAbsolutePath())
                 .addString(RETAILER_ID_PARAM, retailer.getId().toString())
                 .addString(RETAILER_NAME_PARAM, retailer.getName())
                 .addString(CONTACT_EMAIL_PARAM, retailer.getEmail())
@@ -92,39 +92,22 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
         return launchAndPersistJob(updateProductCardsJob, jobParameters, retailer);
     }
 
-    // Fix with minio
-    public Path exportProductCards(UUID retailerOwnerId, ContentType contentType) {
+    @Override
+    public Long exportProductCards(UUID retailerOwnerId, ContentType contentType) throws IOException {
         Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
-        try {
-            // 1. Генерируем временный файл
-            Path tempFile = Files.createTempFile("export_", "tmp");
+        Path tempFile = Files.createTempFile(EXPORT_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
 
-            // 2. Подготавливаем параметры джобы
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addString(RETAILER_ID_PARAM, retailer.getId().toString())
-                    .addString(CONTENT_TYPE_PARAM, contentType.name())
-                    .addString(EXPORT_FILE_PARAM, tempFile.toAbsolutePath().toString())
-                    .addLong(TIME_PARAM, System.currentTimeMillis())
-                    .toJobParameters();
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString(TEMP_FILE_PARAM, tempFile.toAbsolutePath().toString())
+                .addString(RETAILER_ID_PARAM, retailer.getId().toString())
+                .addString(RETAILER_NAME_PARAM, retailer.getName())
+                .addString(CONTACT_EMAIL_PARAM, retailer.getEmail())
+                .addString(CONTENT_TYPE_PARAM, contentType.getValue())
+                .addLong(TIME_PARAM, System.currentTimeMillis())
+                .toJobParameters();
 
-            JobExecution jobExecution = asyncJobLauncher.run(exportProductCardsJob, jobParameters);
-
-            // 4. Ожидаем завершения (синхронно)
-            while (jobExecution.isRunning()) {
-                Thread.sleep(200);
-            }
-
-            // 5. Проверяем статус
-            if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-                return tempFile;
-            } else {
-                throw new IllegalStateException("Export job failed with status: ");
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to export products", e);
-        }
+        return launchAndPersistJob(exportProductCardsJob, jobParameters, retailer);
     }
 
     @Override

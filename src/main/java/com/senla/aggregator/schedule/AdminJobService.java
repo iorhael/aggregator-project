@@ -1,5 +1,6 @@
 package com.senla.aggregator.schedule;
 
+import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.mail.EmailRequest;
 import com.senla.aggregator.model.Product;
 import com.senla.aggregator.model.Role;
@@ -21,7 +22,6 @@ import java.time.Instant;
 import java.util.List;
 
 import static com.senla.aggregator.schedule.helper.Constants.*;
-import static com.senla.aggregator.util.CommonConstants.JSON_FILE_EXTENSION;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class AdminJobService {
         File reportFile = jobHelper.generateReportFile(
                 unverifiedProducts,
                 UNVERIFIED_PRODUCTS_REPORT_NAME,
-                JSON_FILE_EXTENSION
+                ContentType.JSON.getFileExtension()
         );
 
         EmailRequest emailRequest = EmailRequest.builder()

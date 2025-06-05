@@ -3,6 +3,7 @@ package com.senla.aggregator.config.batch.productCard.reader;
 import com.senla.aggregator.config.batch.FileItemReader;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
+import com.senla.aggregator.util.CommonConstants;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
@@ -14,6 +15,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import static com.senla.aggregator.config.batch.helper.Constants.*;
+import static com.senla.aggregator.util.CommonConstants.*;
 
 @Component
 @StepScope
@@ -21,13 +23,13 @@ public class CsvProductCardItemReader implements FileItemReader<ProductCardImpor
 
     private final FlatFileItemReader<ProductCardImportDto> delegate;
 
-    public CsvProductCardItemReader(@Value("#{jobParameters['importFile']}") String inputFilePath) {
+    public CsvProductCardItemReader(@Value("#{jobParameters['tempFile']}") String inputFilePath) {
         this.delegate = new FlatFileItemReaderBuilder<ProductCardImportDto>()
                 .name(CSV_IMPORT_READER_NAME)
                 .resource(new FileSystemResource(inputFilePath))
                 .linesToSkip(1)
                 .delimited()
-                .delimiter(CSV_DELIMITER)
+                .delimiter(COMMA)
                 .names(PRODUCT_CARD_FIELDS_FILE)
                 .targetType(ProductCardImportDto.class)
                 .build();

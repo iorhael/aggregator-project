@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CustomProductCardRepository {
     void batchUpsert(List<ProductCardBatchCreateDto> cards);
+
+    void batchUpdate(List<ProductCardBatchCreateDto> cards);
 }

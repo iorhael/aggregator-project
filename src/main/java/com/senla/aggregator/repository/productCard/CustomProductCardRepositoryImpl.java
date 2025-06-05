@@ -21,6 +21,15 @@ public class CustomProductCardRepositoryImpl implements CustomProductCardReposit
             SET description = excluded.description, warranty = excluded.warranty, installment_period = excluded.installment_period, max_delivery_time = excluded.max_delivery_time;
             """;
 
+    private static final String UPDATE_SQL = """
+                    UPDATE product_cards
+                    SET description = ?,
+                        warranty = ?,
+                        installment_period = ?,
+                        max_delivery_time = ?
+                    WHERE product_id = ? AND retailer_id = ?;
+            """;
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -36,6 +45,21 @@ public class CustomProductCardRepositoryImpl implements CustomProductCardReposit
                     ps.setShort(5, pc.getWarranty());
                     ps.setShort(6, pc.getInstallmentPeriod());
                     ps.setShort(7, pc.getMaxDeliveryTime());
+                });
+    }
+
+    @Override
+    public void batchUpdate(List<ProductCardBatchCreateDto> cards) {
+        jdbcTemplate.batchUpdate(UPDATE_SQL,
+                cards,
+                100,
+                (PreparedStatement ps, ProductCardBatchCreateDto pc) -> {
+                    ps.setString(1, pc.getDescription());
+                    ps.setShort(2, pc.getWarranty());
+                    ps.setShort(3, pc.getInstallmentPeriod());
+                    ps.setShort(4, pc.getMaxDeliveryTime());
+                    ps.setObject(5, pc.getProductId());
+                    ps.setObject(6, pc.getRetailerId());
                 });
     }
 }

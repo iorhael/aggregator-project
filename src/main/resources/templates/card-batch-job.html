@@ -63,10 +63,13 @@
         <p>This is an automated message sent on
             <span class="highlight" th:text="${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">current date</span>.</p>
 
-        <p>The import job has completed with the following status:
-            <span class="highlight" th:text="${jobStatus}">SUCCESS</span>.</p>
+        <p>
+            The job "<span class="highlight" th:text="${jobName}">PRODUCT_CARD_JOB</span>"
+            has completed with the following status:
+            <span class="highlight" th:text="${jobStatus}">STATUS</span>.
+        </p>
 
-        <p>You can download the log file using the following link:</p>
+        <p>You can download the result file using the following link:</p>
         <p><a th:href="${minioFileUrl}" target="_blank" th:text="${minioFileUrl}">Download Log File</a></p>
     </div>
 

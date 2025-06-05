@@ -1,11 +1,11 @@
-package com.senla.aggregator.config.batch.productCard.writer;
+package com.senla.aggregator.config.batch.productCard.importJob;
 
 import com.senla.aggregator.dto.priceHistory.PriceHistoryBatchCreateDto;
 import com.senla.aggregator.dto.product.ProductIdName;
 import com.senla.aggregator.dto.productCard.ProductCardBatchCreateDto;
 import com.senla.aggregator.dto.productCard.ProductCardIdProductName;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
-import com.senla.aggregator.mapper.ProductCardBatchCreateDtoMapper;
+import com.senla.aggregator.mapper.ProductCardMapper;
 import com.senla.aggregator.repository.priceHistory.PriceHistoryBatchRepository;
 import com.senla.aggregator.repository.ProductRepository;
 import com.senla.aggregator.repository.productCard.ProductCardRepository;
@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,10 +34,10 @@ import java.util.stream.Collectors;
 @Slf4j(topic = "batchLogger")
 public class CreateProductCardsItemWriter implements ItemWriter<ProductCardImportDto> {
 
+    private final ProductCardMapper productCardMapper;
     private final ProductRepository productRepository;
     private final ProductCardRepository productCardRepository;
     private final PriceHistoryBatchRepository priceHistoryBatchRepository;
-    private final ProductCardBatchCreateDtoMapper batchCreateProductCardMapper;
 
     @Value("#{jobParameters['retailerId']}")
     private String retailerId;
@@ -101,7 +100,7 @@ public class CreateProductCardsItemWriter implements ItemWriter<ProductCardImpor
     private Optional<ProductCardBatchCreateDto> filterAndConvertCards(ProductCardImportDto dto) {
         return Optional.ofNullable(productNameIdMap.get(dto.getProductName()))
                 .map(productId -> {
-                    ProductCardBatchCreateDto card = batchCreateProductCardMapper.toDto(dto);
+                    ProductCardBatchCreateDto card = productCardMapper.toBatchCreateDto(dto);
                     card.setProductId(productId);
                     card.setRetailerId(retailerUUID);
                     return card;

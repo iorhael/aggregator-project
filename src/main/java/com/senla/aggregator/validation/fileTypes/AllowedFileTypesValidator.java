@@ -1,4 +1,4 @@
-package com.senla.aggregator.validation;
+package com.senla.aggregator.validation.fileTypes;
 
 import com.senla.aggregator.controller.helper.ContentType;
 import jakarta.validation.ConstraintValidator;

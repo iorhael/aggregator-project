@@ -1,5 +1,6 @@
 package com.senla.aggregator.schedule;
 
+import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.mail.EmailRequest;
 import com.senla.aggregator.dto.productCard.BestOffer;
 import com.senla.aggregator.dto.retailer.RetailerGetDto;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.senla.aggregator.schedule.helper.Constants.*;
-import static com.senla.aggregator.util.CommonConstants.JSON_FILE_EXTENSION;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +53,7 @@ public class RetailerJobService {
         File reportFile = jobHelper.generateReportFile(
                 bestOffers,
                 BEST_OFFERS_REPORT_NAME,
-                JSON_FILE_EXTENSION
+                ContentType.JSON.getFileExtension()
         );
 
         EmailRequest emailRequest = EmailRequest.builder()

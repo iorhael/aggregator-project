@@ -24,7 +24,7 @@ public class JsonProductCardItemWriter implements FileItemWriter<ProductCardImpo
 
     private final JsonFileItemWriter<ProductCardImportDto> delegate;
 
-    public JsonProductCardItemWriter(@Value("#{jobParameters['exportFile']}") String outputFilePath) {
+    public JsonProductCardItemWriter(@Value("#{jobParameters['tempFile']}") String outputFilePath) {
         WritableResource resource = new FileSystemResource(outputFilePath);
 
         JacksonJsonObjectMarshaller<ProductCardImportDto> marshaller =

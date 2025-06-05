@@ -1,4 +1,4 @@
-package com.senla.aggregator.validation;
+package com.senla.aggregator.validation.validImage;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

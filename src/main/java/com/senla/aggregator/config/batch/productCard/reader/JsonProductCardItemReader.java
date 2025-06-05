@@ -23,7 +23,7 @@ public class JsonProductCardItemReader implements FileItemReader<ProductCardImpo
 
     private final JsonItemReader<ProductCardImportDto> delegate;
 
-    public JsonProductCardItemReader(@Value("#{jobParameters['importFile']}") String inputFilePath) {
+    public JsonProductCardItemReader(@Value("#{jobParameters['tempFile']}") String inputFilePath) {
         Resource resource = new FileSystemResource(inputFilePath);
         JacksonJsonObjectReader<ProductCardImportDto> objectReader =
                 new JacksonJsonObjectReader<>(ProductCardImportDto.class);

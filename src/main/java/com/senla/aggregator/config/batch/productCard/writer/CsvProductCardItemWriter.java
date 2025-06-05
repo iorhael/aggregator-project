@@ -3,6 +3,7 @@ package com.senla.aggregator.config.batch.productCard.writer;
 import com.senla.aggregator.config.batch.FileItemWriter;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
+import com.senla.aggregator.util.CommonConstants;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ExecutionContext;
@@ -18,6 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import static com.senla.aggregator.config.batch.helper.Constants.*;
+import static com.senla.aggregator.util.CommonConstants.*;
 
 @Component
 @StepScope
@@ -25,7 +27,7 @@ public class CsvProductCardItemWriter implements FileItemWriter<ProductCardImpor
 
     private final FlatFileItemWriter<ProductCardImportDto> delegate;
 
-    public CsvProductCardItemWriter(@Value("#{jobParameters['exportFile']}") String outputFilePath) {
+    public CsvProductCardItemWriter(@Value("#{jobParameters['tempFile']}") String outputFilePath) {
         WritableResource resource = new FileSystemResource(outputFilePath);
 
         BeanWrapperFieldExtractor<ProductCardImportDto> fieldExtractor = new BeanWrapperFieldExtractor<>();
@@ -37,7 +39,7 @@ public class CsvProductCardItemWriter implements FileItemWriter<ProductCardImpor
                 .name(CSV_EXPORT_WRITER_NAME)
                 .resource(resource)
                 .lineAggregator(lineAggregator)
-                .headerCallback(w -> w.write(String.join(CSV_DELIMITER, PRODUCT_CARD_FIELDS_FILE)))
+                .headerCallback(w -> w.write(String.join(COMMA, PRODUCT_CARD_FIELDS_FILE)))
                 .build();
     }
 
