@@ -1,6 +1,5 @@
 package com.senla.aggregator.config.batch.productCard;
 
-import com.senla.aggregator.config.batch.helper.Constants;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.mail.EmailRequest;
 import com.senla.aggregator.service.mail.GmailApiService;
@@ -46,7 +45,7 @@ public class SendLogTasklet implements Tasklet {
                            JobParameters jobParameters,
                            ExecutionContext executionContext,
                            ChunkContext chunkContext) {
-        String[] recipients = { jobParameters.getString(CONTACT_EMAIL_PARAM) };
+        String[] recipients = {jobParameters.getString(CONTACT_EMAIL_PARAM)};
 
         EmailRequest emailRequest = EmailRequest.builder()
                 .subject(executionContext.getString(EMAIL_SUBJECT_PARAM))

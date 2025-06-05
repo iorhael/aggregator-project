@@ -10,13 +10,6 @@ import org.springframework.stereotype.Component;
 import java.nio.file.Paths;
 
 import static com.senla.aggregator.config.batch.helper.Constants.*;
-import static com.senla.aggregator.config.batch.helper.Constants.CARD_BATCH_EMAIL_TEMPLATE;
-import static com.senla.aggregator.config.batch.helper.Constants.EMAIL_SUBJECT_PARAM;
-import static com.senla.aggregator.config.batch.helper.Constants.EMAIL_TEMPLATE_PARAM;
-import static com.senla.aggregator.config.batch.helper.Constants.OUTPUT_BUCKET_PARAM;
-import static com.senla.aggregator.config.batch.helper.Constants.OUTPUT_CONTENT_TYPE_PARAM;
-import static com.senla.aggregator.config.batch.helper.Constants.OUTPUT_FILE_PATH_PARAM;
-import static com.senla.aggregator.config.batch.helper.Constants.OUTPUT_MINIO_PATH_PARAM;
 import static com.senla.aggregator.util.CommonConstants.LOG_FILE_EXTENSION;
 import static com.senla.aggregator.util.CommonConstants.SLASH;
 

@@ -7,7 +7,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.senla.aggregator.dto.mail.GoogleTokenRequestDto;
 import com.senla.aggregator.model.credential.GoogleCredentials;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

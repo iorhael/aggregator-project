@@ -4,5 +4,6 @@ import java.util.UUID;
 
 public interface ProductIdName {
     UUID getId();
+
     String getName();
 }

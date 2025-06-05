@@ -78,10 +78,11 @@ public class ProductSeeder implements CommandLineRunner {
     private JsonNode fakeCharacteristics() {
         ObjectNode characteristics = objectMapper.createObjectNode();
 
-        for (int i = 0; i < 5; i++) characteristics.put(
-                faker.hacker().noun(),
-                faker.lorem().sentence()
-        );
+        for (int i = 0; i < 5; i++)
+            characteristics.put(
+                    faker.hacker().noun(),
+                    faker.lorem().sentence()
+            );
 
         return characteristics;
     }

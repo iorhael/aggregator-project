@@ -1,8 +1,6 @@
 package com.senla.aggregator.config.batch.productCard.importJob;
 
-import com.senla.aggregator.config.batch.helper.Constants;
 import com.senla.aggregator.controller.helper.ContentType;
-import com.senla.aggregator.util.CommonConstants;
 import org.slf4j.MDC;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -12,7 +10,8 @@ import org.springframework.stereotype.Component;
 import java.nio.file.Paths;
 
 import static com.senla.aggregator.config.batch.helper.Constants.*;
-import static com.senla.aggregator.util.CommonConstants.*;
+import static com.senla.aggregator.util.CommonConstants.LOG_FILE_EXTENSION;
+import static com.senla.aggregator.util.CommonConstants.SLASH;
 
 @Component
 public class ImportJobPrepareArgsForSendStepExecutionListener implements StepExecutionListener {

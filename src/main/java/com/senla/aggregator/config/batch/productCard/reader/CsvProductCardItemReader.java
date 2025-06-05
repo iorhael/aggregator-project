@@ -3,7 +3,6 @@ package com.senla.aggregator.config.batch.productCard.reader;
 import com.senla.aggregator.config.batch.FileItemReader;
 import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
-import com.senla.aggregator.util.CommonConstants;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
@@ -14,8 +13,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import static com.senla.aggregator.config.batch.helper.Constants.*;
-import static com.senla.aggregator.util.CommonConstants.*;
+import static com.senla.aggregator.config.batch.helper.Constants.CSV_IMPORT_READER_NAME;
+import static com.senla.aggregator.config.batch.helper.Constants.PRODUCT_CARD_FIELDS_FILE;
+import static com.senla.aggregator.util.CommonConstants.COMMA;
 
 @Component
 @StepScope

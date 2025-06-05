@@ -1,6 +1,5 @@
 package com.senla.aggregator.config.batch.productCard;
 
-import com.senla.aggregator.config.batch.helper.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
@@ -9,7 +8,7 @@ import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.stereotype.Component;
 
-import static com.senla.aggregator.config.batch.helper.Constants.*;
+import static com.senla.aggregator.config.batch.helper.Constants.MAIN_STEP_STATUS_PARAM;
 
 @Component
 @Slf4j(topic = "batchLogger")

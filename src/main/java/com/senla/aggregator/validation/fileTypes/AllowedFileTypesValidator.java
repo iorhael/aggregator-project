@@ -28,7 +28,7 @@ public class AllowedFileTypesValidator implements ConstraintValidator<AllowedFil
         if (file.isEmpty()) return false;
 
         boolean isFileSizeValid = true;
-        if (maxFileSize != -1)  isFileSizeValid = file.getSize() <= maxFileSize * 1024L;
+        if (maxFileSize != -1) isFileSizeValid = file.getSize() <= maxFileSize * 1024L;
 
         return isFileSizeValid && allowedFileTypes.contains(file.getContentType());
     }

@@ -66,8 +66,8 @@ public class ReviewController {
     )
     @GetMapping("/authors/{authorName}")
     public List<ReviewGetDto> findReviewsOfAuthor(@PathVariable String authorName,
-                                                   @RequestParam(defaultValue = "0") int pageNo,
-                                                   @RequestParam(defaultValue = "15") int pageSize) {
+                                                  @RequestParam(defaultValue = "0") int pageNo,
+                                                  @RequestParam(defaultValue = "15") int pageSize) {
         return reviewService.getReviewsOfAuthor(authorName, pageNo, pageSize);
     }
 

@@ -39,7 +39,7 @@ services:
         condition: service_healthy
 
   minio:
-    image: minio/minio:RELEASE.2025-05-24T17-08-30Z-cpuv1
+    image: minio/minio:RELEASE.2025-05-24T17-08-30Z
     command: server /data --console-address ":9001"
     ports:
       - '9000:9000'
@@ -47,6 +47,17 @@ services:
       - .env
     volumes:
       - minio:/data
+
+  minio-configurer:
+    image: minio/mc:RELEASE.2025-05-21T01-59-54Z
+    entrypoint: ["bin/sh", "/init-minio/minio-entrypoint.sh"]
+    env_file:
+      - .env
+    volumes:
+      - ./init-minio:/init-minio:z
+    depends_on:
+      minio:
+        condition: service_healthy
 
   webapp:
     build: .
@@ -57,12 +68,12 @@ services:
     env_file:
       - .env
     depends_on:
-      minio:
-        condition: service_started
       redis:
         condition: service_started
       postgres:
         condition: service_healthy
+      minio-configurer:
+        condition: service_completed_successfully
 
 volumes:
   minio:

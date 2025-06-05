@@ -7,14 +7,11 @@ import com.senla.aggregator.model.Retailer;
 import com.senla.aggregator.model.RetailerJob;
 import com.senla.aggregator.repository.RetailerJobRepository;
 import com.senla.aggregator.repository.RetailerRepository;
-import com.senla.aggregator.repository.UserRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
 import com.senla.aggregator.service.exception.SpringBatchException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionException;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -137,7 +134,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
             retailerJobRepository.save(retailerJob);
 
             return retailerJob.getJobExecutionId();
-        } catch (JobExecutionException  e) {
+        } catch (JobExecutionException e) {
             throw new SpringBatchException(ExceptionMessages.JOB_LAUNCH_FAILED, e);
         }
     }

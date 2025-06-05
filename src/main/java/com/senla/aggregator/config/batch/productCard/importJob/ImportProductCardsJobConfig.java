@@ -5,10 +5,8 @@ import com.senla.aggregator.config.batch.productCard.ProductCardCompositeItemPro
 import com.senla.aggregator.config.batch.productCard.UniqueProductNameFilterProcessor;
 import com.senla.aggregator.dto.OnCreateGroup;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
-import jakarta.validation.groups.Default;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
-import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -21,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
 import static com.senla.aggregator.config.batch.helper.Constants.*;
