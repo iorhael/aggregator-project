@@ -5,5 +5,6 @@ import java.time.LocalDate;
 
 public interface PriceDynamics {
     LocalDate getDate();
+
     BigDecimal getAveragePrice();
 }

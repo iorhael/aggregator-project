@@ -2,6 +2,7 @@ package com.senla.aggregator.controller.exception;
 
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.service.exception.KeycloakException;
+import com.senla.aggregator.service.exception.SpringBatchException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.ClientErrorException;
@@ -31,6 +32,7 @@ public class GlobalExceptionHandler {
             ClientErrorException.class,
             HttpMessageNotReadableException.class,
             ConstraintViolationException.class,
+            SpringBatchException.class,
             MultipartException.class,
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)

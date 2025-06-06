@@ -6,8 +6,6 @@ import com.senla.aggregator.dto.auth.TokenDto;
 import com.senla.aggregator.dto.user.UserProfileDto;
 import com.senla.aggregator.service.keycloak.KeycloakService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

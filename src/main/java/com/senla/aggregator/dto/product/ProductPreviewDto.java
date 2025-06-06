@@ -21,6 +21,10 @@ public class ProductPreviewDto {
     @JsonProperty("name")
     private String name;
 
+    @Schema(description = "Image link in minio", example = "https://minio.example.com/images")
+    @JsonProperty("image_link")
+    private String imageLink;
+
     @Schema(description = "Vendor/manufacturer name", example = "Apple")
     @JsonProperty("vendor_name")
     private String vendorName;

@@ -1,4 +1,4 @@
-package com.senla.aggregator.validation;
+package com.senla.aggregator.validation.fileTypes;
 
 import com.senla.aggregator.controller.helper.ContentType;
 import jakarta.validation.Constraint;
@@ -13,11 +13,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = AllowedFileTypesValidator.class)
 public @interface AllowedFileTypes {
-    String message() default "Incompatible file type";
+    String message() default "Incompatible file type or file is too large";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
     ContentType[] allowedFileTypes();
+
+    /**
+     * Value in KB
+     */
+    int maxFileSize() default -1;
 }

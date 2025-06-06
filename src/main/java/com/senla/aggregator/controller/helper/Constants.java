@@ -9,6 +9,9 @@ public final class Constants {
     public static final String PRODUCTS_VERIFICATION_MESSAGE = "%d products verified successfully";
     public static final String PRODUCT_CARDS_DELETION_MESSAGE = "%d product cards deleted successfully";
     public static final String DATA_INTEGRITY_VIOLATION_EXCEPTION = "Data integrity violation";
+    public static final String AUTO_UPDATE_RULE_ADD_MESSAGE = "Product cards auto update rule added successfully";
+    public static final String AUTO_UPDATE_RULE_UPDATE_MESSAGE = "Product cards auto update rule updated successfully";
+    public static final String AUTO_UPDATE_RULE_DISABLE_MESSAGE = "Product cards auto update rule disabled successfully";
 
     public static final String USER = "User";
     public static final String STORE = "Store";

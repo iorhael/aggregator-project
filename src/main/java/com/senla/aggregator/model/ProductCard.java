@@ -79,6 +79,7 @@ public class ProductCard {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "card", orphanRemoval = true)
     private List<PriceHistory> priceHistories = new ArrayList<>();
 
+    // вытягивается всегда
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinFormula("""
             (SELECT ph.id

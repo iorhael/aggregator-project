@@ -5,7 +5,6 @@ import com.senla.aggregator.dto.category.CategoryCreateDto;
 import com.senla.aggregator.dto.category.CategoryGetDto;
 import com.senla.aggregator.dto.category.CategoryUpdateDto;
 import com.senla.aggregator.dto.category.CategoryWithChildrenDto;
-import com.senla.aggregator.model.Category;
 import com.senla.aggregator.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -108,6 +107,7 @@ public class CategoryController {
             description = "Insert multiple categories in a single request"
     )
     @PostMapping("/batch")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryGetDto> batchInsertCategories(@Valid @RequestBody List<CategoryCreateDto> dtos) {
         return categoryService.batchInsertCategories(dtos);
     }

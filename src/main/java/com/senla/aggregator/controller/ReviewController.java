@@ -65,9 +65,9 @@ public class ReviewController {
             description = "Retrieve a paginated list of reviews written by a specific author"
     )
     @GetMapping("/authors/{authorName}")
-    public List<ReviewGetDto> findReviewsOfProduct(@PathVariable String authorName,
-                                                   @RequestParam(defaultValue = "0") int pageNo,
-                                                   @RequestParam(defaultValue = "15") int pageSize) {
+    public List<ReviewGetDto> findReviewsOfAuthor(@PathVariable String authorName,
+                                                  @RequestParam(defaultValue = "0") int pageNo,
+                                                  @RequestParam(defaultValue = "15") int pageSize) {
         return reviewService.getReviewsOfAuthor(authorName, pageNo, pageSize);
     }
 

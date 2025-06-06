@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f6ff;
+            margin: 0;
+            padding: 40px 0;
+            color: #003366;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #cce0ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 51, 153, 0.15);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 120px;
+            width: auto;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #0055aa;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #666;
+            border-top: 1px solid #cce0ff;
+            padding-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img alt="Logo" class="logo" src="cid:logo.png">
+    </div>
+
+    <div class="content">
+        <p><strong>Dear <span th:text="${retailerName}">Retailer</span>,</strong></p>
+
+        <p>This is an automated message sent on
+            <span class="highlight" th:text="${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">current date</span>.</p>
+
+        <p>
+            The job "<span class="highlight" th:text="${jobName}">PRODUCT_CARD_JOB</span>"
+            has completed with the following status:
+            <span class="highlight" th:text="${jobStatus}">STATUS</span>.
+        </p>
+
+        <p>You can download the result file using the following link:</p>
+        <p><a th:href="${minioFileUrl}" target="_blank" th:text="${minioFileUrl}">Download Log File</a></p>
+    </div>
+
+    <div class="footer">
+        Best regards,<br/>
+        Product Import Notification System
+    </div>
+</div>
+</body>
+</html>

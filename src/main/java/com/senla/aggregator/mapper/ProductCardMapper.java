@@ -1,5 +1,7 @@
 package com.senla.aggregator.mapper;
 
+import com.senla.aggregator.dto.productCard.ProductCardBatchCreateDto;
+import com.senla.aggregator.dto.productCard.ProductCardBatchUpdateDto;
 import com.senla.aggregator.dto.productCard.ProductCardCreateDto;
 import com.senla.aggregator.dto.productCard.ProductCardDetailedDto;
 import com.senla.aggregator.dto.productCard.ProductCardImportDto;
@@ -33,9 +35,13 @@ public interface ProductCardMapper {
     @Mapping(source = "product.name", target = "productName")
     ProductCardImportDto toProductCardImportDto(ProductCard productCard);
 
+    ProductCardBatchCreateDto toBatchCreateDto(ProductCardBatchUpdateDto productCard);
+
+    ProductCardBatchCreateDto toBatchCreateDto(ProductCardImportDto productCardImportDto);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateProductCard(@MappingTarget ProductCard productCard, ProductCardUpdateDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateProductCardWithImportDto(@MappingTarget ProductCard productCard, ProductCardImportDto dto);
+    void updateForBatch(@MappingTarget ProductCardBatchUpdateDto productCard, ProductCardImportDto dto);
 }
