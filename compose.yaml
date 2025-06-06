@@ -47,6 +47,11 @@ services:
       - .env
     volumes:
       - minio:/data
+    healthcheck:
+      test: [ "CMD", "curl", "-I", "http://localhost:9000/minio/health/cluster" ]
+      timeout: 5s
+      interval: 2s
+      retries: 5
 
   minio-configurer:
     image: minio/mc:RELEASE.2025-05-21T01-59-54Z

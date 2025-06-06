@@ -38,8 +38,8 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
   servlet:
     multipart:
-      max-file-size: 500MB
-      max-request-size: 501MB
+      max-file-size: 50MB
+      max-request-size: 51MB
   jackson:
     default-property-inclusion: non_empty
   batch:
@@ -91,5 +91,6 @@ minio:
   default-link-expiration: 259200
 
 schedule:
-  admin-morning: "0 0 8 * * *"
+  admin-morning: "0 0 9 * * *"
   retailer-morning: "0 0 10 * * *"
+  daily-update-cards: "0 0 8 * * *"

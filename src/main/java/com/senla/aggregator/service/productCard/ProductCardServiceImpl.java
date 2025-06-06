@@ -68,7 +68,7 @@ public class ProductCardServiceImpl implements ProductCardService {
 
         productCard.setProduct(productRepository.getReferenceById(dto.getProductId()));
 
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
         productCard.setRetailer(retailer);
 

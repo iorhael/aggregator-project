@@ -1,5 +1,7 @@
 package com.senla.aggregator.config.batch.helper;
 
+import com.senla.aggregator.controller.helper.ContentType;
+
 public final class Constants {
     public static final String IMPORT_CARDS_JOB_NAME = "importProductCardsJob";
     public static final String UPDATE_CARDS_JOB_NAME = "updateProductCardsJob";
@@ -43,6 +45,7 @@ public final class Constants {
 
     public static final String[] PRODUCT_CARD_FIELDS_FILE = {"product_name", "description", "warranty", "installment_period", "max_delivery_time", "price"};
     public static final String[] PRODUCT_CARD_FIELDS_MODEL = {"productName", "description", "warranty", "installmentPeriod", "maxDeliveryTime", "price"};
+    public static final ContentType[] SUPPORTED_CONTENT_TYPES = {ContentType.JSON, ContentType.XML, ContentType.CSV};
 
     public static final String CARD_BATCH_EMAIL_TEMPLATE = "card-batch-job";
 

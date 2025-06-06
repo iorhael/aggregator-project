@@ -1,10 +1,14 @@
 package com.senla.aggregator.service.productCard;
 
 import com.senla.aggregator.controller.helper.ContentType;
+import com.senla.aggregator.dto.AutoUpdateCardDto;
 import com.senla.aggregator.dto.JobInfoDto;
+import com.senla.aggregator.mapper.AutoUpdateCardMapper;
 import com.senla.aggregator.mapper.JobExecutionMapper;
+import com.senla.aggregator.model.AutoUpdateCard;
 import com.senla.aggregator.model.Retailer;
 import com.senla.aggregator.model.RetailerJob;
+import com.senla.aggregator.repository.AutoUpdateCardRepository;
 import com.senla.aggregator.repository.RetailerJobRepository;
 import com.senla.aggregator.repository.RetailerRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
@@ -37,7 +41,9 @@ import static com.senla.aggregator.util.CommonConstants.TMP_FILE_EXTENSION;
 public class ProductCardBatchServiceImpl implements ProductCardBatchService {
 
     private final RetailerRepository retailerRepository;
+    private final AutoUpdateCardMapper autoUpdateCardMapper;
     private final RetailerJobRepository retailerJobRepository;
+    private final AutoUpdateCardRepository autoUpdateCardRepository;
 
     private final JobExplorer jobExplorer;
     private final Job importProductCardsJob;
@@ -47,14 +53,24 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     private final JobExecutionMapper jobExecutionMapper;
 
     @Override
-    public Long importProductCards(MultipartFile file, UUID retailerOwnerId, Boolean verifiedProductsOnly) throws IOException {
+    public Long importProductCards(MultipartFile file,
+                                   UUID retailerOwnerId,
+                                   Boolean verifiedProductsOnly) throws IOException {
         ContentType contentType = ContentType.fromValue(file.getContentType());
         File tempFile = File.createTempFile(IMPORT_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
         file.transferTo(tempFile);
 
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
 
+        return importProductCards(tempFile, contentType, retailer, verifiedProductsOnly);
+    }
+
+    @Override
+    public Long importProductCards(File tempFile,
+                                   ContentType contentType,
+                                   Retailer retailer,
+                                   Boolean verifiedProductsOnly) {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString(TEMP_FILE_PARAM, tempFile.getAbsolutePath())
                 .addString(VERIFIED_PRODUCTS_ONLY_PARAM, Boolean.toString(verifiedProductsOnly))
@@ -69,12 +85,39 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     }
 
     @Override
+    @Transactional
+    public void enableAutoUpdate(AutoUpdateCardDto dto, UUID retailerOwnerId) {
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
+
+        AutoUpdateCard info = autoUpdateCardMapper.toAutoUpdateCard(dto);
+        info.setRetailer(retailer);
+
+        autoUpdateCardRepository.save(info);
+    }
+
+    @Override
+    @Transactional
+    public void disableAutoUpdate(UUID retailerOwnerId) {
+        autoUpdateCardRepository.deleteByRetailerId(retailerOwnerId);
+    }
+
+    @Override
+    @Transactional
+    public void changeAutoUpdateRules(AutoUpdateCardDto dto, UUID retailerOwnerId) {
+        AutoUpdateCard info = autoUpdateCardRepository.findByRetailerOwnerId(retailerOwnerId)
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.AUTO_UPDATE_RULE_NOT_FOUND));
+
+        autoUpdateCardMapper.updateAutoUpdateCard(info, dto);
+    }
+
+    @Override
     public Long updateProductCards(MultipartFile file, UUID retailerOwnerId) throws IOException {
         ContentType contentType = ContentType.fromValue(file.getContentType());
         File tempFile = File.createTempFile(UPDATE_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
         file.transferTo(tempFile);
 
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
 
         JobParameters jobParameters = new JobParametersBuilder()
@@ -91,7 +134,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
 
     @Override
     public Long exportProductCards(UUID retailerOwnerId, ContentType contentType) throws IOException {
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
         Path tempFile = Files.createTempFile(EXPORT_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
 
@@ -110,7 +153,7 @@ public class ProductCardBatchServiceImpl implements ProductCardBatchService {
     @Override
     @Transactional
     public List<JobInfoDto> getExecutionsHistory(UUID retailerOwnerId, int pageNo, int pageSize) {
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.RETAILER_NOT_FOUND));
 
         List<Long> jobExecutionsIds = retailerJobRepository.findRetailerJobExecutionIds(
