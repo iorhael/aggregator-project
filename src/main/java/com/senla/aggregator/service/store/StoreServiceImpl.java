@@ -37,7 +37,7 @@ public class StoreServiceImpl implements StoreService {
     public StoreGetDto createStore(StoreCreateDto dto, UUID ownerId) {
         Store store = storeMapper.toStore(dto);
 
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(ownerId)
+        Retailer retailer = retailerRepository.findByOwnerId(ownerId)
                 .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
 
         store.setRetailer(retailer);

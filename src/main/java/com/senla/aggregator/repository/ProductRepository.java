@@ -1,5 +1,6 @@
 package com.senla.aggregator.repository;
 
+import com.senla.aggregator.dto.product.ProductIdName;
 import com.senla.aggregator.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +22,15 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     @NonNull
     Page<Product> findAll(Specification<Product> spec, @NonNull Pageable pageable);
 
-    @Query("SELECT p FROM Product p WHERE p.name IN :names AND (:verifiedOnly = FALSE OR p.verified = TRUE)")
-    List<Product> findByNames(@Param("names") List<String> names,
-                              @Param("verifiedOnly") Boolean verifiedOnly
+    @NativeQuery("""
+                SELECT p.id , p.name
+                FROM products p
+                WHERE p.name IN :names
+                AND (:verifiedOnly = FALSE OR p.verified = TRUE)
+            """)
+    List<ProductIdName> findByNames(
+            @Param("names") List<String> names,
+            @Param("verifiedOnly") Boolean verifiedOnly
     );
 
     @Query("SELECT p FROM Product p WHERE p.verified = false AND p.createdAt BETWEEN :periodStart AND :periodEnd")

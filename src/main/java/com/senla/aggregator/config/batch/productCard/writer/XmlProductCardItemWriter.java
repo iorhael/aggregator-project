@@ -26,7 +26,7 @@ public class XmlProductCardItemWriter implements FileItemWriter<ProductCardImpor
 
     private final StaxEventItemWriter<ProductCardImportDto> delegate;
 
-    public XmlProductCardItemWriter(@Value("#{jobParameters['exportFile']}") String outputFilePath) {
+    public XmlProductCardItemWriter(@Value("#{jobParameters['tempFile']}") String outputFilePath) {
         WritableResource resource = new FileSystemResource(outputFilePath);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();

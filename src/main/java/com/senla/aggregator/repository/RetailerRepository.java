@@ -14,7 +14,5 @@ public interface RetailerRepository extends JpaRepository<Retailer, UUID> {
 
     List<Retailer> findAllBy(Pageable pageable);
 
-    Optional<Retailer> findRetailerByOwnerId(UUID ownerId);
-
     void deleteByOwnerId(UUID ownerId);
 }

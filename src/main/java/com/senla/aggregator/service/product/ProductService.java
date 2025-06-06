@@ -7,7 +7,9 @@ import com.senla.aggregator.dto.product.ProductInfoDto;
 import com.senla.aggregator.dto.product.ProductNameDescriptionDto;
 import com.senla.aggregator.dto.product.ProductPreviewDto;
 import com.senla.aggregator.dto.product.ProductUpdateDto;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +17,7 @@ public interface ProductService {
 
     ProductDetailedDto getProduct(UUID id);
 
-    ProductInfoDto createProduct(ProductCreateDto product, Boolean isCreatorTrusted);
+    ProductInfoDto createProduct(ProductCreateDto product, MultipartFile image, Boolean isCreatorTrusted) throws IOException;
 
     List<ProductNameDescriptionDto> getProductsNameDescription(UUID categoryId, int pageNo, int pageSize);
 
@@ -25,7 +27,7 @@ public interface ProductService {
 
     int verifyProducts(List<UUID> productIds);
 
-    ProductInfoDto updateProduct(ProductUpdateDto product, UUID id);
+    ProductInfoDto updateProduct(ProductUpdateDto product, MultipartFile newImage, UUID id) throws IOException;
 
     void deleteProduct(UUID id);
 }

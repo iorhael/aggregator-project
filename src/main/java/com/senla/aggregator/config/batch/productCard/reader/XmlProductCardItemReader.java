@@ -26,7 +26,7 @@ public class XmlProductCardItemReader implements FileItemReader<ProductCardImpor
 
     private final StaxEventItemReader<ProductCardImportDto> delegate;
 
-    public XmlProductCardItemReader(@Value("#{jobParameters['importFile']}") String inputFilePath) {
+    public XmlProductCardItemReader(@Value("#{jobParameters['tempFile']}") String inputFilePath) {
         XStreamMarshaller unmarshaller = new XStreamMarshaller();
         Map<String, Class<?>> aliases = new HashMap<>();
         aliases.put(PRODUCT_CARD_NAME, ProductCardImportDto.class);

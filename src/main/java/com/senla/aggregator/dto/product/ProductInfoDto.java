@@ -21,6 +21,10 @@ public class ProductInfoDto {
     @JsonProperty("name")
     private String name;
 
+    @Schema(description = "Image link in minio", example = "https://minio.example.com/images")
+    @JsonProperty("image_link")
+    private String imageLink;
+
     @Schema(description = "Product description", example = "Fitness tracker with AMOLED screen")
     @JsonProperty("description")
     private String description;

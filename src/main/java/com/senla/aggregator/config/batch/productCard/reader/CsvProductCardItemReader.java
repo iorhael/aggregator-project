@@ -13,7 +13,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import static com.senla.aggregator.config.batch.helper.Constants.*;
+import static com.senla.aggregator.config.batch.helper.Constants.CSV_IMPORT_READER_NAME;
+import static com.senla.aggregator.config.batch.helper.Constants.PRODUCT_CARD_FIELDS_FILE;
+import static com.senla.aggregator.util.CommonConstants.COMMA;
 
 @Component
 @StepScope
@@ -21,13 +23,13 @@ public class CsvProductCardItemReader implements FileItemReader<ProductCardImpor
 
     private final FlatFileItemReader<ProductCardImportDto> delegate;
 
-    public CsvProductCardItemReader(@Value("#{jobParameters['importFile']}") String inputFilePath) {
+    public CsvProductCardItemReader(@Value("#{jobParameters['tempFile']}") String inputFilePath) {
         this.delegate = new FlatFileItemReaderBuilder<ProductCardImportDto>()
                 .name(CSV_IMPORT_READER_NAME)
                 .resource(new FileSystemResource(inputFilePath))
                 .linesToSkip(1)
                 .delimited()
-                .delimiter(CSV_DELIMITER)
+                .delimiter(COMMA)
                 .names(PRODUCT_CARD_FIELDS_FILE)
                 .targetType(ProductCardImportDto.class)
                 .build();

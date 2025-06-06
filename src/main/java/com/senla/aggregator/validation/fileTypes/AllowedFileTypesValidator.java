@@ -1,4 +1,4 @@
-package com.senla.aggregator.validation;
+package com.senla.aggregator.validation.fileTypes;
 
 import com.senla.aggregator.controller.helper.ContentType;
 import jakarta.validation.ConstraintValidator;
@@ -11,10 +11,12 @@ import java.util.Objects;
 
 public class AllowedFileTypesValidator implements ConstraintValidator<AllowedFileTypes, MultipartFile> {
 
+    private int maxFileSize;
     private List<String> allowedFileTypes;
 
     @Override
     public void initialize(AllowedFileTypes constraintAnnotation) {
+        maxFileSize = constraintAnnotation.maxFileSize();
         allowedFileTypes = Arrays.stream(constraintAnnotation.allowedFileTypes())
                 .map(ContentType::getValue)
                 .toList();
@@ -22,8 +24,12 @@ public class AllowedFileTypesValidator implements ConstraintValidator<AllowedFil
 
     @Override
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
-        if (Objects.isNull(file) || file.isEmpty()) return false;
+        if (Objects.isNull(file)) return true; // RequestPart must specify should there be a file. Condition for optional file upload.
+        if (file.isEmpty()) return false;
 
-        return allowedFileTypes.contains(file.getContentType());
+        boolean isFileSizeValid = true;
+        if (maxFileSize != -1) isFileSizeValid = file.getSize() <= maxFileSize * 1024L;
+
+        return isFileSizeValid && allowedFileTypes.contains(file.getContentType());
     }
 }

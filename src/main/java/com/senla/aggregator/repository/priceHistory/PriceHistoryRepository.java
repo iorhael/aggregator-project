@@ -1,4 +1,4 @@
-package com.senla.aggregator.repository;
+package com.senla.aggregator.repository.priceHistory;
 
 import com.senla.aggregator.dto.priceHistory.PriceDynamics;
 import com.senla.aggregator.model.PriceHistory;

@@ -4,6 +4,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
+import com.senla.aggregator.controller.helper.ContentType;
 import com.senla.aggregator.dto.mail.EmailRequest;
 import com.senla.aggregator.model.credential.GoogleCredentials;
 import com.senla.aggregator.service.exception.GmailException;
@@ -34,7 +35,6 @@ import java.util.Objects;
 import java.util.Properties;
 
 import static com.senla.aggregator.service.exception.ExceptionMessages.GMAIL_NOT_SENT;
-import static com.senla.aggregator.util.CommonConstants.*;
 import static com.senla.aggregator.util.CommonConstants.COMMA;
 
 @Service
@@ -129,7 +129,7 @@ public class GmailApiServiceImpl implements GmailApiService {
 
     private void attachImagePart(Resource image, Multipart multipart) throws MessagingException, IOException {
         MimeBodyPart imagePart = new MimeBodyPart();
-        DataSource source = new ByteArrayDataSource(image.getInputStream(), PNG_CONTENT_TYPE);
+        DataSource source = new ByteArrayDataSource(image.getInputStream(), ContentType.PNG.getValue());
         imagePart.setDataHandler(new DataHandler(source));
         imagePart.setFileName(LOGO_FILE_NAME);
         imagePart.setDisposition(Part.INLINE);

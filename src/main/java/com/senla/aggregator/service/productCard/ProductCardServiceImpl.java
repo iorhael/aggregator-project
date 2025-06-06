@@ -10,9 +10,9 @@ import com.senla.aggregator.model.PriceHistory;
 import com.senla.aggregator.model.ProductCard;
 import com.senla.aggregator.model.ProductCard_;
 import com.senla.aggregator.model.Retailer;
-import com.senla.aggregator.repository.ProductCardRepository;
 import com.senla.aggregator.repository.ProductRepository;
 import com.senla.aggregator.repository.RetailerRepository;
+import com.senla.aggregator.repository.productCard.ProductCardRepository;
 import com.senla.aggregator.specification.ProductCardSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +68,7 @@ public class ProductCardServiceImpl implements ProductCardService {
 
         productCard.setProduct(productRepository.getReferenceById(dto.getProductId()));
 
-        Retailer retailer = retailerRepository.findRetailerByOwnerId(retailerOwnerId)
+        Retailer retailer = retailerRepository.findByOwnerId(retailerOwnerId)
                 .orElseThrow(() -> new EntityNotFoundException(RETAILER_NOT_FOUND));
         productCard.setRetailer(retailer);
 
