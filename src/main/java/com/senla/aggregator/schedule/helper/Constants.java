@@ -16,6 +16,12 @@ public final class Constants {
     public static final String BEST_OFFERS_SUCCESS_TEMPLATE_NAME = "best-offers-success";
     public static final String OFFERS_COUNT_PARAM = "offersCount";
 
+    public static final String INPUT_FILE_NOT_VALID_MAIL_SUBJECT = "Input File Not Valid";
+    public static final String INPUT_FILE_NOT_VALID_TEMPLATE = "input-file-not-valid";
+    public static final String ERROR_MESSAGE_PARAM = "errorMessage";
+    public static final String CONTENT_NOT_SUPPORTED_MESSAGE = "Content of the import file is not supported";
+    public static final String FILE_TOO_LARGE_MESSAGE = "File is too large";
+
     private Constants() {
     }
 }

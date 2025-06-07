@@ -9,7 +9,9 @@ import com.senla.aggregator.dto.product.ProductInfoDto;
 import com.senla.aggregator.dto.product.ProductNameDescriptionDto;
 import com.senla.aggregator.dto.product.ProductPreviewDto;
 import com.senla.aggregator.dto.product.ProductUpdateDto;
+import com.senla.aggregator.model.AutoUpdateCard;
 import com.senla.aggregator.model.Role;
+import com.senla.aggregator.schedule.RetailerJobService;
 import com.senla.aggregator.service.product.ProductService;
 import com.senla.aggregator.validation.fileTypes.AllowedFileTypes;
 import com.senla.aggregator.validation.validImage.ValidImage;
@@ -53,13 +55,17 @@ import static com.senla.aggregator.controller.helper.Constants.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final RetailerJobService retailerJobService;
 
     @Operation(
             summary = "Get product by ID",
             description = "Returns detailed information about a product including rating, characteristics and offers"
     )
     @GetMapping("/{id}")
-    public ProductDetailedDto getProduct(@PathVariable UUID id) {
+    public ProductDetailedDto getProduct(@PathVariable UUID id) throws IOException {
+        AutoUpdateCard card = new AutoUpdateCard();
+        card.setDownloadLink("http://minio:9000/images/products/create-cards.csv");
+        retailerJobService.executeUpdateCardsForRetailerJob(card);
         return productService.getProduct(id);
     }
 
