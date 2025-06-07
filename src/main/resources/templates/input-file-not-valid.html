@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff7f7;
+            margin: 0;
+            padding: 40px 0;
+            color: #660000;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #ffcccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(153, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            height: 120px;
+            width: auto;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #990000;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #999;
+            border-top: 1px solid #ffcccc;
+            padding-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img alt="Logo" class="logo" src="cid:logo.png">
+    </div>
+
+    <div class="content">
+        <p><strong>Dear <span th:text="${retailerName}">Retailer</span>,</strong></p>
+
+        <p>This is an automated notification sent on
+            <span class="highlight" th:text="${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">date</span>.</p>
+
+        <p>Unfortunately, an error occurred during the automated validation of your import file.</p>
+
+        <p><strong>Error details:</strong><br/>
+            <span class="highlight" th:text="${errorMessage}">Validation failed due to incorrect format</span>
+        </p>
+
+        <p>Please review the file and make the necessary corrections before attempting another upload. If the issue persists, contact support for assistance.</p>
+    </div>
+
+    <div class="footer">
+        Best regards,<br/>
+        Price Aggregator Notification System
+    </div>
+</div>
+</body>
+</html>
