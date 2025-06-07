@@ -14,36 +14,26 @@ import com.senla.aggregator.service.mail.GmailApiService;
 import com.senla.aggregator.service.productCard.ProductCardBatchService;
 import com.senla.aggregator.util.FileUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.jobs.annotations.Recurring;
 import org.jobrunr.scheduling.JobScheduler;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.unit.DataSize;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.senla.aggregator.config.batch.helper.Constants.IMPORT_CARDS_FILE_PREFIX;
 import static com.senla.aggregator.schedule.helper.Constants.*;
-import static com.senla.aggregator.util.CommonConstants.TMP_FILE_EXTENSION;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RetailerJobService {
 
     private final JobHelper jobHelper;
     private final JobScheduler jobScheduler;
-    private final RestTemplate restTemplate;
     private final RetailerMapper retailerMapper;
     private final GmailApiService gmailApiService;
     private final RetailerRepository retailerRepository;
@@ -51,25 +41,25 @@ public class RetailerJobService {
     private final ProductCardBatchService productCardBatchService;
     private final AutoUpdateCardRepository autoUpdateCardRepository;
 
-    @Value("${spring.servlet.multipart.max-file-size}")
-    private DataSize maxFileSize;
-
     @Recurring(id = "best-offers-job", cron = "${schedule.retailer-morning}")
     @Job(name = "Send daily reports about best offers among product cards to all retailers")
     public void executeBestOffersJob() {
-        retailerRepository.findAll()
+        Stream<RetailerGetDto> retailerStream = retailerRepository.findAll()
                 .stream()
-                .map(retailerMapper::toRetailerGetDto)
-                .forEach(retailer ->
-                        jobScheduler.enqueue(() -> executeBestOffersForRetailerJob(retailer)));
+                .map(retailerMapper::toRetailerGetDto);
+
+        jobScheduler.enqueue(retailerStream, this::executeBestOffersForRetailerJob);
     }
 
     @Job(name = "Send daily report about best offers among product cards to retailer: %0")
     public void executeBestOffersForRetailerJob(RetailerGetDto retailer) throws IOException {
-        String[] mails = {retailer.getEmail()};
+        String[] recipients = {retailer.getEmail()};
         List<BestOffer> bestOffers = productCardRepository.findBestOffers(retailer.getId());
 
-        if (bestOffers.isEmpty()) sendBestOffersNotFoundMail(retailer.getName(), mails);
+        if (bestOffers.isEmpty()) {
+            sendBestOffersNotFoundMail(retailer.getName(), recipients);
+            return;
+        }
 
         File reportFile = jobHelper.generateReportFile(
                 bestOffers,
@@ -83,7 +73,7 @@ public class RetailerJobService {
                 .modelParam(RETAILER_NAME_PARAM, retailer.getName())
                 .modelParam(OFFERS_COUNT_PARAM, bestOffers.size())
                 .attachment(reportFile)
-                .recipients(mails)
+                .recipients(recipients)
                 .build();
         try {
             gmailApiService.sendEmail(emailRequest);
@@ -94,52 +84,61 @@ public class RetailerJobService {
 
     @Recurring(id = "update-cards-job", cron = "${schedule.daily-update-cards}")
     public void executeUpdateCardsJob() {
-        autoUpdateCardRepository.findWithRetailerBy()
-                .forEach(info ->
-                        jobScheduler.enqueue(() -> executeUpdateCardsForRetailerJob(info)));
+        Stream<AutoUpdateCard> infoStream = autoUpdateCardRepository.findWithRetailerBy().stream();
+        jobScheduler.enqueue(infoStream, this::executeUpdateCardsForRetailerJob);
     }
 
     @Job(name = "Daily update product cards info: %0")
-    public void executeUpdateCardsForRetailerJob(AutoUpdateCard info) throws IOException {
-        byte[] fileBytes = fetchFileBytes(info.getDownloadLink());
+    public void executeUpdateCardsForRetailerJob(AutoUpdateCard info) {
+        String downloadLink = info.getDownloadLink();
+        String retailerName = info.getRetailer().getName();
+        String[] recipients = {info.getRetailer().getEmail()};
 
-        if (fileBytes.length > maxFileSize.toBytes()) {
-            log.error("Downloaded file is too large: {}", info);
+        if (jobHelper.isFileTooLarge(downloadLink)) {
+            sendFileValidationFailedMail(retailerName, recipients, FILE_TOO_LARGE_MESSAGE);
             return;
         }
 
-        Path tempFilePath = Files.createTempFile(IMPORT_CARDS_FILE_PREFIX, TMP_FILE_EXTENSION);
-        Files.write(tempFilePath, fileBytes);
+        Optional<ContentType> optionalContentType = jobHelper.getSupportedContentType(downloadLink);
+        if (optionalContentType.isEmpty()) {
+            sendFileValidationFailedMail(
+                    retailerName,
+                    recipients,
+                    CONTENT_NOT_SUPPORTED_MESSAGE
+            );
+            return;
+        }
 
-        Optional<ContentType> optionalContentType = jobHelper.getContentTypeOfFile(tempFilePath);
-        if (optionalContentType.isEmpty()) return;
+        File file = jobHelper.downloadFileByLink(downloadLink, IMPORT_CARDS_FILE_PREFIX);
 
         productCardBatchService.importProductCards(
-                tempFilePath.toFile(),
+                file,
                 optionalContentType.get(),
                 info.getRetailer(),
                 info.getVerifiedProductsOnly()
         );
     }
 
-    private void sendBestOffersNotFoundMail(String retailerName, String[] mails) {
+    private void sendBestOffersNotFoundMail(String retailerName, String[] recipients) {
         EmailRequest emailRequest = EmailRequest.builder()
                 .subject(BEST_OFFERS_NOT_FOUND_MAIL_SUBJECT)
                 .templateName(BEST_OFFERS_NOT_FOUND_TEMPLATE)
                 .modelParam(RETAILER_NAME_PARAM, retailerName)
-                .recipients(mails)
+                .recipients(recipients)
                 .build();
 
         gmailApiService.sendEmail(emailRequest);
     }
 
-    private byte[] fetchFileBytes(String downloadLink) throws IOException {
-        ResponseEntity<byte[]> response = restTemplate.getForEntity(downloadLink, byte[].class);
+    private void sendFileValidationFailedMail(String retailerName, String[] recipients, String errorMessage) {
+        EmailRequest emailRequest = EmailRequest.builder()
+                .subject(INPUT_FILE_NOT_VALID_MAIL_SUBJECT)
+                .templateName(INPUT_FILE_NOT_VALID_TEMPLATE)
+                .modelParam(RETAILER_NAME_PARAM, retailerName)
+                .modelParam(ERROR_MESSAGE_PARAM, errorMessage)
+                .recipients(recipients)
+                .build();
 
-        if (!response.getStatusCode().is2xxSuccessful() || Objects.isNull(response.getBody())) {
-            throw new IOException("Failed to download file. Status: " + response.getStatusCode());
-        }
-
-        return response.getBody();
+        gmailApiService.sendEmail(emailRequest);
     }
 }
