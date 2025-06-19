@@ -17,7 +17,6 @@ EOSQL
 }
 
 if [ -n "${POSTGRES_MULTIPLE_DATABASES:-}" ]; then
-    echo "Multiple database creation requested: $POSTGRES_MULTIPLE_DATABASES"
     IFS=' ' read -ra user_password_pairs <<< "$POSTGRES_MULTIPLE_DATABASES"
 
     for pair in "${user_password_pairs[@]}"; do

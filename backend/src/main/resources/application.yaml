@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: price_aggregator
+    version: 1.0
+  config:
+    import: redisson-cache-regions.yaml
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}/${WEBAPP_DBNAME}?reWriteBatchedInserts=true
+    username: ${WEBAPP_DB_USERNAME}
+    password: ${WEBAPP_DB_PASSWORD}
+  jpa:
+    open-in-view: false
+    mapping-resources:
+      - query/category-tree.xml
+      - query/best-offers-report.xml
+      - query/daily-price-dynamics.xml
+      - query/child-categories-names.xml
+      - query/monthly-price-dynamics.xml
+      - query/products-in-category-tree.xml
+      - query/products-in-category-tree-count.xml
+      - query/products-name-description-in-category-tree.xml
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 20
+          batch_versioned_data: true
+        order_updates: true
+        cache:
+          region:
+            factory_class: org.redisson.hibernate.RedissonRegionFactory
+          use_query_cache: true
+          use_second_level_cache: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KC_URL}/realms/${KC_REALM}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 51MB
+  jackson:
+    default-property-inclusion: non_empty
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+server:
+  cors-allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
+keycloak:
+  server-url: ${KC_URL}
+  realm: ${KC_REALM}
+  username: ${KC_ADMIN_USERNAME}
+  password: ${KC_ADMIN_PASSWORD}
+  client-database-id: ${KC_CLIENT_DATABASE_ID}
+  client-id: ${KC_CLIENT_ID}
+  client-secret: ${KC_CLIENT_SECRET}
+
+google:
+  client-id: ${GOOGLE_CLIENT_ID}
+  client-secret: ${GOOGLE_CLIENT_SECRET}
+  refresh-token: ${GOOGLE_REFRESH_TOKEN}
+  from-email: ${GOOGLE_FROM_EMAIL}
+  refresh-access-url: https://www.googleapis.com/oauth2/v4/token
+
+swagger:
+  application:
+    title: Price Aggregator Project
+    description: An application that helps you choose a store with the best prices
+
+org:
+  jobrunr:
+    dashboard:
+      enabled: true
+    background-job-server:
+      enabled: true
+
+minio:
+  server-url: http://${MINIO_HOST}:9000
+  access-key: ${MINIO_ROOT_USER}
+  secret-key: ${MINIO_ROOT_PASSWORD}
+  external-server-url: ${EXTERNAL_SERVER_URL}
+  default-link-expiration: 259200
+
+schedule:
+  admin-morning: "0 0 9 * * *"
+  retailer-morning: "0 0 10 * * *"
+  daily-update-cards: "0 0 8 * * *"
