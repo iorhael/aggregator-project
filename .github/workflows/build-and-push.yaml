@@ -43,7 +43,7 @@ jobs:
         uses: docker/setup-buildx-action@v3.10.0
       -
         name: Build and push backend image
-        uses: docker/build-push-action@v6.17.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: "{{defaultContext}}:backend"
           tags: ${{ steps.meta.outputs.tags }}
@@ -60,7 +60,7 @@ jobs:
           min-versions-to-keep: 0
       -
         name: Build and push frontend image
-        uses: docker/build-push-action@v6.17.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: "{{defaultContext}}:frontend"
           tags: ${{ steps.meta.outputs.tags }}
