@@ -16,6 +16,20 @@ services:
       interval: 5s
       retries: 5
 
+  nginx:
+    image: nginx:alpine-slim
+    volumes:
+      - ./nginx-config:/etc/nginx:ro,z
+      - ./nginx-logs:/nginx-logs:z
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - minio
+      - keycloak
+      - webapp
+      - front
+
   redis:
     image: redis:7.4.2-alpine
     volumes:
@@ -23,9 +37,12 @@ services:
 
   keycloak:
     image: keycloak/keycloak:26.1
-    command: [ "start", "--http-enabled", "true", "--import-realm" ]
+    entrypoint: ["/bin/sh", "/keycloak-startup.sh"]
     volumes:
-      - ./keycloak-export:/opt/keycloak/data/import:z
+      - ./init-keycloak/keycloak-export:/opt/keycloak/data/import:z
+      - ./init-keycloak/aggregator-theme.jar:/opt/keycloak/providers/aggregator-theme.jar:z
+      - ./init-keycloak/keycloak-keystore.p12:/opt/keycloak/keystore.p12:z
+      - ./init-keycloak/keycloak-startup.sh:/keycloak-startup.sh:z
       - keycloak:/opt/keycloak/data
     environment:
       - KC_DB=postgres
@@ -41,8 +58,6 @@ services:
   minio:
     image: minio/minio:RELEASE.2025-05-24T17-08-30Z
     command: server /data --console-address ":9001"
-    ports:
-      - '9000:9000'
     env_file:
       - .env
     volumes:
@@ -55,7 +70,7 @@ services:
 
   minio-configurer:
     image: minio/mc:RELEASE.2025-05-21T01-59-54Z
-    entrypoint: ["bin/sh", "/init-minio/minio-entrypoint.sh"]
+    entrypoint: ["/bin/sh", "/init-minio/minio-entrypoint.sh"]
     env_file:
       - .env
     volumes:
@@ -65,20 +80,28 @@ services:
         condition: service_healthy
 
   webapp:
-    build: .
-    ports:
-      - '443:8080'
-    volumes:
-      - ./certificate.p12:${KEY_STORE}:z
+    build:
+      context: ./backend
     env_file:
       - .env
     depends_on:
+      keycloak:
+        condition: service_started
       redis:
         condition: service_started
       postgres:
         condition: service_healthy
       minio-configurer:
         condition: service_completed_successfully
+
+  front:
+    build:
+      context: ./frontend
+    depends_on:
+      webapp:
+        condition: service_started
+      keycloak:
+        condition: service_started
 
 volumes:
   minio:

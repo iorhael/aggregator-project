@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+        http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" version="2.2">
+    <named-native-query name="products-in-category-tree">
+        <query><![CDATA[
+            WITH RECURSIVE category_tree AS (
+                SELECT id FROM categories WHERE id = :categoryId
+                UNION ALL
+                SELECT c.id FROM categories c
+                JOIN category_tree ct ON c.parent_id = ct.id
+            )
+            SELECT p.id, p.name, p.image_link AS imageLink, v.name AS vendorName, p.verified,
+                   ps.minimal_price AS minimalPrice, ps.offers_count AS offersCount, ps.average_rating AS averageRating
+            FROM products p
+            JOIN product_categories pc ON p.id = pc.product_id
+            JOIN category_tree ct ON pc.category_id = ct.id
+            JOIN products_summary ps ON ps.product_id = p.id
+            JOIN vendors v ON v.id = p.vendor_id
+            LIMIT :limit OFFSET :offset
+        ]]></query>
+    </named-native-query>
+</entity-mappings>

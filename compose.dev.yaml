@@ -8,7 +8,7 @@ services:
 
   keycloak:
     ports:
-      - '8090:8080'
+      - '8080:8080'
 
   redis:
     ports:
@@ -20,21 +20,33 @@ services:
 
   webapp:
     build:
-      context: .
-      dockerfile: ./Dockerfile.dev
+      context: ./backend
+      dockerfile: Dockerfile.dev
     volumes:
       - m2-cache:/root/.m2
     develop:
       watch:
         - action: sync
-          path: ./src/main/java
+          path: ./backend/src/main/java
           target: /app/src/main/java
     ports:
       - '8000:8000'
-      - '8080:8080'
+      - '8090:8080'
       - '5005:5005'
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+
+  front:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/src
+          target: /app/src
+    ports:
+      - '5173:5173'
 
 volumes:
   m2-cache:
