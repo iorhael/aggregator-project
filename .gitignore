@@ -1,4 +1,4 @@
 .env
 nginx-logs/
 nginx-config/server-fullchain.pem
-nginx-confgi/server-privkey.pem
+nginx-config/server-privkey.pem

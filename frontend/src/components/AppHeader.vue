@@ -106,18 +106,18 @@
             Organization Info
           </router-link>
 
-          <a
-            href="#"
+          <routerLink
+            to="/search"
             class="text-gray-700 hover:text-gray-900 font-medium py-2 px-4 rounded-md transition-colors"
           >
-            Categories
-          </a>
-          <a
-            href="#"
+            Search
+          </routerLink>
+          <routernLink
+            to="/about"
             class="text-gray-700 hover:text-gray-900 font-medium py-2 px-4 rounded-md transition-colors"
           >
             About
-          </a>
+          </routernLink>
         </div>
       </div>
     </div>

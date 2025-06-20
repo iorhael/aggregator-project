@@ -3,6 +3,7 @@ package com.senla.aggregator.service.keycloak;
 import com.senla.aggregator.dto.auth.LoginDto;
 import com.senla.aggregator.dto.auth.RegisterDto;
 import com.senla.aggregator.dto.auth.TokenDto;
+import com.senla.aggregator.dto.user.UserDto;
 import com.senla.aggregator.dto.user.UserProfileDto;
 import com.senla.aggregator.dto.user.UserUpdateDto;
 import com.senla.aggregator.mapper.UserMapper;
@@ -12,6 +13,7 @@ import com.senla.aggregator.model.credential.KeycloakCredentials;
 import com.senla.aggregator.repository.UserRepository;
 import com.senla.aggregator.service.exception.ExceptionMessages;
 import com.senla.aggregator.service.exception.KeycloakException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +28,22 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.senla.aggregator.service.exception.ExceptionMessages.*;
+
 @Service
 @RequiredArgsConstructor
 public class KeycloakServiceImpl implements KeycloakService {
 
-    private final Keycloak adminKeycloak;
-
-    private final KeycloakCredentials keycloakCredentials;
-
-    private final UserRepository userRepository;
-
     private final UserMapper userMapper;
+    private final Keycloak adminKeycloak;
+    private final UserRepository userRepository;
+    private final KeycloakCredentials keycloakCredentials;
 
     @Override
     public TokenDto getAccessToken(LoginDto dto) {
@@ -57,7 +59,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
             return new TokenDto(keycloak.tokenManager().getAccessTokenString());
         } catch (NotAuthorizedException e) {
-            throw new KeycloakException(ExceptionMessages.KEYCLOAK_BAD_CREDENTIALS, e);
+            throw new KeycloakException(KEYCLOAK_BAD_CREDENTIALS, e);
         }
     }
 
@@ -120,12 +122,12 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     @Override
-    public void verifyPassword(String userId, String password) {
-        String username = getUsersResource().get(userId)
-                .toRepresentation()
-                .getUsername();
+    @Transactional
+    public void synchronizeUser(UserDto user) {
+        User oldUser = userRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        getAccessToken(new LoginDto(username, password));
+        userMapper.updateUser(oldUser, user);
     }
 
     @Override
@@ -170,7 +172,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         try (Response response = usersResource.create(user)) {
             if (response.getStatusInfo().getFamily() == Response.Status.Family.CLIENT_ERROR)
-                throw new KeycloakException(ExceptionMessages.KEYCLOAK_CONFLICT);
+                throw new KeycloakException(KEYCLOAK_CONFLICT);
 
             return extractUserIdFromResponse(response);
         }
