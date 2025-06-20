@@ -5,7 +5,6 @@
     github-username="iorhael"
   >
     <div class="bg-gray-50 min-h-screen">
-      <!-- Navigation Subheader -->
       <div v-if="retailer" class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
@@ -28,12 +27,10 @@
       </div>
 
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -58,7 +55,6 @@
           </div>
         </div>
 
-        <!-- No Retailer Account - Create New -->
         <div v-else-if="!retailer && !loading" class="text-center py-12">
           <div class="bg-white rounded-lg shadow-md p-8">
             <img
@@ -80,14 +76,11 @@
           </div>
         </div>
 
-        <!-- Existing Retailer Info -->
         <div v-else-if="retailer" class="space-y-8">
-          <!-- Main Organization Info -->
           <div class="bg-white rounded-lg shadow-md p-4 sm:p-8">
             <div
               class="flex flex-col lg:flex-row lg:items-start lg:space-x-8 space-y-6 lg:space-y-0"
             >
-              <!-- Logo Section -->
               <div class="flex-shrink-0 flex justify-center lg:justify-start">
                 <div
                   class="w-32 h-32 sm:w-48 sm:h-48 bg-gray-100 rounded-full overflow-hidden border-4 border-gray-200"
@@ -109,9 +102,7 @@
                 </div>
               </div>
 
-              <!-- Info Section -->
               <div class="flex-1 space-y-6">
-                <!-- Header with Edit Button -->
                 <div
                   class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
                 >
@@ -164,9 +155,7 @@
                   </div>
                 </div>
 
-                <!-- Info Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <!-- About Info -->
                   <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-500 mb-2">About info:</label>
                     <div class="bg-gray-50 border border-gray-200 rounded-md p-4 min-h-[100px]">
@@ -176,7 +165,6 @@
                     </div>
                   </div>
 
-                  <!-- Website -->
                   <div>
                     <label class="block text-sm font-medium text-gray-500 mb-2">Website:</label>
                     <div class="bg-gray-50 border border-gray-200 rounded-md p-3">
@@ -192,7 +180,6 @@
                     </div>
                   </div>
 
-                  <!-- Email -->
                   <div>
                     <label class="block text-sm font-medium text-gray-500 mb-2">Email:</label>
                     <div class="bg-gray-50 border border-gray-200 rounded-md p-3">
@@ -202,7 +189,6 @@
                     </div>
                   </div>
 
-                  <!-- Product Feed Section (only show if configured) -->
                   <div v-if="hasProductFeedConfig" class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-500 mb-2"
                       >Product Feed Configuration:</label
@@ -239,7 +225,6 @@
             </div>
           </div>
 
-          <!-- Recent Product Cards -->
           <div class="bg-white rounded-lg shadow-md p-6">
             <div
               class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 space-y-4 sm:space-y-0"
@@ -253,12 +238,10 @@
               </router-link>
             </div>
 
-            <!-- Cards Loading -->
             <div v-if="cardsLoading" class="flex justify-center py-8">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
 
-            <!-- Cards Slider -->
             <div v-else-if="recentCards.length > 0" class="relative">
               <div class="flex space-x-4 overflow-x-auto pb-4">
                 <div
@@ -281,13 +264,11 @@
               </div>
             </div>
 
-            <!-- No Cards -->
             <div v-else class="text-center py-8">
               <p class="text-gray-500">No product cards found</p>
             </div>
           </div>
 
-          <!-- Danger Zone -->
           <div class="bg-white rounded-lg shadow-md p-6 border border-red-200">
             <h3 class="text-lg font-medium text-red-900 mb-4">Danger Zone</h3>
             <div class="bg-red-50 border border-red-200 rounded-md p-4">
@@ -312,21 +293,18 @@
           </div>
         </div>
 
-        <!-- Export Modal -->
         <ExportModal
           v-if="showExportModal"
           @close="showExportModal = false"
           @export="handleExport"
         />
 
-        <!-- Success Notification -->
         <SuccessNotification
           v-if="showSuccessNotification"
           :message="successMessage"
           @close="showSuccessNotification = false"
         />
 
-        <!-- Edit Form Modal -->
         <RetailerFormModal
           v-if="showEditForm"
           :is-edit="!!retailer"
@@ -335,14 +313,12 @@
           @success="handleFormSuccess"
         />
 
-        <!-- Import Modal -->
         <ImportModal
           v-if="showImportModal"
           @close="showImportModal = false"
           @success="handleImportSuccess"
         />
 
-        <!-- Delete Confirmation Modal -->
         <DeleteConfirmationModal
           v-if="showDeleteModal"
           :item="retailer"
@@ -410,7 +386,6 @@ export default {
         const response = await retailersApi.getMyRetailer()
         this.retailer = response.data
 
-        // Fetch additional data
         await Promise.all([this.fetchCounts(), this.fetchRecentCards()])
       } catch (err) {
         if (err.response?.status === 404) {
@@ -427,7 +402,6 @@ export default {
       this.cardsLoading = true
       try {
         const response = await productCardsApi.getMyProductCards(0, 10)
-        // Handle new paginated structure
         this.recentCards = response.data.content || []
       } catch (err) {
         console.error('Failed to fetch recent cards:', err)
@@ -448,11 +422,9 @@ export default {
       try {
         await batchApi.exportProductCards(format)
 
-        // Show success notification
         this.successMessage = `Export job submitted successfully! You will receive the ${format} file via email once processing is complete.`
         this.showSuccessNotification = true
 
-        // Auto-hide notification after 5 seconds
         setTimeout(() => {
           this.showSuccessNotification = false
         }, 5000)
@@ -468,12 +440,11 @@ export default {
       this.retailer = updatedRetailer
       this.showEditForm = false
       this.invalidateCounts()
-      this.fetchCounts(true) // Force refresh counts
+      this.fetchCounts(true)
       this.fetchRecentCards()
     },
 
     handleLogoError(event) {
-      // Remove the image and show placeholder
       event.target.style.display = 'none'
     },
 
@@ -491,16 +462,13 @@ export default {
       try {
         await batchApi.importProductCards(file, verifiedProductsOnly)
 
-        // Show success notification
         this.successMessage =
           'Import job submitted successfully! Your products will be processed in the background.'
         this.showSuccessNotification = true
 
-        // Refresh counts and recent cards
         this.invalidateCounts()
         await Promise.all([this.fetchCounts(true), this.fetchRecentCards()])
 
-        // Auto-hide notification after 5 seconds
         setTimeout(() => {
           this.showSuccessNotification = false
         }, 5000)
@@ -520,11 +488,9 @@ export default {
 
         this.showDeleteModal = false
 
-        // Show success notification
         this.successMessage = 'Organization deleted successfully! Redirecting...'
         this.showSuccessNotification = true
 
-        // Clear cache and redirect after a short delay
         this.invalidateCounts()
         setTimeout(() => {
           this.$router.push('/')

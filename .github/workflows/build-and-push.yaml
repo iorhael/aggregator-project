@@ -8,8 +8,8 @@ on:
       - 'v*'
 
 jobs:
-  build_and_push_backend:
-    name: Build and push backend
+  build_and_push:
+    name: Build and push containers
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -17,16 +17,15 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      -
-        name: Log in into container registry
+      - name: Log in to container registry
         uses: docker/login-action@v3.4.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        id: meta
-        name: Generate tags and labels for an image backend image
+
+      - id: backend_meta
+        name: Generate backend image metadata
         uses: docker/metadata-action@v5.7.0
         with:
           images: |
@@ -35,40 +34,51 @@ jobs:
             type=ref,event=pr
             type=ref,event=branch
             type=semver,pattern={{version}}
-      -
-        name: Set up qemu
+
+      - id: frontend_meta
+        name: Generate frontend image metadata
+        uses: docker/metadata-action@v5.7.0
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/aggregator-frontend
+          tags: |
+            type=ref,event=pr
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.6.0
-      -
-        name: Set up docker buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.10.0
-      -
-        name: Build and push backend image
+
+      - name: Build and push backend image
         uses: docker/build-push-action@v6.17.0
         with:
           context: "{{defaultContext}}:backend"
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.backend_meta.outputs.tags }}
           platforms: linux/amd64,linux/arm64
           provenance: false
           push: true
-      -
-        name: Cleanup untagged images of backend
+
+      - name: Cleanup untagged backend images
         uses: actions/delete-package-versions@v5.0.0
         with:
           package-type: container
           package-name: aggregator-backend
           delete-only-untagged-versions: true
           min-versions-to-keep: 0
-      -
-        name: Build and push frontend image
+
+      - name: Build and push frontend image
         uses: docker/build-push-action@v6.17.0
         with:
           context: "{{defaultContext}}:frontend"
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.frontend_meta.outputs.tags }}
           platforms: linux/amd64,linux/arm64
           provenance: false
           push: true
-      -
-        name: Cleanup untagged images of frontend
+
+      - name: Cleanup untagged frontend images
         uses: actions/delete-package-versions@v5.0.0
         with:
           package-type: container

@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">Export Product Cards</h3>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
@@ -17,7 +16,6 @@
           </button>
         </div>
 
-        <!-- Format Selection -->
         <div class="space-y-4">
           <p class="text-sm text-gray-600">Choose the export format for your product cards:</p>
 
@@ -60,7 +58,6 @@
           </div>
         </div>
 
-        <!-- Actions -->
         <div class="flex justify-end space-x-3 pt-6">
           <button
             @click="$emit('close')"

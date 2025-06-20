@@ -6,12 +6,10 @@
   >
     <div class="bg-gray-50 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -30,13 +28,10 @@
           </div>
         </div>
 
-        <!-- Retailer Content -->
         <div v-else-if="retailer" class="space-y-8">
-          <!-- Retailer Header -->
           <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="p-6 lg:p-8">
               <div class="flex flex-col lg:flex-row lg:items-start gap-8">
-                <!-- Logo -->
                 <div class="flex-shrink-0">
                   <div class="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden">
                     <img
@@ -48,7 +43,6 @@
                   </div>
                 </div>
 
-                <!-- Retailer Info -->
                 <div class="flex-1 space-y-4">
                   <div>
                     <h1 class="text-3xl font-bold text-gray-900">{{ retailer.name }}</h1>
@@ -57,7 +51,6 @@
                     </p>
                   </div>
 
-                  <!-- Contact Information -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div v-if="retailer.email" class="flex items-center space-x-3">
                       <svg
@@ -116,19 +109,16 @@
             </div>
           </div>
 
-          <!-- Stores Section -->
           <div class="bg-white rounded-lg shadow-md p-6">
             <div class="flex justify-between items-center mb-6">
               <h2 class="text-xl font-semibold text-gray-900">Store Locations</h2>
               <span class="text-sm text-gray-500">{{ totalStores }} stores</span>
             </div>
 
-            <!-- Stores Loading -->
             <div v-if="storesLoading" class="flex justify-center py-8">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
 
-            <!-- Stores List -->
             <div v-else-if="stores.length > 0" class="space-y-6">
               <div
                 v-for="store in stores"
@@ -150,7 +140,6 @@
                       </h3>
                     </div>
 
-                    <!-- Contact Info -->
                     <div class="space-y-2">
                       <div class="flex items-center text-gray-600">
                         <svg
@@ -196,11 +185,9 @@
                   </div>
                 </div>
 
-                <!-- Opening Hours -->
                 <div v-if="store.opening_hours" class="mt-4">
                   <h4 class="text-sm font-medium text-gray-700 mb-3">Opening Hours</h4>
 
-                  <!-- Desktop Schedule -->
                   <div class="hidden md:block">
                     <div class="grid grid-cols-7 gap-2">
                       <div
@@ -222,7 +209,6 @@
                     </div>
                   </div>
 
-                  <!-- Mobile Schedule -->
                   <div class="md:hidden space-y-2">
                     <div
                       v-for="(day, dayName) in store.opening_hours"
@@ -238,7 +224,6 @@
                 </div>
               </div>
 
-              <!-- Stores Pagination -->
               <div
                 v-if="totalStorePages > 1"
                 class="flex justify-center items-center space-x-2 pt-6"
@@ -277,7 +262,6 @@
               </div>
             </div>
 
-            <!-- No Stores -->
             <div v-else class="text-center py-8">
               <img
                 src="@/assets/no-stores.png"
@@ -299,7 +283,7 @@ import { retailersApi, storesApi } from '@/api'
 import organizationLogoDefault from '@/assets/organization-logo-default.png'
 
 export default {
-  name: 'RetailerInfo',
+  name: 'RetailerInfoPublic',
   components: {
     AppLayout,
   },

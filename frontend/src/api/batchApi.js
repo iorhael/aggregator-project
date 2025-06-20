@@ -14,7 +14,6 @@ export const batchApi = {
     })
   },
 
-  // Export product cards (requires auth)
   exportProductCards(type = 'CSV') {
     return apiClient.get('product_cards_batch/export', {
       params: { type },
@@ -22,7 +21,6 @@ export const batchApi = {
     })
   },
 
-  // Configure product feed auto-update (requires auth)
   configureAutoUpdate(downloadLink, verifiedProductsOnly) {
     return apiClient.post(
       'product_cards_batch/auto_update',
@@ -36,7 +34,6 @@ export const batchApi = {
     )
   },
 
-  // Update product feed auto-update (requires auth)
   updateAutoUpdate(downloadLink, verifiedProductsOnly) {
     return apiClient.put(
       'product_cards_batch/auto_update',
@@ -56,7 +53,6 @@ export const batchApi = {
     })
   },
 
-  // Get job executions history (requires auth)
   getJobExecutions(pageNo = 0, pageSize = 15) {
     return apiClient.get('product_cards_batch/job_executions', {
       params: { pageNo, pageSize },

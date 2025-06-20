@@ -20,14 +20,12 @@ export const productCardsApi = {
     })
   },
 
-  // Update product card (requires auth)
   updateProductCard(cardId, updateData) {
     return apiClient.put(`product_cards/${cardId}`, updateData, {
       requiresAuth: true,
     })
   },
 
-  // Delete product card (requires auth)
   deleteProductCard(cardId) {
     return apiClient.delete(`product_cards/${cardId}`, {
       requiresAuth: true,

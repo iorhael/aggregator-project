@@ -6,7 +6,6 @@
   >
     <div class="bg-gray-50 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Title -->
         <div class="mb-8">
           <h2 class="text-3xl font-bold text-gray-900 mb-2">
             <span v-if="isSearchMode && searchQuery">Search Results for "{{ searchQuery }}"</span>
@@ -20,16 +19,13 @@
           </p>
         </div>
 
-        <!-- Top Level Categories -->
         <div class="mb-8">
           <h3 class="text-lg font-medium text-gray-900 mb-4">Browse by Category</h3>
 
-          <!-- Loading State -->
           <div v-if="categoriesLoading" class="flex justify-center py-8">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
 
-          <!-- Categories Grid -->
           <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <button
               v-for="category in categories"
@@ -57,17 +53,14 @@
           </div>
         </div>
 
-        <!-- Search Bar -->
         <div class="mb-6">
           <SearchBar :is-searching="isSearching" @search="onSearch" @clear="onClearSearch" />
         </div>
 
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -86,7 +79,6 @@
           </div>
         </div>
 
-        <!-- Products Grid -->
         <div
           v-else-if="products.length > 0"
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8"
@@ -96,7 +88,6 @@
             :key="product.id"
             class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
           >
-            <!-- Product Image -->
             <div class="aspect-square bg-gray-100 relative">
               <img
                 :src="product.image_link || placeholderImage"
@@ -104,7 +95,6 @@
                 @error="handleImageError"
                 class="w-full h-full object-cover"
               />
-              <!-- Verified Badge -->
               <div v-if="product.is_verified" class="absolute top-2 right-2">
                 <div
                   class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center"
@@ -121,14 +111,12 @@
               </div>
             </div>
 
-            <!-- Product Info -->
             <div class="p-4">
               <h3 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
                 {{ product.name }}
               </h3>
               <p class="text-gray-600 text-xs mb-2">{{ product.vendor_name }}</p>
 
-              <!-- Rating -->
               <div class="flex items-center mb-2">
                 <div class="flex items-center">
                   <svg
@@ -153,7 +141,6 @@
                 >
               </div>
 
-              <!-- Price and Offers -->
               <div class="flex justify-between items-center">
                 <div>
                   <span class="text-lg font-bold text-gray-900"
@@ -172,7 +159,6 @@
           </div>
         </div>
 
-        <!-- Empty State -->
         <div v-else class="text-center py-12">
           <img
             src="@/assets/no-products.png"
@@ -185,7 +171,6 @@
           </p>
         </div>
 
-        <!-- Pagination -->
         <div v-if="totalPages > 1" class="flex justify-center items-center space-x-2">
           <button
             @click="goToPage(currentPage - 1)"
@@ -220,13 +205,11 @@
           </button>
         </div>
 
-        <!-- Results Info -->
         <div v-if="products.length > 0" class="text-center mt-4 text-sm text-gray-600">
           Showing {{ (currentPage - 1) * pageSize + 1 }} to
           {{ Math.min(currentPage * pageSize, totalProducts) }} of {{ totalProducts }} products
         </div>
 
-        <!-- Category Tree Modal -->
         <CategoryTreeModal
           v-if="showCategoryModal"
           :root-category="selectedRootCategory"
@@ -307,7 +290,6 @@ export default {
 
     handleCategorySelect(category) {
       this.showCategoryModal = false
-      // Use the correct route name with parameters
       this.$router.push({
         name: 'ProductSearchWithCategory',
         params: {
@@ -324,14 +306,12 @@ export default {
         let response
 
         if (this.isSearchMode && this.searchQuery) {
-          // Search mode
           response = await productsApi.searchProducts(
             { product_name: this.searchQuery },
             this.currentPage - 1,
             this.pageSize,
           )
         } else {
-          // Default mode - show all products
           response = await productsApi.getProducts(this.currentPage - 1, this.pageSize)
         }
 

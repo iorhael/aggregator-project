@@ -5,6 +5,7 @@ import RetailerInfo from '@/views/retailer/RetailerInfo.vue'
 import CardsManagmentPage from '@/views/retailer/CardsManagment.vue'
 import StoresManagmentPage from '@/views/retailer/StoresManagment.vue'
 import JobsHistoryPage from '@/views/retailer/JobsHistory.vue'
+import RetailerInfoPublic from '@/views/RetailerInfoPublic.vue'
 import HomePage from '@/views/Home.vue'
 import NotFoundPage from '@/views/NotFound.vue'
 import ForbiddenPage from '@/views/Forbidden.vue'
@@ -12,7 +13,7 @@ import ProductSearch from '@/views/ProductSearch.vue'
 import ProductDetail from '@/views/ProductDetail.vue'
 import ProductOffers from '@/views/ProductOffers.vue'
 import ProductComments from '@/views/ProductComments.vue'
-import RetailerInfoPublic from '@/views/RetailerInfo.vue'
+import AboutUs from '@/views/AboutUs.vue'
 
 const routes = [
   {
@@ -30,6 +31,14 @@ const routes = [
     meta: {
       requiresAuth: true,
       availableFor: [Roles.RETAILER],
+    },
+  },
+  {
+    path: '/about',
+    name: 'AboutUs',
+    component: AboutUs,
+    meta: {
+      requiresAuth: false,
     },
   },
   {
@@ -57,22 +66,6 @@ const routes = [
     meta: {
       requiresAuth: true,
       availableFor: [Roles.RETAILER],
-    },
-  },
-  {
-    path: '/forbidden',
-    name: 'Forbidden',
-    component: ForbiddenPage,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFoundPage,
-    meta: {
-      requiresAuth: false,
     },
   },
   {
@@ -123,6 +116,22 @@ const routes = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/forbidden',
+    name: 'Forbidden',
+    component: ForbiddenPage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFoundPage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ]
 
 const router = createRouter({
@@ -130,7 +139,6 @@ const router = createRouter({
   routes,
 })
 
-// redirect to retailer page through /retailer causes Uncaught (in promise) {error: 'login_required', error_description: undefined}
 router.beforeEach((to, from, next) => {
   if (to.meta?.requiresAuth) {
     const basePath = window.location.origin

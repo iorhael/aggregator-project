@@ -5,7 +5,6 @@
     github-username="iorhael"
   >
     <div class="bg-gray-50 min-h-screen">
-      <!-- Navigation Subheader -->
       <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
@@ -28,7 +27,6 @@
       </div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Header -->
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-gray-900 mb-2">Jobs History</h1>
           <p class="text-gray-600">
@@ -36,12 +34,10 @@
           </p>
         </div>
 
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -66,11 +62,8 @@
           </div>
         </div>
 
-        <!-- Jobs List -->
         <div v-else-if="jobs.length > 0" class="space-y-4">
-          <!-- Desktop Table -->
           <div class="hidden lg:block bg-white shadow-md rounded-lg overflow-hidden">
-            <!-- Table Header -->
             <div class="bg-gray-50 px-6 py-3 border-b border-gray-200">
               <div
                 class="grid grid-cols-12 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wide"
@@ -84,7 +77,6 @@
               </div>
             </div>
 
-            <!-- Table Body -->
             <div class="divide-y divide-gray-200">
               <div
                 v-for="job in jobs"
@@ -92,7 +84,6 @@
                 class="px-6 py-4 hover:bg-gray-50 transition-colors"
               >
                 <div class="grid grid-cols-12 gap-4 items-center">
-                  <!-- Job Name -->
                   <div class="col-span-3">
                     <div class="flex items-center">
                       <div
@@ -123,7 +114,6 @@
                     </div>
                   </div>
 
-                  <!-- Status -->
                   <div class="col-span-2">
                     <span
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
@@ -133,26 +123,22 @@
                     </span>
                   </div>
 
-                  <!-- Start Time -->
                   <div class="col-span-2">
                     <p class="text-sm text-gray-900">{{ formatDateTime(job.start_time) }}</p>
                   </div>
 
-                  <!-- End Time -->
                   <div class="col-span-2">
                     <p class="text-sm text-gray-900">
                       {{ job.end_time ? formatDateTime(job.end_time) : '-' }}
                     </p>
                   </div>
 
-                  <!-- Duration -->
                   <div class="col-span-1">
                     <p class="text-sm text-gray-600">
                       {{ calculateDuration(job.start_time, job.end_time) }}
                     </p>
                   </div>
 
-                  <!-- Exit Status -->
                   <div class="col-span-2">
                     <span class="text-sm text-gray-600">{{ job.exit_status || '-' }}</span>
                   </div>
@@ -161,14 +147,12 @@
             </div>
           </div>
 
-          <!-- Mobile Cards -->
           <div class="lg:hidden space-y-4">
             <div
               v-for="job in jobs"
               :key="job.job_name + job.start_time"
               class="bg-white rounded-lg shadow-md p-4"
             >
-              <!-- Job Header -->
               <div class="flex items-start justify-between mb-3">
                 <div class="flex items-center">
                   <div
@@ -205,7 +189,6 @@
                 </span>
               </div>
 
-              <!-- Job Details -->
               <div class="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <span class="text-gray-500">Duration:</span>
@@ -226,7 +209,6 @@
           </div>
         </div>
 
-        <!-- Empty State -->
         <div v-else class="text-center py-12">
           <div class="bg-white rounded-lg shadow-md p-8">
             <img
@@ -242,7 +224,6 @@
           </div>
         </div>
 
-        <!-- Pagination -->
         <div v-if="totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
           <button
             @click="goToPage(currentPage - 1)"
@@ -277,7 +258,6 @@
           </button>
         </div>
 
-        <!-- Results Info -->
         <div v-if="jobs.length > 0" class="text-center mt-4 text-sm text-gray-600">
           Showing {{ (currentPage - 1) * pageSize + 1 }} to
           {{ Math.min(currentPage * pageSize, totalJobs) }} of {{ totalJobs }} jobs
@@ -334,7 +314,6 @@ export default {
       try {
         const response = await batchApi.getJobExecutions(this.currentPage - 1, this.pageSize)
 
-        // Handle paginated response structure
         this.jobs = response.data.content || []
         this.totalJobs = response.data.total_elements || response.data.totalElements || 0
         this.totalPages = response.data.total_pages || response.data.totalPages || 0
@@ -355,7 +334,6 @@ export default {
     },
 
     formatJobName(jobName) {
-      // Convert job names to human-readable format
       const jobNames = {
         importProductCards: 'Import Product Cards',
         exportProductCards: 'Export Product Cards',

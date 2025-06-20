@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">Import Product Cards</h3>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
@@ -17,9 +16,7 @@
           </button>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="handleImport" class="space-y-6">
-          <!-- File Upload -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2"> Select File * </label>
             <div
@@ -84,7 +81,6 @@
             </div>
           </div>
 
-          <!-- Product Filter -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2"> Product Filter </label>
             <div class="space-y-2">
@@ -109,7 +105,6 @@
             </div>
           </div>
 
-          <!-- Info -->
           <div class="bg-blue-50 border border-blue-200 rounded-md p-3">
             <p class="text-blue-800 text-sm">
               <strong>Note:</strong> The import process will run in the background. You'll be
@@ -117,12 +112,10 @@
             </p>
           </div>
 
-          <!-- Error Message -->
           <div v-if="error" class="bg-red-50 border border-red-200 rounded-md p-3">
             <p class="text-red-600 text-sm">{{ error }}</p>
           </div>
 
-          <!-- Actions -->
           <div class="flex justify-end space-x-3">
             <button
               type="button"
@@ -185,7 +178,6 @@ export default {
     handleFileChange(event) {
       const file = event.target.files[0]
       if (file) {
-        // Validate file type
         const allowedTypes = ['text/csv', 'application/xml', 'text/xml', 'application/json']
         const fileExtension = file.name.split('.').pop().toLowerCase()
         const allowedExtensions = ['csv', 'xml', 'json']

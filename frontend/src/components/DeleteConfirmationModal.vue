@@ -5,7 +5,6 @@
   >
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">{{ title || 'Confirm Deletion' }}</h3>
           <button
@@ -23,7 +22,6 @@
           </button>
         </div>
 
-        <!-- Content -->
         <div class="mb-6">
           <div class="flex items-center mb-4">
             <div class="flex-shrink-0">
@@ -47,7 +45,6 @@
             </div>
           </div>
 
-          <!-- Item details if provided -->
           <div
             v-if="item && itemName"
             class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4"
@@ -64,7 +61,6 @@
             </div>
           </div>
 
-          <!-- Message -->
           <p class="text-sm text-gray-600">
             {{
               message ||
@@ -73,7 +69,6 @@
           </p>
         </div>
 
-        <!-- Actions -->
         <div class="flex justify-end space-x-3">
           <button
             @click="$emit('close')"
@@ -133,7 +128,6 @@ export default {
     formatPhone(phone) {
       if (!phone) return 'Not provided'
 
-      // Format phone number for display
       if (phone.length === 11) {
         return `+${phone.slice(0, 1)} (${phone.slice(1, 4)}) ${phone.slice(4, 7)}-${phone.slice(7, 9)}-${phone.slice(9)}`
       } else if (phone.length >= 10) {

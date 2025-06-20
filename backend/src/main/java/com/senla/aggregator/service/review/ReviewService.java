@@ -1,5 +1,7 @@
 package com.senla.aggregator.service.review;
 
+import com.senla.aggregator.dto.PaginationStatsDto;
+import com.senla.aggregator.dto.TempReviewImageDto;
 import com.senla.aggregator.dto.review.ReviewCreateDto;
 import com.senla.aggregator.dto.review.ReviewGetDto;
 import com.senla.aggregator.dto.review.ReviewUpdateDto;
@@ -15,11 +17,11 @@ public interface ReviewService {
 
     int getReviewCountOfProduct(UUID productId);
 
-    String storeTempImage(MultipartFile file) throws IOException;
+    TempReviewImageDto storeReviewImage(MultipartFile file) throws IOException;
 
     ReviewGetDto createReview(ReviewCreateDto dto, UUID authorId);
 
-    List<ReviewGetDto> getReviewsOfProduct(UUID productId, int pageNo, int pageSize);
+    PaginationStatsDto<ReviewGetDto> getReviewsOfProduct(UUID productId, int pageNo, int pageSize);
 
     List<ReviewGetDto> getReviewsOfAuthor(String authorName, int pageNo, int pageSize);
 

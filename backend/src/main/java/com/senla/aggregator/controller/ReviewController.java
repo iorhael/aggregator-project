@@ -1,7 +1,8 @@
 package com.senla.aggregator.controller;
 
 import com.senla.aggregator.controller.helper.ContentType;
-import com.senla.aggregator.dto.ImageUrlDto;
+import com.senla.aggregator.dto.PaginationStatsDto;
+import com.senla.aggregator.dto.TempReviewImageDto;
 import com.senla.aggregator.dto.ResponseInfoDto;
 import com.senla.aggregator.dto.review.ReviewCreateDto;
 import com.senla.aggregator.dto.review.ReviewGetDto;
@@ -73,9 +74,9 @@ public class ReviewController {
             description = "Retrieve a paginated list of reviews for a specific product"
     )
     @GetMapping("/products/{productId}")
-    public List<ReviewGetDto> findReviewsOfProduct(@PathVariable UUID productId,
-                                                   @RequestParam(defaultValue = "0") int pageNo,
-                                                   @RequestParam(defaultValue = "15") int pageSize) {
+    public PaginationStatsDto<ReviewGetDto> findReviewsOfProduct(@PathVariable UUID productId,
+                                                                 @RequestParam(defaultValue = "0") int pageNo,
+                                                                 @RequestParam(defaultValue = "15") int pageSize) {
         return reviewService.getReviewsOfProduct(productId, pageNo, pageSize);
     }
 
@@ -91,16 +92,16 @@ public class ReviewController {
                     )
             )
     )
-    @PostMapping(value = "/temp_image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('AUTHOR')")
-    public ImageUrlDto storeTempImage(@RequestPart(value = "image")
-                                      @AllowedFileTypes(maxFileSize = 4096,
-                                              allowedFileTypes = {
-                                                      ContentType.PNG,
-                                                      ContentType.JPEG
-                                              })
-                                      @ValidImage MultipartFile image) throws IOException {
-        return new ImageUrlDto(reviewService.storeTempImage(image));
+    public TempReviewImageDto storeReviewImage(@RequestPart(value = "image")
+                                               @AllowedFileTypes(maxFileSize = 4096,
+                                                       allowedFileTypes = {
+                                                               ContentType.PNG,
+                                                               ContentType.JPEG
+                                                       })
+                                               @ValidImage MultipartFile image) throws IOException {
+        return reviewService.storeReviewImage(image);
     }
 
     @Operation(

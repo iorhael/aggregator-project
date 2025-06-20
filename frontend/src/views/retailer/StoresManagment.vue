@@ -5,7 +5,6 @@
     github-username="iorhael"
   >
     <div class="bg-gray-50 min-h-screen">
-      <!-- Navigation Subheader -->
       <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
@@ -28,7 +27,6 @@
       </div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Header -->
         <div
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0"
         >
@@ -54,12 +52,10 @@
           </button>
         </div>
 
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -84,7 +80,6 @@
           </div>
         </div>
 
-        <!-- Stores List -->
         <div v-else-if="stores.length > 0" class="space-y-6">
           <div
             v-for="store in stores"
@@ -92,7 +87,6 @@
             class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
           >
             <div class="p-6">
-              <!-- Store Header -->
               <div
                 class="flex flex-col lg:flex-row lg:items-start lg:justify-between space-y-4 lg:space-y-0 mb-6"
               >
@@ -112,7 +106,6 @@
                     </h3>
                   </div>
 
-                  <!-- Contact Info -->
                   <div class="space-y-2">
                     <div class="flex items-center text-gray-600">
                       <svg
@@ -157,7 +150,6 @@
                   </div>
                 </div>
 
-                <!-- Actions -->
                 <div class="flex space-x-2">
                   <button
                     @click="editStore(store)"
@@ -174,11 +166,9 @@
                 </div>
               </div>
 
-              <!-- Opening Hours -->
               <div v-if="store.opening_hours">
                 <h4 class="text-sm font-medium text-gray-700 mb-3">Opening Hours</h4>
 
-                <!-- Desktop Schedule -->
                 <div class="hidden md:block">
                   <div class="grid grid-cols-7 gap-2">
                     <div
@@ -200,7 +190,6 @@
                   </div>
                 </div>
 
-                <!-- Mobile Schedule -->
                 <div class="md:hidden space-y-2">
                   <div
                     v-for="(day, dayName) in store.opening_hours"
@@ -216,7 +205,6 @@
           </div>
         </div>
 
-        <!-- Empty State -->
         <div v-else class="text-center py-12">
           <div class="bg-white rounded-lg shadow-md p-8">
             <img
@@ -237,7 +225,6 @@
           </div>
         </div>
 
-        <!-- Pagination -->
         <div v-if="totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
           <button
             @click="goToPage(currentPage - 1)"
@@ -272,13 +259,11 @@
           </button>
         </div>
 
-        <!-- Results Info -->
         <div v-if="stores.length > 0" class="text-center mt-4 text-sm text-gray-600">
           Showing {{ (currentPage - 1) * pageSize + 1 }} to
           {{ Math.min(currentPage * pageSize, totalStores) }} of {{ totalStores }} stores
         </div>
 
-        <!-- Store Form Modal -->
         <StoreFormModal
           v-if="showStoreModal"
           :is-edit="!!selectedStore"
@@ -287,7 +272,6 @@
           @success="handleStoreSuccess"
         />
 
-        <!-- Delete Confirmation Modal -->
         <DeleteConfirmationModal
           v-if="showDeleteModal"
           :item="selectedStore"
@@ -297,7 +281,6 @@
           @confirm="handleDelete"
         />
 
-        <!-- Success Notification -->
         <SuccessNotification
           v-if="showSuccessNotification"
           :message="successMessage"
@@ -366,7 +349,6 @@ export default {
       try {
         const response = await storesApi.getMyStores(this.currentPage - 1, this.pageSize)
 
-        // Handle paginated response structure
         this.stores = response.data.content || []
         this.totalStores = response.data.total_elements || response.data.totalElements || 0
         this.totalPages = response.data.total_pages || response.data.totalPages || 0
@@ -408,15 +390,12 @@ export default {
         this.showDeleteModal = false
         this.selectedStore = null
 
-        // Show success message
         this.successMessage = 'Store deleted successfully!'
         this.showSuccessNotification = true
 
-        // Invalidate cache and refresh
         this.invalidateCounts()
         await Promise.all([this.fetchStores(), this.fetchCounts(true)])
 
-        // Auto-hide notification
         setTimeout(() => {
           this.showSuccessNotification = false
         }, 3000)
@@ -430,17 +409,14 @@ export default {
       this.showStoreModal = false
       this.selectedStore = null
 
-      // Show success message
       this.successMessage = updatedStore.isNew
         ? 'Store created successfully!'
         : 'Store updated successfully!'
       this.showSuccessNotification = true
 
-      // Invalidate cache and refresh
       this.invalidateCounts()
       await Promise.all([this.fetchStores(), this.fetchCounts(true)])
 
-      // Auto-hide notification
       setTimeout(() => {
         this.showSuccessNotification = false
       }, 3000)
@@ -449,7 +425,6 @@ export default {
     formatPhone(phone) {
       if (!phone) return 'Not provided'
 
-      // Format phone number for display
       if (phone.length === 11) {
         return `+${phone.slice(0, 1)} (${phone.slice(1, 4)}) ${phone.slice(4, 7)}-${phone.slice(7, 9)}-${phone.slice(9)}`
       } else if (phone.length >= 10) {
@@ -462,7 +437,6 @@ export default {
     formatSchedule(schedule) {
       if (!schedule) return 'Closed'
 
-      // Handle common schedule formats
       if (schedule.toLowerCase().includes('closed')) {
         return 'Closed'
       }
@@ -471,7 +445,6 @@ export default {
         return '24/7'
       }
 
-      // Try to format time ranges
       const timePattern = /(\d{1,2}):?(\d{2})?\s*-\s*(\d{1,2}):?(\d{2})?/
       const match = schedule.match(timePattern)
 

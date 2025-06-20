@@ -10,8 +10,6 @@ public interface MinioService {
 
     String updateImage(String oldImageLink, String imageDirectory, InputStream stream, ContentType contentType);
 
-    String copyImageFromTemp(String source);
-
     void deleteImage(String imageLink);
 
     String saveFileByBucketAndPath(String filePath, ContentType contentType, String bucket, String objectPath);

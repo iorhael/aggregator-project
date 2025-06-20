@@ -5,7 +5,6 @@
     github-username="iorhael"
   >
     <div class="bg-gray-50 min-h-screen">
-      <!-- Navigation Subheader -->
       <div v-if="product" class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
@@ -26,20 +25,15 @@
             >
               Comments ({{ product.comments_count || 0 }})
             </router-link>
-            <button class="text-gray-500 hover:text-gray-700 pb-2" disabled>
-              Reviews ({{ reviewCount || 0 }})
-            </button>
           </div>
         </div>
       </div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -64,13 +58,10 @@
           </div>
         </div>
 
-        <!-- Product Content -->
         <div v-else-if="product" class="space-y-8">
-          <!-- Main Product Section -->
           <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="p-6 lg:p-8">
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Product Image -->
                 <div class="space-y-4">
                   <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
                     <img
@@ -79,7 +70,6 @@
                       @error="handleImageError"
                       class="w-full h-full object-cover"
                     />
-                    <!-- Verified Badge -->
                     <div v-if="product.is_verified" class="absolute top-4 right-4">
                       <div
                         class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium flex items-center"
@@ -96,7 +86,6 @@
                     </div>
                   </div>
 
-                  <!-- Price and Actions -->
                   <div class="text-center lg:text-left space-y-3">
                     <div>
                       <p class="text-2xl font-bold text-gray-900">
@@ -107,7 +96,6 @@
                       </p>
                     </div>
 
-                    <!-- Price Dynamics Button -->
                     <button
                       @click="showPriceDynamics = true"
                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium transition-colors flex items-center justify-center lg:justify-start"
@@ -130,14 +118,11 @@
                   </div>
                 </div>
 
-                <!-- Product Info -->
                 <div class="space-y-6">
-                  <!-- Header -->
                   <div class="space-y-4">
                     <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ product.name }}</h1>
                     <p class="text-lg text-gray-600">{{ product.vendor_name }}</p>
 
-                    <!-- Rating and Actions -->
                     <div
                       class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0"
                     >
@@ -176,7 +161,6 @@
                     </div>
                   </div>
 
-                  <!-- Description -->
                   <div class="space-y-2">
                     <h3 class="text-lg font-semibold text-gray-900">Description</h3>
                     <div class="prose prose-sm max-w-none text-gray-700">
@@ -191,9 +175,7 @@
             </div>
           </div>
 
-          <!-- Bottom Section: Characteristics and Offers -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Technical Characteristics -->
             <div class="bg-white rounded-lg shadow-md p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Technical Characteristics</h3>
               <div v-if="product.technical_characteristics">
@@ -202,7 +184,6 @@
               <div v-else class="text-gray-500 italic">No technical characteristics available</div>
             </div>
 
-            <!-- Top Offers -->
             <div class="bg-white rounded-lg shadow-md p-6">
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">Top Offers</h3>
@@ -214,12 +195,10 @@
                 </router-link>
               </div>
 
-              <!-- Offers Loading -->
               <div v-if="offersLoading" class="flex justify-center py-8">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
 
-              <!-- Offers List -->
               <div v-else-if="offers.length > 0" class="space-y-4">
                 <div
                   v-for="offer in offers"
@@ -262,7 +241,6 @@
                 </div>
               </div>
 
-              <!-- No Offers -->
               <div v-else class="text-center py-8">
                 <p class="text-gray-500">No offers available</p>
               </div>
@@ -270,7 +248,6 @@
           </div>
         </div>
 
-        <!-- Price Dynamics Modal -->
         <PriceDynamicsModal
           v-if="showPriceDynamics"
           :product-id="String(product.id || product.product_id)"
@@ -323,16 +300,14 @@ export default {
       this.error = null
 
       try {
-        // Fetch product details, offers, and review count in parallel
         const [productResponse, reviewCountResponse] = await Promise.all([
           productsApi.getProductDetails(productId),
-          reviewsApi.getReviewCount(productId).catch(() => ({ data: 0 })), // Don't fail if reviews endpoint fails
+          reviewsApi.getReviewCount(productId).catch(() => ({ data: 0 })),
         ])
 
         this.product = productResponse.data
         this.reviewCount = reviewCountResponse.data
 
-        // Fetch offers separately to avoid blocking the main content
         this.fetchOffers(productId)
       } catch (err) {
         console.error('Failed to fetch product data:', err)
@@ -346,7 +321,6 @@ export default {
       this.offersLoading = true
       try {
         const response = await productsApi.getProductOffers(productId, 0, 6)
-        // Handle new pagination format
         this.offers = response.data.content || response.data || []
       } catch (err) {
         console.error('Failed to fetch offers:', err)

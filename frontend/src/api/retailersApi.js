@@ -7,24 +7,20 @@ export const retailersApi = {
     })
   },
 
-  // Get retailer by name (public endpoint)
   getRetailerByName(retailerName) {
     return apiClient.get(`retailers/${retailerName}`, {
       requiresAuth: false,
     })
   },
 
-  // Create new retailer (requires auth)
   createRetailer(retailerData, logoFile = null) {
     const formData = new FormData()
 
-    // Add retailer data as JSON string
     const retailerBlob = new Blob([JSON.stringify(retailerData)], {
       type: 'application/json',
     })
     formData.append('retailer', retailerBlob)
 
-    // Add logo file if provided
     if (logoFile) {
       formData.append('image', logoFile)
     }
@@ -37,11 +33,9 @@ export const retailersApi = {
     })
   },
 
-  // Update retailer info (requires auth)
   updateRetailer(retailerData = null, logoFile = null) {
     const formData = new FormData()
 
-    // Add retailer data as JSON string if provided
     if (retailerData) {
       const retailerBlob = new Blob([JSON.stringify(retailerData)], {
         type: 'application/json',
@@ -49,7 +43,6 @@ export const retailersApi = {
       formData.append('retailer', retailerBlob)
     }
 
-    // Add logo file if provided
     if (logoFile) {
       formData.append('image', logoFile)
     }
@@ -62,7 +55,6 @@ export const retailersApi = {
     })
   },
 
-  // Delete retailer (requires auth)
   deleteRetailer() {
     return apiClient.delete('retailers/me', {
       requiresAuth: true,

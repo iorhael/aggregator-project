@@ -21,12 +21,10 @@
         :class="{ 'pr-20': isSearching }"
       />
 
-      <!-- Loading spinner -->
       <div v-if="isSearching" class="absolute inset-y-0 right-0 pr-3 flex items-center">
         <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
       </div>
 
-      <!-- Clear button -->
       <button
         v-else-if="searchQuery"
         @click="clearSearch"
@@ -44,7 +42,6 @@
       </button>
     </div>
 
-    <!-- Search suggestions/recent searches (optional) -->
     <div
       v-if="showSuggestions && recentSearches.length > 0"
       class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
@@ -103,7 +100,6 @@ export default {
   },
   mounted() {
     this.loadRecentSearches()
-    // Close suggestions when clicking outside
     document.addEventListener('click', this.handleClickOutside)
   },
   beforeUnmount() {
@@ -114,15 +110,12 @@ export default {
   },
   methods: {
     onSearchInput() {
-      // Clear existing timer
       if (this.debounceTimer) {
         clearTimeout(this.debounceTimer)
       }
 
-      // Show suggestions when typing
       this.showSuggestions = this.searchQuery.length > 0
 
-      // Debounce search
       this.debounceTimer = setTimeout(() => {
         if (this.searchQuery.trim()) {
           this.performSearch()
@@ -160,13 +153,9 @@ export default {
     },
 
     addToRecentSearches(search) {
-      // Remove if already exists
       this.recentSearches = this.recentSearches.filter((s) => s !== search)
-      // Add to beginning
       this.recentSearches.unshift(search)
-      // Keep only last 5 searches
       this.recentSearches = this.recentSearches.slice(0, 5)
-      // Save to localStorage
       localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches))
     },
 

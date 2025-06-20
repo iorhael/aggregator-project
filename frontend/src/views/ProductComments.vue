@@ -5,7 +5,6 @@
     github-username="iorhael"
   >
     <div class="bg-gray-50 min-h-screen">
-      <!-- Navigation Subheader -->
       <div v-if="product" class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div
@@ -26,20 +25,15 @@
             <button class="text-blue-600 border-b-2 border-blue-600 pb-2 font-medium">
               Comments ({{ totalComments || 0 }})
             </button>
-            <button class="text-gray-500 hover:text-gray-700 pb-2" disabled>
-              Reviews ({{ reviewCount || 0 }})
-            </button>
           </div>
         </div>
       </div>
 
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <div class="flex">
             <div class="flex-shrink-0">
@@ -58,9 +52,7 @@
           </div>
         </div>
 
-        <!-- Content -->
         <div v-else class="space-y-6">
-          <!-- Product Header -->
           <div v-if="product" class="bg-white rounded-lg shadow-sm p-6">
             <div class="flex items-center space-x-4">
               <img
@@ -76,15 +68,12 @@
             </div>
           </div>
 
-          <!-- User's Comment Section -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Comment</h2>
 
-            <!-- User has comment -->
             <div v-if="userComment" class="border border-gray-200 rounded-lg p-4">
               <div class="flex justify-between items-start mb-3">
                 <div class="flex items-center space-x-3">
-                  <!-- User Avatar -->
                   <div
                     class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium"
                   >
@@ -134,7 +123,6 @@
               </p>
             </div>
 
-            <!-- No user comment -->
             <div v-else class="text-center py-8">
               <p class="text-gray-500 mb-4">You haven't commented on this product yet.</p>
               <button
@@ -146,16 +134,13 @@
             </div>
           </div>
 
-          <!-- All Comments Section -->
           <div class="bg-white rounded-lg shadow-sm p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-6">All Comments</h2>
 
-            <!-- Comments Loading -->
             <div v-if="commentsLoading" class="flex justify-center py-8">
               <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
 
-            <!-- Comments List -->
             <div v-else-if="comments.length > 0" class="space-y-6">
               <div
                 v-for="comment in comments"
@@ -164,7 +149,6 @@
               >
                 <div class="flex justify-between items-start mb-3">
                   <div class="flex items-center space-x-3">
-                    <!-- User Avatar -->
                     <div
                       class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-white font-medium"
                     >
@@ -197,7 +181,6 @@
                 <p class="text-gray-700 whitespace-pre-wrap">{{ comment.content }}</p>
               </div>
 
-              <!-- Pagination -->
               <div v-if="totalPages > 1" class="flex justify-center items-center space-x-2 pt-6">
                 <button
                   @click="changePage(currentPage - 1)"
@@ -233,14 +216,12 @@
               </div>
             </div>
 
-            <!-- No Comments -->
             <div v-else class="text-center py-8">
               <p class="text-gray-500">No comments yet. Be the first to comment!</p>
             </div>
           </div>
         </div>
 
-        <!-- Comment Modal -->
         <CommentModal
           v-if="showCommentModal"
           :comment="editingComment"
@@ -250,7 +231,6 @@
           @close="closeCommentModal"
         />
 
-        <!-- Delete Confirmation Modal -->
         <DeleteConfirmationModal
           v-if="showDeleteModal"
           title="Delete Comment"
@@ -327,7 +307,6 @@ export default {
       this.error = null
 
       try {
-        // Fetch product details and review count
         const [productResponse, reviewCountResponse] = await Promise.all([
           productsApi.getProductDetails(this.productId),
           reviewsApi.getReviewCount(this.productId).catch(() => ({ data: 0 })),
@@ -336,12 +315,10 @@ export default {
         this.product = productResponse.data
         this.reviewCount = reviewCountResponse.data
 
-        // Fetch user's comment if authenticated
         if (keycloak.authenticated) {
           this.fetchUserComment()
         }
 
-        // Fetch all comments
         this.fetchComments()
       } catch (err) {
         console.error('Failed to fetch data:', err)
@@ -356,7 +333,6 @@ export default {
         const response = await commentsApi.getMyComment(this.productId)
         this.userComment = response.data
       } catch (err) {
-        // User doesn't have a comment yet, which is fine
         if (err.response?.status !== 404) {
           console.error('Failed to fetch user comment:', err)
         }
@@ -386,7 +362,7 @@ export default {
 
     addComment() {
       if (!keycloak.authenticated) {
-        keycloak.login({ redirectUri: window.location.href })
+        keycloak.login()
         return
       }
 

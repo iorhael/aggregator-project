@@ -95,34 +95,6 @@ public class MinioServiceImpl implements MinioService {
         }
     }
 
-    // Add timestamp later to file name later
-    @Override
-    public String copyImageFromTemp(String source) {
-        try {
-            // Извлекаем имя файла из пути
-            String fileName = StringUtils.substringAfter(source, externalServerUrl + "/images/reviews/temp");
-
-            // Новый путь для изображения
-            String newPath = "reviews/" + fileName;
-
-            // Копируем объект
-            minioClient.copyObject(
-                    CopyObjectArgs.builder()
-                            .bucket(IMAGE_BUCKET)
-                            .object(newPath)
-                            .source(
-                                    CopySource.builder()
-                                            .bucket(IMAGE_BUCKET)
-                                            .object(source)
-                                            .build())
-                            .build());
-
-            return externalServerUrl + "/images/" + newPath;
-        } catch (IOException | GeneralSecurityException | io.minio.errors.MinioException e) {
-            throw new MinioException(e.getMessage(), e);
-        }
-    }
-
     @Override
     public String saveFileByBucketAndPath(String filePath,
                                           ContentType contentType,

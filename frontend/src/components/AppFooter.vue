@@ -2,7 +2,6 @@
   <footer class="bg-gray-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <!-- Brand Section -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-3 mb-4">
             <img
@@ -13,8 +12,8 @@
             />
           </div>
           <p class="text-gray-300 mb-4 max-w-md">
-            Your ultimate destination for finding the best products and deals. Compare prices, read
-            reviews, and make informed purchasing decisions.
+            Your ultimate destination for finding the best products and deals. Compare prices, leave
+            comments and make informed purchasing decisions.
           </p>
           <div class="flex space-x-4">
             <a
@@ -33,7 +32,6 @@
           </div>
         </div>
 
-        <!-- Quick Links -->
         <div>
           <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
           <ul class="space-y-2">
@@ -48,39 +46,31 @@
               </router-link>
             </li>
             <li>
-              <a href="#" class="text-gray-300 hover:text-white transition-colors">Categories</a>
+              <router-link to="/search" class="text-gray-300 hover:text-white transition-colors">
+                Search
+              </router-link>
+              <!-- <a href="#" class="text-gray-300 hover:text-white transition-colors">Categories</a> -->
             </li>
             <li>
-              <a href="#" class="text-gray-300 hover:text-white transition-colors">About Us</a>
+              <router-link to="/about" class="text-gray-300 hover:text-white transition-colors"
+                >About Us</router-link
+              >
             </li>
           </ul>
         </div>
 
-        <!-- Support -->
         <div>
           <h4 class="text-lg font-semibold mb-4">Support</h4>
           <ul class="space-y-2">
             <li>
-              <a href="#" class="text-gray-300 hover:text-white transition-colors">Help Center</a>
-            </li>
-            <li>
-              <a href="#" class="text-gray-300 hover:text-white transition-colors">Contact Us</a>
-            </li>
-            <li>
-              <a href="#" class="text-gray-300 hover:text-white transition-colors"
-                >Privacy Policy</a
-              >
-            </li>
-            <li>
-              <a href="#" class="text-gray-300 hover:text-white transition-colors"
-                >Terms of Service</a
+              <router-link to="/about" class="text-gray-300 hover:text-white transition-colors"
+                >Contact Page</router-link
               >
             </li>
           </ul>
         </div>
       </div>
 
-      <!-- Bottom Section -->
       <div
         class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center"
       >

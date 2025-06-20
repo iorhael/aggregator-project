@@ -1,12 +1,10 @@
 <template>
   <div class="space-y-4">
     <div v-for="(section, sectionKey) in characteristics" :key="sectionKey" class="space-y-2">
-      <!-- Section Header -->
       <h4 class="text-sm font-semibold text-gray-900 capitalize border-b border-gray-200 pb-1">
         {{ formatSectionName(sectionKey) }}
       </h4>
 
-      <!-- Section Content -->
       <div class="space-y-1 pl-2">
         <div v-if="isObject(section)">
           <div

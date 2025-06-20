@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <div>
             <h3 class="text-lg font-medium text-gray-900">Create Product Card</h3>
@@ -20,7 +19,6 @@
           </button>
         </div>
 
-        <!-- Selected Product Info -->
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <div class="flex items-start space-x-4">
             <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
@@ -46,9 +44,7 @@
           </div>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Description -->
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
               Description *
@@ -68,7 +64,6 @@
             </p>
           </div>
 
-          <!-- Price -->
           <div>
             <label for="price" class="block text-sm font-medium text-gray-700 mb-1">
               Price *
@@ -92,7 +87,6 @@
             <p v-if="errors.price" class="text-red-600 text-xs mt-1">{{ errors.price }}</p>
           </div>
 
-          <!-- Warranty and Installment -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label for="warranty" class="block text-sm font-medium text-gray-700 mb-1">
@@ -145,7 +139,6 @@
             </div>
           </div>
 
-          <!-- Delivery Time -->
           <div>
             <label for="delivery" class="block text-sm font-medium text-gray-700 mb-1">
               Maximum Delivery Time *
@@ -172,12 +165,10 @@
             </p>
           </div>
 
-          <!-- Error Message -->
           <div v-if="submitError" class="bg-red-50 border border-red-200 rounded-md p-3">
             <p class="text-red-600 text-sm">{{ submitError }}</p>
           </div>
 
-          <!-- Form Actions -->
           <div class="flex justify-end space-x-3 pt-4">
             <button
               type="button"
@@ -254,21 +245,18 @@ export default {
     validateForm() {
       this.errors = {}
 
-      // Description validation
       if (!this.form.description.trim()) {
         this.errors.description = 'Description is required'
       } else if (this.form.description.trim().length < 10) {
         this.errors.description = 'Description must be at least 10 characters'
       }
 
-      // Price validation
       if (!this.form.price) {
         this.errors.price = 'Price is required'
       } else if (isNaN(this.form.price) || parseFloat(this.form.price) <= 0) {
         this.errors.price = 'Price must be a positive number'
       }
 
-      // Warranty validation
       if (!this.form.warranty) {
         this.errors.warranty = 'Warranty period is required'
       } else if (
@@ -279,7 +267,6 @@ export default {
         this.errors.warranty = 'Warranty period must be between 1 and 120 months'
       }
 
-      // Installment validation
       if (!this.form.installment_period) {
         this.errors.installment_period = 'Installment period is required'
       } else if (
@@ -290,7 +277,6 @@ export default {
         this.errors.installment_period = 'Installment period must be between 1 and 120 months'
       }
 
-      // Delivery time validation
       if (!this.form.max_delivery_time) {
         this.errors.max_delivery_time = 'Delivery time is required'
       } else if (

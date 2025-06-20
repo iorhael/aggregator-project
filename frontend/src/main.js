@@ -6,8 +6,7 @@ import keycloak from './services/keycloak'
 
 const app = createApp(App)
 
-// 'check-sso' causes error message on logout
-keycloak.init({ onLoad: 'check-sso' }).then(() => {
+keycloak.init().then(() => {
   app.use(router)
   app.mount('#app')
 })

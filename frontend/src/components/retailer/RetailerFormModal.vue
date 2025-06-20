@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">
             {{ isEdit ? 'Edit Organization' : 'Create Organization' }}
@@ -19,13 +18,10 @@
           </button>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Logo Upload -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Organization Logo</label>
             <div class="flex items-center space-x-4">
-              <!-- Current/Preview Logo -->
               <div class="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                 <img
                   v-if="logoPreview || (isEdit && retailer?.logo_link)"
@@ -50,7 +46,6 @@
                 </div>
               </div>
 
-              <!-- Upload Button -->
               <div>
                 <input
                   ref="logoInput"
@@ -71,7 +66,6 @@
             </div>
           </div>
 
-          <!-- Organization Name -->
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
               Organization Name *
@@ -87,7 +81,6 @@
             <p v-if="errors.name" class="text-red-600 text-xs mt-1">{{ errors.name }}</p>
           </div>
 
-          <!-- Description -->
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
               Description *
@@ -105,7 +98,6 @@
             </p>
           </div>
 
-          <!-- Email -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
               Email *
@@ -121,7 +113,6 @@
             <p v-if="errors.email" class="text-red-600 text-xs mt-1">{{ errors.email }}</p>
           </div>
 
-          <!-- Website -->
           <div>
             <label for="website" class="block text-sm font-medium text-gray-700 mb-1">
               Website *
@@ -138,7 +129,6 @@
             <p v-if="errors.website" class="text-red-600 text-xs mt-1">{{ errors.website }}</p>
           </div>
 
-          <!-- Auto Update Toggle -->
           <div class="border-t pt-6">
             <div class="flex items-center justify-between mb-4">
               <label class="flex items-center cursor-pointer">
@@ -151,7 +141,6 @@
               </label>
             </div>
 
-            <!-- Auto Update Fields -->
             <div v-if="enableAutoUpdate" class="space-y-4 pl-6 border-l-2 border-blue-200">
               <div>
                 <label for="downloadLink" class="block text-sm font-medium text-gray-700 mb-1">
@@ -194,12 +183,10 @@
             </div>
           </div>
 
-          <!-- Error Message -->
           <div v-if="submitError" class="bg-red-50 border border-red-200 rounded-md p-3">
             <p class="text-red-600 text-sm">{{ submitError }}</p>
           </div>
 
-          <!-- Form Actions -->
           <div class="flex justify-end space-x-3 pt-4">
             <button
               type="button"
@@ -273,7 +260,7 @@ export default {
         verified_products_only: false,
       },
       enableAutoUpdate: false,
-      originalAutoUpdateState: false, // Track original state
+      originalAutoUpdateState: false,
       logoFile: null,
       logoPreview: null,
       errors: {},
@@ -292,7 +279,6 @@ export default {
         verified_products_only: this.retailer.verified_products_only || false,
       }
 
-      // Enable auto update if there's already a download link
       this.enableAutoUpdate = !!this.retailer.download_link
       this.originalAutoUpdateState = this.enableAutoUpdate
     }
@@ -301,13 +287,11 @@ export default {
     handleLogoChange(event) {
       const file = event.target.files[0]
       if (file) {
-        // Validate file size (4MB max to match backend)
         if (file.size > 4 * 1024 * 1024) {
           alert('File size must be less than 4MB')
           return
         }
 
-        // Validate file type
         if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
           alert('Only PNG and JPEG files are allowed')
           return
@@ -315,7 +299,6 @@ export default {
 
         this.logoFile = file
 
-        // Create preview
         const reader = new FileReader()
         reader.onload = (e) => {
           this.logoPreview = e.target.result
@@ -347,7 +330,6 @@ export default {
         this.errors.website = 'Please enter a valid website URL (starting with http:// or https://)'
       }
 
-      // Validate auto update fields if enabled
       if (this.enableAutoUpdate) {
         if (!this.form.download_link.trim()) {
           this.errors.download_link = 'Product feed URL is required when auto update is enabled'
@@ -368,7 +350,6 @@ export default {
       this.submitError = null
 
       try {
-        // Prepare retailer data
         const retailerData = {
           name: this.form.name,
           description: this.form.description,
@@ -379,21 +360,15 @@ export default {
         let response
 
         if (this.isEdit) {
-          // Update retailer info
           response = await retailersApi.updateRetailer(retailerData, this.logoFile)
         } else {
-          // Create new retailer
           response = await retailersApi.createRetailer(retailerData, this.logoFile)
         }
 
-        // Handle auto update configuration
         if (this.isEdit) {
-          // Check if auto update state changed
           if (this.originalAutoUpdateState && !this.enableAutoUpdate) {
-            // Auto update was enabled, now disabled - delete configuration
             try {
               await batchApi.deleteAutoUpdate()
-              // Clear auto update fields from response
               response.data = {
                 ...response.data,
                 download_link: null,
@@ -403,23 +378,19 @@ export default {
               console.error('Failed to delete auto update configuration:', deleteError)
             }
           } else if (this.enableAutoUpdate && this.form.download_link) {
-            // Auto update is enabled
             try {
               if (this.originalAutoUpdateState) {
-                // Update existing configuration
                 await batchApi.updateAutoUpdate(
                   this.form.download_link,
                   this.form.verified_products_only,
                 )
               } else {
-                // Create new configuration
                 await batchApi.configureAutoUpdate(
                   this.form.download_link,
                   this.form.verified_products_only,
                 )
               }
 
-              // Update response data with auto update info
               response.data = {
                 ...response.data,
                 download_link: this.form.download_link,
@@ -427,11 +398,9 @@ export default {
               }
             } catch (autoUpdateError) {
               console.error('Auto update configuration failed:', autoUpdateError)
-              // Don't fail the whole operation, just log the error
             }
           }
         } else {
-          // For new retailers, only configure auto update if enabled
           if (this.enableAutoUpdate && this.form.download_link) {
             try {
               await batchApi.configureAutoUpdate(
@@ -439,7 +408,6 @@ export default {
                 this.form.verified_products_only,
               )
 
-              // Update response data with auto update info
               response.data = {
                 ...response.data,
                 download_link: this.form.download_link,

@@ -37,3 +37,7 @@ databaseChangeLog:
       file: db/changelog/016-create-auto-update-card.sql
   - include:
       file: db/changelog/002-alter-retailer.sql
+  - include:
+      file: db/changelog/003-alter-comment.sql
+  - include:
+      file: db/changelog/017-create-temp-review-image.sql

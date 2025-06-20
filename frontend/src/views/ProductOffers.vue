@@ -4,7 +4,6 @@
     github-url="https://github.com/iorhael"
     github-username="iorhael"
   >
-    <!-- Navigation Subheader -->
     <div v-if="product" class="bg-white border-b border-gray-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
@@ -25,28 +24,23 @@
           >
             Comments ({{ product.comments_count || 0 }})
           </router-link>
-          <button class="text-gray-500 hover:text-gray-700 pb-2" disabled>Reviews (0)</button>
         </div>
       </div>
     </div>
     <div class="bg-gray-50 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col lg:flex-row gap-8">
-          <!-- Filters Sidebar -->
           <div class="lg:w-80 flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
               <h2 class="text-lg font-semibold text-gray-900 mb-6">Filter Offers</h2>
 
-              <!-- Product Info -->
               <div v-if="product" class="mb-6 p-4 bg-blue-50 rounded-lg">
                 <h3 class="text-sm font-medium text-blue-900 mb-1">Product</h3>
                 <p class="text-sm text-blue-700 font-medium">{{ product.name }}</p>
                 <p class="text-xs text-blue-600 mt-1">{{ product.vendor_name }}</p>
               </div>
 
-              <!-- Search Form -->
               <form @submit.prevent="applyFilters" class="space-y-6">
-                <!-- Retailer Name -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Store/Retailer</label>
                   <input
@@ -57,7 +51,6 @@
                   />
                 </div>
 
-                <!-- Warranty Period -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2"
                     >Minimum Warranty</label
@@ -79,7 +72,6 @@
                   </div>
                 </div>
 
-                <!-- Installment Period -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2"
                     >Minimum Installment</label
@@ -101,7 +93,6 @@
                   </div>
                 </div>
 
-                <!-- Max Delivery Time -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2"
                     >Maximum Delivery Time</label
@@ -123,7 +114,6 @@
                   </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="space-y-3 pt-4">
                   <button
                     type="submit"
@@ -166,9 +156,7 @@
             </div>
           </div>
 
-          <!-- Offers Content -->
           <div class="flex-1">
-            <!-- Results Header -->
             <div class="mb-6">
               <h1 class="text-2xl font-bold text-gray-900 mb-2">
                 All Offers
@@ -183,12 +171,10 @@
               </p>
             </div>
 
-            <!-- Loading State -->
             <div v-if="loading" class="flex justify-center items-center py-12">
               <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
 
-            <!-- Error State -->
             <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
               <div class="flex">
                 <div class="flex-shrink-0">
@@ -207,7 +193,6 @@
               </div>
             </div>
 
-            <!-- Offers Grid -->
             <div
               v-else-if="offers.length > 0"
               class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
@@ -218,7 +203,6 @@
                 class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
               >
                 <div class="p-6">
-                  <!-- Header with Price and Store -->
                   <div class="flex justify-between items-start mb-4">
                     <div>
                       <p class="text-2xl font-bold text-gray-900">
@@ -233,12 +217,10 @@
                     </div>
                   </div>
 
-                  <!-- Description -->
                   <div v-if="offer.description" class="mb-4">
                     <p class="text-sm text-gray-700 line-clamp-3">{{ offer.description }}</p>
                   </div>
 
-                  <!-- Offer Details -->
                   <div class="space-y-3">
                     <div class="space-y-2 text-sm">
                       <div class="flex justify-between">
@@ -265,7 +247,6 @@
                     </div>
                   </div>
 
-                  <!-- Action Button -->
                   <div class="mt-4 pt-4 border-t border-gray-200">
                     <router-link
                       :to="{ name: 'RetailerInfoPublic', params: { name: offer.retailer_name } }"
@@ -278,7 +259,6 @@
               </div>
             </div>
 
-            <!-- Empty State -->
             <div v-else-if="!initialLoad" class="text-center py-12">
               <img
                 src="@/assets/no-cards.png"
@@ -291,7 +271,6 @@
               </p>
             </div>
 
-            <!-- Initial State -->
             <div v-else class="text-center py-12">
               <svg
                 class="mx-auto h-12 w-12 text-gray-400"
@@ -309,7 +288,6 @@
               <h3 class="mt-2 text-sm font-medium text-gray-900">Loading offers...</h3>
             </div>
 
-            <!-- Pagination -->
             <div v-if="totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
               <button
                 @click="goToPage(currentPage - 1)"
@@ -344,7 +322,6 @@
               </button>
             </div>
 
-            <!-- Results Info -->
             <div v-if="offers.length > 0" class="text-center mt-4 text-sm text-gray-600">
               Showing {{ (currentPage - 1) * pageSize + 1 }} to
               {{ Math.min(currentPage * pageSize, totalOffers) }} of {{ totalOffers }} offers
@@ -410,12 +387,10 @@ export default {
       }
 
       try {
-        // Load product info and initial offers
         const [productResponse] = await Promise.all([productsApi.getProductDetails(productId)])
 
         this.product = productResponse.data
 
-        // Load all offers without filters
         await this.searchOffers()
       } catch (err) {
         console.error('Failed to load initial data:', err)
@@ -438,7 +413,6 @@ export default {
       this.initialLoad = false
 
       try {
-        // Build filter criteria
         const filterCriteria = {}
 
         if (this.filters.retailer_name.trim()) {
@@ -464,7 +438,6 @@ export default {
           this.pageSize,
         )
 
-        // Handle new pagination format
         this.offers = response.data.content || []
         this.totalOffers = response.data.total_elements || 0
         this.totalPages = response.data.total_pages || 0

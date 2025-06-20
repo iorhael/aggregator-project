@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
+import java.util.List;
+import java.util.UUID;
+
 @Getter
 @Setter
 @Schema(description = "DTO used to update an existing product review")
@@ -26,4 +29,8 @@ public class ReviewUpdateDto {
     @Range(min = 1, max = 5)
     @JsonProperty("product_rating")
     private Short productRating;
+
+    @Schema(description = "Ids of images of the review")
+    @JsonProperty("image_ids")
+    private List<UUID> imageIds;
 }

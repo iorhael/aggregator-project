@@ -7,12 +7,10 @@
     <div class="bg-gray-50 min-h-screen">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col lg:flex-row gap-8">
-          <!-- Filters Sidebar -->
           <div class="lg:w-80 flex-shrink-0">
             <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
               <h2 class="text-lg font-semibold text-gray-900 mb-6">Filters</h2>
 
-              <!-- Category Info -->
               <div v-if="selectedCategory" class="mb-6 p-4 bg-blue-50 rounded-lg">
                 <h3 class="text-sm font-medium text-blue-900 mb-1">Category</h3>
                 <p class="text-sm text-blue-700">{{ selectedCategory.name }}</p>
@@ -24,9 +22,7 @@
                 </button>
               </div>
 
-              <!-- Search Form -->
               <form @submit.prevent="applyFilters" class="space-y-6">
-                <!-- Product Name -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
                   <input
@@ -37,7 +33,6 @@
                   />
                 </div>
 
-                <!-- Vendor Name -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Brand/Vendor</label>
                   <input
@@ -48,7 +43,6 @@
                   />
                 </div>
 
-                <!-- Price Range -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Price</label>
                   <div class="relative">
@@ -68,7 +62,6 @@
                   </div>
                 </div>
 
-                <!-- Minimum Offers -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Minimum Offers</label>
                   <input
@@ -80,7 +73,6 @@
                   />
                 </div>
 
-                <!-- Average Rating -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">Minimum Rating</label>
                   <select
@@ -96,7 +88,6 @@
                   </select>
                 </div>
 
-                <!-- Verification Status -->
                 <div>
                   <label class="flex items-center cursor-pointer">
                     <input
@@ -108,7 +99,6 @@
                   </label>
                 </div>
 
-                <!-- Technical Characteristics -->
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Technical Characteristics
@@ -157,7 +147,6 @@
                   </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="space-y-3 pt-4">
                   <button
                     type="submit"
@@ -200,9 +189,7 @@
             </div>
           </div>
 
-          <!-- Products Content -->
           <div class="flex-1">
-            <!-- Results Header -->
             <div class="mb-6">
               <h1 class="text-2xl font-bold text-gray-900 mb-2">
                 <span v-if="selectedCategory">{{ selectedCategory.name }}</span>
@@ -215,12 +202,10 @@
               </p>
             </div>
 
-            <!-- Loading State -->
             <div v-if="loading" class="flex justify-center items-center py-12">
               <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
 
-            <!-- Error State -->
             <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
               <div class="flex">
                 <div class="flex-shrink-0">
@@ -239,7 +224,6 @@
               </div>
             </div>
 
-            <!-- Products Grid -->
             <div
               v-else-if="products.length > 0"
               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8"
@@ -249,7 +233,6 @@
                 :key="product.id"
                 class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
               >
-                <!-- Product Image -->
                 <div class="aspect-square bg-gray-100 relative">
                   <img
                     :src="product.image_link || placeholderImage"
@@ -257,7 +240,6 @@
                     @error="handleImageError"
                     class="w-full h-full object-cover"
                   />
-                  <!-- Verified Badge -->
                   <div v-if="product.is_verified" class="absolute top-2 right-2">
                     <div
                       class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center"
@@ -274,14 +256,12 @@
                   </div>
                 </div>
 
-                <!-- Product Info -->
                 <div class="p-4">
                   <h3 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
                     {{ product.name }}
                   </h3>
                   <p class="text-gray-600 text-xs mb-2">{{ product.vendor_name }}</p>
 
-                  <!-- Rating -->
                   <div class="flex items-center mb-2">
                     <div class="flex items-center">
                       <svg
@@ -306,7 +286,6 @@
                     >
                   </div>
 
-                  <!-- Price and Offers -->
                   <div class="flex justify-between items-center">
                     <div>
                       <span class="text-lg font-bold text-gray-900"
@@ -325,7 +304,6 @@
               </div>
             </div>
 
-            <!-- Empty State -->
             <div v-else-if="!initialLoad" class="text-center py-12">
               <img
                 src="@/assets/no-products.png"
@@ -338,7 +316,6 @@
               </p>
             </div>
 
-            <!-- Initial State -->
             <div v-else class="text-center py-12">
               <svg
                 class="mx-auto h-12 w-12 text-gray-400"
@@ -359,7 +336,6 @@
               </p>
             </div>
 
-            <!-- Pagination -->
             <div v-if="totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
               <button
                 @click="goToPage(currentPage - 1)"
@@ -394,7 +370,6 @@
               </button>
             </div>
 
-            <!-- Results Info -->
             <div v-if="products.length > 0" class="text-center mt-4 text-sm text-gray-600">
               Showing {{ (currentPage - 1) * pageSize + 1 }} to
               {{ Math.min(currentPage * pageSize, totalProducts) }} of {{ totalProducts }} products
@@ -456,7 +431,6 @@ export default {
     },
   },
   watch: {
-    // Watch for route changes
     $route(to, from) {
       this.handleRouteChange()
     },
@@ -466,11 +440,9 @@ export default {
   },
   methods: {
     handleRouteChange() {
-      // Reset state
       this.selectedCategory = null
       this.filters.category_name = ''
 
-      // Check if category was passed via route params
       if (this.$route.params.categoryId && this.$route.params.categoryName) {
         console.log('Setting category from params:', this.$route.params)
         this.selectedCategory = {
@@ -480,9 +452,7 @@ export default {
         this.filters.category_name = this.selectedCategory.name
         this.initialLoad = false
         this.searchProducts()
-      }
-      // Check for query parameters
-      else if (this.$route.query.category) {
+      } else if (this.$route.query.category) {
         console.log('Setting category from query:', this.$route.query.category)
         this.filters.category_name = this.$route.query.category
         this.initialLoad = false
@@ -520,7 +490,6 @@ export default {
       this.initialLoad = false
 
       try {
-        // Build search criteria
         const searchCriteria = {}
 
         if (this.filters.product_name.trim()) {

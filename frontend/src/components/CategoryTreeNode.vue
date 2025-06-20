@@ -1,13 +1,11 @@
 <template>
   <div>
-    <!-- Category Item -->
     <div
       class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-md cursor-pointer transition-colors"
       :class="{ 'bg-blue-50': isExpanded }"
       @click="handleClick"
     >
       <div class="flex items-center space-x-3" :style="{ paddingLeft: level * 20 + 'px' }">
-        <!-- Expand/Collapse Icon -->
         <button
           v-if="hasChildren"
           @click.stop="toggleExpanded"
@@ -30,7 +28,6 @@
         </button>
         <div v-else class="w-4"></div>
 
-        <!-- Category Icon -->
         <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
           <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -41,11 +38,9 @@
           </svg>
         </div>
 
-        <!-- Category Name -->
         <span class="text-sm font-medium text-gray-900">{{ category.name }}</span>
       </div>
 
-      <!-- Select Button -->
       <button
         @click.stop="selectCategory"
         class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
@@ -54,7 +49,6 @@
       </button>
     </div>
 
-    <!-- Children -->
     <div v-if="isExpanded && hasChildren" class="mt-1">
       <CategoryTreeNode
         v-for="child in category.child_categories"

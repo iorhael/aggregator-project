@@ -15,28 +15,24 @@ export const storesApi = {
     })
   },
 
-  // Get count of retailer's stores (requires auth)
   getMyStoresCount() {
     return apiClient.get('stores/my/count', {
       requiresAuth: true,
     })
   },
 
-  // Create new store (requires auth)
   createStore(storeData) {
     return apiClient.post('stores', storeData, {
       requiresAuth: true,
     })
   },
 
-  // Update store (requires auth)
   updateStore(storeId, storeData) {
     return apiClient.put(`stores/${storeId}`, storeData, {
       requiresAuth: true,
     })
   },
 
-  // Delete store (requires auth)
   deleteStore(storeId) {
     return apiClient.delete(`stores/${storeId}`, {
       requiresAuth: true,

@@ -1,8 +1,7 @@
-// Simple cache for counts to avoid frequent API calls
 class CountsCache {
   constructor() {
     this.cache = new Map()
-    this.cacheTimeout = 5 * 60 * 1000 // 5 minutes
+    this.cacheTimeout = 5 * 60 * 1000
   }
 
   set(key, value) {
@@ -16,7 +15,6 @@ class CountsCache {
     const cached = this.cache.get(key)
     if (!cached) return null
 
-    // Check if cache is expired
     if (Date.now() - cached.timestamp > this.cacheTimeout) {
       this.cache.delete(key)
       return null
@@ -33,7 +31,6 @@ class CountsCache {
     }
   }
 
-  // Invalidate all counts when data changes
   invalidateAll() {
     this.cache.clear()
   }

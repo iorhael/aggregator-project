@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <div>
             <h3 class="text-lg font-medium text-gray-900">Edit Product Card</h3>
@@ -20,9 +19,7 @@
           </button>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Description -->
           <div>
             <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
               Description
@@ -40,7 +37,6 @@
             </p>
           </div>
 
-          <!-- Price -->
           <div>
             <label for="price" class="block text-sm font-medium text-gray-700 mb-1">
               Price *
@@ -64,7 +60,6 @@
             <p v-if="errors.price" class="text-red-600 text-xs mt-1">{{ errors.price }}</p>
           </div>
 
-          <!-- Warranty and Installment -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label for="warranty" class="block text-sm font-medium text-gray-700 mb-1">
@@ -113,7 +108,6 @@
             </div>
           </div>
 
-          <!-- Delivery Time -->
           <div>
             <label for="delivery" class="block text-sm font-medium text-gray-700 mb-1">
               Maximum Delivery Time *
@@ -138,12 +132,10 @@
             </p>
           </div>
 
-          <!-- Error Message -->
           <div v-if="submitError" class="bg-red-50 border border-red-200 rounded-md p-3">
             <p class="text-red-600 text-sm">{{ submitError }}</p>
           </div>
 
-          <!-- Form Actions -->
           <div class="flex justify-end space-x-3 pt-4">
             <button
               type="button"
@@ -215,7 +207,6 @@ export default {
     }
   },
   mounted() {
-    // Initialize form with current values
     this.form = {
       description: this.card.description || '',
       price: this.card.price || '',
@@ -262,7 +253,6 @@ export default {
       this.submitError = null
 
       try {
-        // Prepare update data - only send fields that have values
         const updateData = {}
 
         if (this.form.description !== undefined && this.form.description !== null) {
@@ -290,7 +280,6 @@ export default {
           updateData,
         )
 
-        // Create updated card object for the parent component
         const updatedCard = {
           ...this.card,
           description:

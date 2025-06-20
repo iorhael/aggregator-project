@@ -17,7 +17,6 @@
           </button>
         </div>
 
-        <!-- Search Input -->
         <div class="mb-6">
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -46,12 +45,10 @@
           <p class="text-sm text-gray-500 mt-2">Start typing to search for products</p>
         </div>
 
-        <!-- Loading State -->
         <div v-if="searching" class="flex justify-center items-center py-8">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Search Results -->
         <div v-else-if="products.length > 0" class="space-y-3 max-h-96 overflow-y-auto">
           <div
             v-for="product in products"
@@ -60,7 +57,6 @@
             @click="selectProduct(product)"
           >
             <div class="flex items-start space-x-4">
-              <!-- Product Image -->
               <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                 <img
                   :src="product.image_link || placeholderImage"
@@ -70,7 +66,6 @@
                 />
               </div>
 
-              <!-- Product Info -->
               <div class="flex-1 min-w-0">
                 <h4 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">
                   {{ product.name }}
@@ -97,7 +92,6 @@
                 </div>
               </div>
 
-              <!-- Price -->
               <div class="text-right flex-shrink-0">
                 <div class="text-lg font-bold text-gray-900">
                   ${{ formatPrice(product.minimal_price) }}
@@ -108,7 +102,6 @@
           </div>
         </div>
 
-        <!-- Empty State -->
         <div v-else-if="searchQuery && !searching" class="text-center py-8">
           <svg
             class="mx-auto h-12 w-12 text-gray-400 mb-4"
@@ -127,7 +120,6 @@
           <p class="text-gray-600">Try searching with different keywords</p>
         </div>
 
-        <!-- Initial State -->
         <div v-else class="text-center py-8">
           <svg
             class="mx-auto h-12 w-12 text-gray-400 mb-4"
@@ -173,12 +165,10 @@ export default {
   },
   methods: {
     onSearchInput() {
-      // Clear existing timer
       if (this.debounceTimer) {
         clearTimeout(this.debounceTimer)
       }
 
-      // Debounce search
       this.debounceTimer = setTimeout(() => {
         if (this.searchQuery.trim().length >= 2) {
           this.searchProducts()

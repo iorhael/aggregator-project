@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">Select Category</h3>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
@@ -17,12 +16,10 @@
           </button>
         </div>
 
-        <!-- Loading State -->
         <div v-if="loading" class="flex justify-center items-center py-12">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
 
-        <!-- Error State -->
         <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4">
           <p class="text-red-600 text-sm">{{ error }}</p>
           <button
@@ -33,7 +30,6 @@
           </button>
         </div>
 
-        <!-- Category Tree -->
         <div v-else class="max-h-96 overflow-y-auto">
           <div class="space-y-2">
             <CategoryTreeNode
@@ -83,12 +79,9 @@ export default {
 
       try {
         if (this.rootCategory) {
-          // Load subcategories for the selected root category
           const response = await categoriesApi.getSubcategories(this.rootCategory.category_id)
-          // The response should be the category with its children
           this.categories = [response.data]
         } else {
-          // Load top level categories
           const response = await categoriesApi.getTopLevelCategories(0, 100)
           this.categories = response.data || []
         }

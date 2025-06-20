@@ -1,6 +1,7 @@
 package com.senla.aggregator.repository;
 
 import com.senla.aggregator.model.Review;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +19,7 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
     Optional<Review> findWithAuthorAndProductByIdAndAuthorId(UUID id, UUID authorId);
 
     @EntityGraph(attributePaths = {"author", "product"})
-    List<Review> findAllWithAuthorAndProductByProductId(UUID productId, Pageable pageable);
+    Page<Review> findAllWithAuthorAndProductByProductId(UUID productId, Pageable pageable);
 
     @EntityGraph(attributePaths = {"author", "product"})
     List<Review> findAllWithAuthorAndProductByAuthorUsername(String authorName, Pageable pageable);

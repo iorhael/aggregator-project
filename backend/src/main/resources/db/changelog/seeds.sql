@@ -330,69 +330,100 @@ FROM product_cards pc
          JOIN products p ON pc.product_id = p.id
          CROSS JOIN generate_series(1, 2);
 
-WITH default_user AS (SELECT id FROM users WHERE username = 'default_user'),
-     products AS (SELECT id, name
-                  FROM products
-                  WHERE name IN (
-                                 'Apple iPhone 15 Pro',
-                                 'Dell XPS 13 (2023 Model)',
-                                 'Sony WH-1000XM5',
-                                 'Samsung Galaxy Watch 6 Classic',
-                                 'The North Face McMurdo Parka III',
-                                 'Nike Air Max 270 React'
-                      ))
+WITH
+comment_authors AS (
+    SELECT id, username
+    FROM users
+    WHERE username IN ('default_author', 'retailer_1', 'retailer_2', 'default_retailer')
+),
+products AS (
+    SELECT id, name
+    FROM products
+    WHERE name IN (
+                   'Apple iPhone 15 Pro',
+                   'Dell XPS 13 (2023 Model)',
+                   'Sony WH-1000XM5',
+                   'Samsung Galaxy Watch 6 Classic',
+                   'The North Face McMurdo Parka III',
+                   'Nike Air Max 270 React'
+        )
+),
+product_author_combinations AS (
+    SELECT
+        p.id AS product_id,
+        p.name AS product_name,
+        a.id AS author_id,
+        a.username AS author_name,
+        row_number() OVER (PARTITION BY p.id ORDER BY random()) AS author_rank
+    FROM products p
+             CROSS JOIN comment_authors a
+)
 
-INSERT
-INTO comments (author_id, product_id, content, product_rating)
-SELECT (SELECT id FROM default_user) AS author_id,
-       p.id                          AS product_id,
-       CASE
-           WHEN p.name = 'Apple iPhone 15 Pro' THEN
-               CASE
-                   WHEN sub.row_num = 1 THEN 'Great phone, the camera is amazing!'
-                   WHEN sub.row_num = 2 THEN 'Fast performance and excellent display.'
-                   WHEN sub.row_num = 3 THEN 'A bit pricey but the quality is top-notch.'
-                   END
-           WHEN p.name = 'Dell XPS 13 (2023 Model)' THEN
-               CASE
-                   WHEN sub.row_num = 1 THEN 'The best laptop for work, very lightweight.'
-                   WHEN sub.row_num = 2 THEN 'The screen is gorgeous, battery lasts long.'
-                   WHEN sub.row_num = 3 THEN 'Gets a bit noisy under load but overall excellent.'
-                   END
-           WHEN p.name = 'Sony WH-1000XM5' THEN
-               CASE
-                   WHEN sub.row_num = 1 THEN 'Best noise-canceling headphones ever!'
-                   WHEN sub.row_num = 2 THEN 'Very comfortable with clean, deep sound.'
-                   WHEN sub.row_num = 3 THEN 'Expensive but worth every penny.'
-                   END
-           WHEN p.name = 'Samsung Galaxy Watch 6 Classic' THEN
-               CASE
-                   WHEN sub.row_num = 1 THEN 'Excellent smartwatch with many features.'
-                   WHEN sub.row_num = 2 THEN 'Battery life could be better.'
-                   WHEN sub.row_num = 3 THEN 'Stylish design, intuitive interface.'
-                   END
-           WHEN p.name = 'The North Face McMurdo Parka III' THEN
-               CASE
-                   WHEN sub.row_num = 1 THEN 'Extremely warm jacket, fits perfectly.'
-                   WHEN sub.row_num = 2 THEN 'High-quality craftsmanship.'
-                   WHEN sub.row_num = 3 THEN 'A bit heavy but keeps you very warm.'
-                   END
-           WHEN p.name = 'Nike Air Max 270 React' THEN
-               CASE
-                   WHEN sub.row_num = 1 THEN 'Very comfortable sneakers!'
-                   WHEN sub.row_num = 2 THEN 'Stylish and lightweight, great for everyday wear.'
-                   WHEN sub.row_num = 3 THEN 'The sole could be a bit softer.'
-                   END
-           END                       AS content,
-       CASE
-           WHEN sub.row_num = 1 THEN 5
-           WHEN sub.row_num = 2 THEN 4
-           WHEN sub.row_num = 3 THEN 4
-           END                       AS product_rating
-FROM products p
-         CROSS JOIN
-         (SELECT 1 AS row_num UNION SELECT 2 UNION SELECT 3) AS sub
-ORDER BY p.id, sub.row_num;
+INSERT INTO comments (author_id, product_id, content, product_rating)
+SELECT
+    pac.author_id,
+    pac.product_id,
+    CASE
+        WHEN pac.product_name = 'Apple iPhone 15 Pro' THEN
+            CASE pac.author_name
+                WHEN 'default_author' THEN 'Great phone, the camera is amazing!'
+                WHEN 'retailer_1' THEN 'Best selling model in our store this month!'
+                WHEN 'retailer_2' THEN 'Premium build quality and performance'
+                WHEN 'default_retailer' THEN 'Available with 0% installment plan'
+                END
+        WHEN pac.product_name = 'Dell XPS 13 (2023 Model)' THEN
+            CASE pac.author_name
+                WHEN 'default_author' THEN 'The best laptop for work, very lightweight.'
+                WHEN 'retailer_1' THEN 'Only 3 units left in stock!'
+                WHEN 'retailer_2' THEN 'Recommended for business users'
+                WHEN 'default_retailer' THEN 'Free extended warranty this month'
+                END
+        WHEN pac.product_name = 'Sony WH-1000XM5' THEN
+            CASE pac.author_name
+                WHEN 'default_author' THEN 'Best noise-canceling headphones ever!'
+                WHEN 'retailer_1' THEN 'Special bundle with carrying case'
+                WHEN 'retailer_2' THEN 'Award-winning sound quality'
+                WHEN 'default_retailer' THEN 'Try before you buy in our stores'
+                END
+        WHEN pac.product_name = 'Samsung Galaxy Watch 6 Classic' THEN
+            CASE pac.author_name
+                WHEN 'default_author' THEN 'Excellent smartwatch with many features.'
+                WHEN 'retailer_1' THEN 'Compatible with all smartphones'
+                WHEN 'retailer_2' THEN 'Health tracking features are superb'
+                WHEN 'default_retailer' THEN 'Trade-in your old watch for discount'
+                END
+        WHEN pac.product_name = 'The North Face McMurdo Parka III' THEN
+            CASE pac.author_name
+                WHEN 'default_author' THEN 'Extremely warm jacket, fits perfectly.'
+                WHEN 'retailer_1' THEN 'Best choice for winter expeditions'
+                WHEN 'retailer_2' THEN 'Waterproof and windproof'
+                WHEN 'default_retailer' THEN 'Now available in 5 colors'
+                END
+        WHEN pac.product_name = 'Nike Air Max 270 React' THEN
+            CASE pac.author_name
+                WHEN 'default_author' THEN 'Very comfortable sneakers!'
+                WHEN 'retailer_1' THEN 'Limited edition colors available'
+                WHEN 'retailer_2' THEN 'Perfect for running and gym'
+                WHEN 'default_retailer' THEN 'Buy 2 pairs get 15% discount'
+                END
+        END AS content,
+    CASE
+        WHEN pac.author_name = 'default_author' THEN
+            CASE pac.author_rank % 3
+                WHEN 0 THEN 5
+                WHEN 1 THEN 4
+                ELSE 4
+                END
+        WHEN pac.author_name LIKE 'retailer%' THEN
+            CASE pac.author_rank % 4
+                WHEN 0 THEN 5
+                WHEN 1 THEN 5
+                WHEN 2 THEN 4
+                ELSE 4
+                END
+        ELSE 5
+        END AS product_rating
+FROM product_author_combinations pac;
 
 /* liquibase rollback
    rollback TRUNCATE users CASCADE

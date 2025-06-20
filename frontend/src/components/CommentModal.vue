@@ -8,7 +8,6 @@
       @click.stop
     >
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-medium text-gray-900">
             {{ isEditing ? 'Edit Comment' : 'Add Comment' }}
@@ -25,9 +24,7 @@
           </button>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="submitComment" class="space-y-4">
-          <!-- Rating -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
             <div class="flex items-center space-x-1">
@@ -53,7 +50,6 @@
             <p v-if="errors.rating" class="mt-1 text-sm text-red-600">{{ errors.rating }}</p>
           </div>
 
-          <!-- Comment Content -->
           <div>
             <label for="content" class="block text-sm font-medium text-gray-700 mb-2"
               >Comment</label
@@ -69,7 +65,6 @@
             <p v-if="errors.content" class="mt-1 text-sm text-red-600">{{ errors.content }}</p>
           </div>
 
-          <!-- Actions -->
           <div class="flex justify-end space-x-3 pt-4">
             <button
               type="button"

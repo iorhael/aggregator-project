@@ -29,7 +29,6 @@ export const productsApi = {
     })
   },
 
-  // Get product offers/cards
   getProductOffers(productId, pageNo = 0, pageSize = 6) {
     return apiClient.post(
       `/product_cards/search/${productId}`,
@@ -41,7 +40,6 @@ export const productsApi = {
     )
   },
 
-  // Search product offers with filters
   searchProductOffers(productId, filterCriteria = {}, pageNo = 0, pageSize = 15) {
     return apiClient.post(`/product_cards/search/${productId}`, filterCriteria, {
       params: { pageNo, pageSize },

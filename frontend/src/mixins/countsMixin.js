@@ -11,7 +11,6 @@ const countsMixin = {
   },
   methods: {
     async fetchCounts(force = false) {
-      // Check cache first unless forced
       if (!force) {
         const cachedCards = countsCache.get('cardsCount')
         const cachedStores = countsCache.get('storesCount')
@@ -33,7 +32,6 @@ const countsMixin = {
         this.cardsCount = cardsResponse.data
         this.storesCount = storesResponse.data
 
-        // Cache the results
         countsCache.set('cardsCount', this.cardsCount)
         countsCache.set('storesCount', this.storesCount)
       } catch (err) {

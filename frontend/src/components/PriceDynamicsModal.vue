@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">Price Dynamics - {{ productName }}</h3>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
@@ -17,10 +16,8 @@
           </button>
         </div>
 
-        <!-- Controls -->
         <div class="mb-6 p-4 bg-gray-50 rounded-lg">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Period Type -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Period Type</label>
               <select
@@ -33,7 +30,6 @@
               </select>
             </div>
 
-            <!-- Period Count -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 Number of {{ periodType === 'days' ? 'Days' : 'Months' }}
@@ -47,7 +43,6 @@
               />
             </div>
 
-            <!-- Load Button -->
             <div class="flex items-end">
               <button
                 @click="loadPriceData"
@@ -82,12 +77,10 @@
           </div>
         </div>
 
-        <!-- Error State -->
         <div v-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
           <p class="text-red-600 text-sm">{{ error }}</p>
         </div>
 
-        <!-- Chart Container -->
         <div class="bg-white border border-gray-200 rounded-lg p-4">
           <div v-if="loading" class="flex justify-center items-center py-12">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -111,13 +104,11 @@
             <p v-else>Select period and click "Load Data" to view price dynamics</p>
           </div>
 
-          <!-- Always render canvas, but hide it when no data -->
           <div :class="{ hidden: !hasData }">
             <canvas ref="chartCanvas" class="w-full" style="max-height: 400px"></canvas>
           </div>
         </div>
 
-        <!-- Statistics -->
         <div v-if="hasData" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="bg-blue-50 p-3 rounded-lg text-center">
             <p class="text-sm text-blue-600 font-medium">Current Price</p>
@@ -167,7 +158,6 @@ export default {
       chartData: [],
       chart: null,
       dataLoaded: false,
-      // Cache for loaded data
       cache: {
         daily: new Map(),
         monthly: new Map(),
@@ -203,7 +193,6 @@ export default {
   },
   methods: {
     onPeriodTypeChange() {
-      // Reset period count based on type
       this.periodCount = this.periodType === 'days' ? 30 : 6
       this.dataLoaded = false
       this.chartData = []
@@ -218,7 +207,6 @@ export default {
       this.error = null
 
       try {
-        // Check cache first
         const cacheKey = `${this.periodType}-${this.periodCount}`
         const cacheType = this.periodType === 'days' ? 'daily' : 'monthly'
 
@@ -226,7 +214,6 @@ export default {
           this.chartData = this.cache[cacheType].get(cacheKey)
           this.dataLoaded = true
           if (this.hasData) {
-            // Use setTimeout to ensure DOM is fully updated
             setTimeout(() => {
               this.renderChart()
             }, 100)
@@ -234,7 +221,6 @@ export default {
           return
         }
 
-        // Load larger dataset for caching
         const loadCount =
           this.periodType === 'days'
             ? Math.max(this.periodCount, 90)
@@ -247,22 +233,17 @@ export default {
           response = await priceHistoryApi.getMonthlyPriceDynamics(this.productId, loadCount)
         }
 
-        // Transform data
         const fullData = this.transformPriceData(response.data)
 
-        // Cache the full dataset
         this.cache[cacheType].set(`${this.periodType}-${loadCount}`, fullData)
 
-        // Use only requested amount
         this.chartData = fullData.slice(-this.periodCount)
 
-        // Cache the requested subset too
         this.cache[cacheType].set(cacheKey, this.chartData)
 
         this.dataLoaded = true
 
         if (this.hasData) {
-          // Use setTimeout to ensure DOM is fully updated
           setTimeout(() => {
             this.renderChart()
           }, 100)
@@ -290,13 +271,11 @@ export default {
     },
 
     renderChart() {
-      // Destroy existing chart
       if (this.chart) {
         this.chart.destroy()
         this.chart = null
       }
 
-      // Check if canvas exists and is accessible
       if (!this.$refs.chartCanvas) {
         console.error('Chart canvas not found')
         return

@@ -2,7 +2,6 @@
   <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
     <div class="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
       <div class="mt-3">
-        <!-- Header -->
         <div class="flex items-center justify-between mb-6">
           <h3 class="text-lg font-medium text-gray-900">
             {{ isEdit ? 'Edit Store' : 'Create New Store' }}
@@ -19,11 +18,8 @@
           </button>
         </div>
 
-        <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Basic Information -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Address -->
             <div class="md:col-span-2">
               <label for="address" class="block text-sm font-medium text-gray-700 mb-1">
                 Store Address *
@@ -40,7 +36,6 @@
               <p v-if="errors.address" class="text-red-600 text-xs mt-1">{{ errors.address }}</p>
             </div>
 
-            <!-- Phone -->
             <div>
               <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
                 Phone Number *
@@ -61,7 +56,6 @@
             </div>
           </div>
 
-          <!-- Opening Hours -->
           <div>
             <h4 class="text-lg font-medium text-gray-900 mb-4">Opening Hours</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -70,7 +64,6 @@
                   {{ day }} *
                 </label>
                 <div class="space-y-2">
-                  <!-- Quick Options -->
                   <div class="flex space-x-2">
                     <button
                       type="button"
@@ -95,7 +88,6 @@
                     </button>
                   </div>
 
-                  <!-- Custom Input -->
                   <input
                     :id="day"
                     v-model="form.opening_hours[day]"
@@ -112,7 +104,6 @@
               </div>
             </div>
 
-            <!-- Bulk Actions -->
             <div class="mt-4 p-4 bg-gray-50 rounded-md">
               <h5 class="text-sm font-medium text-gray-700 mb-2">Quick Fill Options:</h5>
               <div class="flex flex-wrap gap-2">
@@ -141,12 +132,10 @@
             </div>
           </div>
 
-          <!-- Error Message -->
           <div v-if="submitError" class="bg-red-50 border border-red-200 rounded-md p-3">
             <p class="text-red-600 text-sm">{{ submitError }}</p>
           </div>
 
-          <!-- Form Actions -->
           <div class="flex justify-end space-x-3 pt-4">
             <button
               type="button"
@@ -249,7 +238,6 @@ export default {
   },
   methods: {
     validatePhone() {
-      // Remove non-numeric characters
       this.form.phone = this.form.phone.replace(/\D/g, '')
     },
 
@@ -279,19 +267,16 @@ export default {
     validateForm() {
       this.errors = {}
 
-      // Validate address
       if (!this.form.address.trim()) {
         this.errors.address = 'Address is required'
       }
 
-      // Validate phone
       if (!this.form.phone.trim()) {
         this.errors.phone = 'Phone number is required'
       } else if (!/^\d{11,15}$/.test(this.form.phone)) {
         this.errors.phone = 'Phone number must be 11-15 digits'
       }
 
-      // Validate opening hours
       this.daysOfWeek.forEach((day) => {
         if (!this.form.opening_hours[day].trim()) {
           this.errors[`opening_hours.${day}`] = 'Required'
