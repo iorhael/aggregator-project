@@ -106,14 +106,11 @@
 <script>
 import keycloak from '@/services/keycloak'
 import Roles from '@/constants/roles'
+import logoImage from '@/assets/aggregator-logo.png'
 
 export default {
   name: 'AppFooter',
   props: {
-    logoPath: {
-      type: String,
-      default: '/src/assets/logo.png',
-    },
     githubUrl: {
       type: String,
       required: true,
@@ -125,7 +122,7 @@ export default {
   },
   data() {
     return {
-      logoUrl: '',
+      logoUrl: logoImage,
     }
   },
   computed: {
@@ -136,14 +133,6 @@ export default {
       if (!keycloak.authenticated) return false
       const userRoles = keycloak.tokenParsed?.resource_access?.['aggregator-app']?.roles || []
       return userRoles.includes(Roles.RETAILER)
-    },
-  },
-  mounted() {
-    this.loadLogo()
-  },
-  methods: {
-    loadLogo() {
-      this.logoUrl = new URL(this.logoPath, import.meta.url).href
     },
   },
 }

@@ -131,19 +131,14 @@
 <script>
 import keycloak from '@/services/keycloak'
 import Roles from '@/constants/roles'
+import logoImage from '@/assets/aggregator-logo.png'
 
 export default {
   name: 'AppHeader',
-  props: {
-    logoPath: {
-      type: String,
-      default: '/src/assets/logo.png',
-    },
-  },
   data() {
     return {
       showMobileMenu: false,
-      logoUrl: '',
+      logoUrl: logoImage,
     }
   },
   computed: {
@@ -168,13 +163,7 @@ export default {
       return userRoles.includes(Roles.RETAILER)
     },
   },
-  mounted() {
-    this.loadLogo()
-  },
   methods: {
-    loadLogo() {
-      this.logoUrl = new URL(this.logoPath, import.meta.url).href
-    },
     login() {
       keycloak.login({ redirectUri: window.location.origin })
     },

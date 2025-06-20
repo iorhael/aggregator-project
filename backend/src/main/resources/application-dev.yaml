@@ -10,7 +10,3 @@ logging:
   level:
     org.hibernate.stat: DEBUG
     org.springframework.security: DEBUG
-
-server:
-  ssl:
-    enabled: false
