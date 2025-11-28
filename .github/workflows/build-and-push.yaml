@@ -26,7 +26,7 @@ jobs:
 
       - id: backend_meta
         name: Generate backend image metadata
-        uses: docker/metadata-action@v5.7.0
+        uses: docker/metadata-action@v5.10.0
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/aggregator-backend
@@ -37,7 +37,7 @@ jobs:
 
       - id: frontend_meta
         name: Generate frontend image metadata
-        uses: docker/metadata-action@v5.7.0
+        uses: docker/metadata-action@v5.10.0
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/aggregator-frontend
