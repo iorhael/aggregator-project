@@ -1,22 +1,22 @@
-version: 2
-updates:
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "daily"
-      time: "08:00"
-      timezone: "Europe/Minsk"
-
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "daily"
-      time: "08:00"
-      timezone: "Europe/Minsk"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
-      time: "08:00"
-      timezone: "Europe/Minsk"
+#version: 2
+#updates:
+#  - package-ecosystem: "maven"
+#    directory: "/"
+#    schedule:
+#      interval: "daily"
+#      time: "08:00"
+#      timezone: "Europe/Minsk"
+#
+#  - package-ecosystem: "docker"
+#    directory: "/"
+#    schedule:
+#      interval: "never"
+#      time: "08:00"
+#      timezone: "Europe/Minsk"
+#
+#  - package-ecosystem: "github-actions"
+#    directory: "/"
+#    schedule:
+#      interval: "daily"
+#      time: "08:00"
+#      timezone: "Europe/Minsk"
